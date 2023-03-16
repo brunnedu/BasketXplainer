@@ -3,10 +3,10 @@
 [[_TOC_]]
 
 ## Team Members
-1. Team member 1
-2. Team member 2
-3. Team member 3
-4. ...
+1. Dustin Brunner
+2. Jonathan Koch
+3. Liule Yang
+4. Timothé Laborie
 
 ## Project Description 
 Describe here your project in detail and define your goals.
