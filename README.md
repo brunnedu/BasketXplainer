@@ -9,17 +9,25 @@
 4. Timothé Laborie
 
 ## Project Description 
-Describe here your project in detail and define your goals.
+The goal of our project is to create an interactive dashboard that allows basketball coaches/analysts to determine which are the most important factors for predicting the winning odds. [//]: # "To be refined"
 
 ### Users
-List your projects target Users.
+- Basketball Data Analysts (specifically Fran Camba Rodriguez of the Obradoiro CAB team) 
+- Basketball Coaches
 
 ### Datasets
 Add here all used datasets.\
-Document here where to find the data and how to download it. 
+Document here where to find the data and how to download it.
+- [NBA Kaggle Dataset](https://www.kaggle.com/datasets/nathanlauga/nba-games) 
 
 ### Tasks
 Define all the tasks you want your dashboard solve.
+:warning: Still subject to change!
+- Determine winning odds between two teams
+- Determine feature importance for predicting winning odds
+- Simple EDA (Exploratory Data Analysis)
+- Clustering teams by winning strategy
+- Interventional predictions (what-if analysis)
 
 - - -
 ## Folder Structure
@@ -130,8 +138,11 @@ Take a look at [Issues and Branches](https://www.youtube.com/watch?v=DSuSBuVYpys
 This will help you have a clearer overview of what you are currently doing, track your progress and organise your work among yourselves. Moreover it gives us more insights on your progress.  
 
 ## Weekly Summary 
-Write here a short summary with weekly progress, including challanges and open questions.\
+Write here a short summary with weekly progress, including challenges and open questions.\
 We will use this to understand what your struggles and where did the weekly effort go to.
+
+#### Week 11 (13.03.23)
+We had a very helpful discussion with our TA that helped us refining our goals. We are working on further refining our idea and are starting to implement the backend of our dashboard.
 
 ## Versioning
 Create stable versions of your code each week by using gitlab tags.\
