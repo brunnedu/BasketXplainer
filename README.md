@@ -142,7 +142,8 @@ Write here a short summary with weekly progress, including challenges and open q
 We will use this to understand what your struggles and where did the weekly effort go to.
 
 #### Week 4 (13.03.23)
-We had a very helpful discussion with our TA that helped us refining our goals. We are working on further refining our idea and are starting to implement the backend of our dashboard.
+Because of our limited domain knowledge, the idea we suggested in our video pitch was quite complex and possibly infeasible. Luckily, we had a very helpful discussion with our TA during the office hour that helped us refine our idea. Currently, we are still working on further refining our idea and improving our backend skills to start implementing our backend next week.
+ 
 
 #### Week 5 (20.03.23)
 
