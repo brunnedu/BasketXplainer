@@ -141,8 +141,11 @@ This will help you have a clearer overview of what you are currently doing, trac
 Write here a short summary with weekly progress, including challenges and open questions.\
 We will use this to understand what your struggles and where did the weekly effort go to.
 
-#### Week 11 (13.03.23)
+#### Week 4 (13.03.23)
 We had a very helpful discussion with our TA that helped us refining our goals. We are working on further refining our idea and are starting to implement the backend of our dashboard.
+
+#### Week 5 (20.03.23)
+
 
 ## Versioning
 Create stable versions of your code each week by using gitlab tags.\
