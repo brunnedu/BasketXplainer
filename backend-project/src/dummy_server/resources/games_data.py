@@ -1,9 +1,9 @@
 import os
 import pandas as pd
 from flask_restful import Resource
-from utils import DATA_ROOT
 
-GAMES_FILE_NAME = "games.csv"
+DATA_ROOT = os.path.join(".", "data")
+GAMES_FILE_NAME = "dataset_games.csv"
 path_name = os.path.join(DATA_ROOT, GAMES_FILE_NAME)
 
 class GamesResource(Resource):
