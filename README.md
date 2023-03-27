@@ -148,6 +148,12 @@ Because of our limited domain knowledge, the idea we suggested in our video pitc
 #### Week 5 (20.03.23)
 We proposed three different project ideas to Javi and decided to go with the second one, creating a dashboard for basketball coaches and data analysts. We made ourselves familiar with the dummy-fullstack repository and started implementing the backend. We created some API endpoints for accessing selected parts of our dataset (boxscore) as well as aggregations.
 
+## API Endpoints
+- Complete boxscore data: `/api/data/games`
+- Boxscore data of a certain game:`/api/data/games/<int:game_id>`
+- Boxscore data of all games of a certain matchup: `/api/data/games/<int:home_team_id>_<int:visitor_team_id>`
+- Season-aggregated boxscore data of all teams in a given season: `/api/data/games/aggregated/<int:season>`
+
 
 ## Versioning
 Create stable versions of your code each week by using gitlab tags.\
