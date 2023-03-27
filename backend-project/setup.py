@@ -13,16 +13,20 @@ setup(
     long_description=read("README.md"),
     package_data={
         "": [
-            "dataset_blobs.csv",
-            "dataset_circles.csv",
-            "dataset_moons.csv",
+            "dataset_games.csv",
+            "dataset_games_details.csv",
+            "dataset_players.csv",
+            "dataset_ranking.csv",
+            "dataset_teams.csv",
         ]
     },
     data_files=[(
         "data", [
-            os.path.join("data", "dataset_blobs.csv"),
-            os.path.join("data", "dataset_circles.csv"),
-            os.path.join("data", "dataset_moons.csv"),
+            os.path.join("data", "dataset_games.csv"),
+            os.path.join("data", "dataset_games_details.csv"),
+            os.path.join("data", "dataset_players.csv"),
+            os.path.join("data", "dataset_ranking.csv"),
+            os.path.join("data", "dataset_teams.csv"),
         ]
     )],
     classifiers=[
