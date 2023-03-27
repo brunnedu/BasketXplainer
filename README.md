@@ -164,6 +164,6 @@ We will evaluate your code every week, based on the corresponding version.
 
 Tags:
 - Week 1: [Week 1 Tag](https://gitlab.inf.ethz.ch/COURSE-XAI-IML22/dummy-fullstack/-/tags/stable-readme)
-- Week 5: [Week 5 Tag]()
+- Week 5: [Week 5 Tag](https://gitlab.inf.ethz.ch/course-xai-iml23/b5-winning-in-basketball/-/tags/v1.0)
 
 
