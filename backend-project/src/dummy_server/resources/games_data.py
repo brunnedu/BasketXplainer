@@ -35,7 +35,7 @@ class GamesResourceByMatchUp(Resource):
         return match_up_data.to_dict("records")
     
 class GamesResourceAggregatedBySeason(Resource):
-    """Game given matchups. For query usage"""
+    """Averaged statistics of each team in a given season. For query usage"""
 
     def get(self, season: int):
         data = pd.read_csv(path_name)

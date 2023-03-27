@@ -9,7 +9,7 @@
 4. Timothé Laborie
 
 ## Project Description 
-The goal of our project is to create an interactive dashboard that allows basketball coaches/analysts to determine which are the most important factors for predicting the winning odds. [//]: # "To be refined"
+The goal of our project is to create an interactive dashboard that allows basketball coaches/analysts to determine the most important factors for predicting the winning odds of a given matchup. Additionally we want to provide a clustering of teams based on their strategy.
 
 ### Users
 - Basketball Data Analysts (specifically Fran Camba Rodriguez of the Obradoiro CAB team) 
@@ -25,8 +25,9 @@ Define all the tasks you want your dashboard solve.
 :warning: Still subject to change!
 - Determine winning odds between two teams
 - Determine feature importance for predicting winning odds
-- Simple EDA (Exploratory Data Analysis)
 - Clustering teams by winning strategy
+Optionally:
+- Simple EDA (Exploratory Data Analysis)
 - Interventional predictions (what-if analysis)
 
 - - -
@@ -145,7 +146,7 @@ We will use this to understand what your struggles and where did the weekly effo
 Because of our limited domain knowledge, the idea we suggested in our video pitch was quite complex and possibly infeasible. Luckily, we had a very helpful discussion with our TA during the office hour that helped us refine our idea. Currently, we are still working on further refining our idea and improving our backend skills to start implementing our backend next week.
  
 #### Week 5 (20.03.23)
-We proposed three different project ideas to Javi and decided to go with the second one, creating a dashboard for basketball coaches and data analysts. We made ourselves familiar with the dummy-fullstack repository and started implementing the backend. We created some API endpoints for accessing different views of our datasets as well as aggregations.
+We proposed three different project ideas to Javi and decided to go with the second one, creating a dashboard for basketball coaches and data analysts. We made ourselves familiar with the dummy-fullstack repository and started implementing the backend. We created some API endpoints for accessing selected parts of our dataset (boxscore) as well as aggregations.
 
 
 ## Versioning
@@ -157,8 +158,6 @@ We will evaluate your code every week, based on the corresponding version.
 
 Tags:
 - Week 1: [Week 1 Tag](https://gitlab.inf.ethz.ch/COURSE-XAI-IML22/dummy-fullstack/-/tags/stable-readme)
-- Week 2: ..
-- Week 3: ..
-- ...
+- Week 5: [Week 5 Tag]()
 
 
