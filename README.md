@@ -144,8 +144,8 @@ We will use this to understand what your struggles and where did the weekly effo
 #### Week 4 (13.03.23)
 Because of our limited domain knowledge, the idea we suggested in our video pitch was quite complex and possibly infeasible. Luckily, we had a very helpful discussion with our TA during the office hour that helped us refine our idea. Currently, we are still working on further refining our idea and improving our backend skills to start implementing our backend next week.
  
-
 #### Week 5 (20.03.23)
+We proposed three different project ideas to Javi and decided to go with the second one, creating a dashboard for basketball coaches and data analysts. We made ourselves familiar with the dummy-fullstack repository and started implementing the backend. We created some API endpoints for accessing different views of our datasets as well as aggregations.
 
 
 ## Versioning
