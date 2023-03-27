@@ -1,3 +1,3 @@
-from . import scatter_data
+from . import games_data
 
-__all__ = ["scatter_data"]
+__all__ = ["games_data"]
