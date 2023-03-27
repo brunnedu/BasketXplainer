@@ -10,5 +10,6 @@ def add_routes(app):
     api.add_resource(res.games_data.GamesResource, API + "games")
     api.add_resource(res.games_data.GamesResourceByID, API + "games/<game_id>")
     api.add_resource(res.games_data.GamesResourceByMatchUp, API + "games/<home_team_id>_<visitor_team_id>")
+    api.add_resource(res.games_data.GamesResourceAggregatedBySeason, API + "games/aggregated/<int:season>")
 
     return api
