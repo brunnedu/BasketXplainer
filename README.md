@@ -22,13 +22,32 @@ Document here where to find the data and how to download it.
 
 ### Tasks
 Define all the tasks you want your dashboard solve.
-:warning: Still subject to change!
-- Determine winning odds between two teams
 - Determine feature importance for predicting winning odds
 - Clustering teams by winning strategy
-Optionally:
-- Simple EDA (Exploratory Data Analysis)
-- Interventional predictions (what-if analysis)
+- Modifying boxscore data for interventional predictions (what-if analysis)
+
+### Dashboard Structure
+
+#### Components
+- Tutorial
+  - Overlay when first launching the app
+  - Help button in the corner
+- Team Selector
+  - Team logos
+  - Scrollable dropdown (search)
+  - Prevent user from selecting same team twice
+- Boxscore Display/Manipulation
+  - Parallel Coordinates Plot (adjustable ordering)
+  - Spider Graph
+  - Give user ability to modify boxscore data in the visualization (use some realistic constraints)
+- Explainability Plot
+  - Either combined or split plot (home and away features)
+- Winning Odds Prediction
+  - If not dynamically updated, indicate the change in winning odds after recalculating
+- Strategy Clustering
+  - Improve Strategy Clustering by using `games_details` data (aggregated by team)
+  - On-Hover details
+  - Color scale of league ranking
 
 - - -
 ## Folder Structure
@@ -147,6 +166,9 @@ Because of our limited domain knowledge, the idea we suggested in our video pitc
  
 #### Week 5 (20.03.23)
 We proposed three different project ideas to Javi and decided to go with the second one, creating a dashboard for basketball coaches and data analysts. We made ourselves familiar with the dummy-fullstack repository and started implementing the backend. We created some API endpoints for accessing selected parts of our dataset (boxscore) as well as aggregations.
+
+#### Week 6 (27.03.23)
+We created the visual encoding sketch of our user interface. We also wrote an email to Fran to schedule a meeting so that we could gain some feedback on our idea. We specified our API design for communication between front- and backend and built a requirements document together and listed out all the features in detail.
 
 ## API Endpoints
 - Complete boxscore data: `/api/data/games`
