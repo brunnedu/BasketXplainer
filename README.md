@@ -22,12 +22,33 @@ Document here where to find the data and how to download it.
 
 ### Tasks
 Define all the tasks you want your dashboard solve.
-:warning: Still subject to change!
-- Determine winning odds between two teams
 - Determine feature importance for predicting winning odds
+<<<<<<< Updated upstream
 - Simple EDA (Exploratory Data Analysis)
 - Clustering teams by winning strategy
+=======
+- Clustering teams by winning strategy
+Optionally:
+>>>>>>> Stashed changes
 - Interventional predictions (what-if analysis)
+
+### Dashboard Structure
+
+#### Components
+- Team Selector
+  - Team logos
+  - Scrollable dropdown (search)
+  - Prevent user from selecting same team twice
+- Boxscore Display/Manipulation
+  - Parallel Coordinates Plot (adjustable ordering)
+  - Spider Graph
+  - Give user ability to modify boxscore data in the visualization (use some realistic constraints)
+- Explainability Values
+  - Either combined or split plot (home and away features)
+- Winning Odds Prediction
+  - If not dynamically updated, indicate the change in winning odds after recalculating
+- Strategy Clustering
+  - Improve Strategy Clustering by using `games_details` data (aggregated by team)
 
 - - -
 ## Folder Structure
@@ -145,7 +166,20 @@ We will use this to understand what your struggles and where did the weekly effo
 Because of our limited domain knowledge, the idea we suggested in our video pitch was quite complex and possibly infeasible. Luckily, we had a very helpful discussion with our TA during the office hour that helped us refine our idea. Currently, we are still working on further refining our idea and improving our backend skills to start implementing our backend next week.
  
 #### Week 5 (20.03.23)
+<<<<<<< Updated upstream
 We proposed three different project ideas to Javi and decided to go with the second one, creating a dashboard for basketball coaches and data analysts. We made ourselves familiar with the dummy-fullstack repository and started implementing the backend. We created some API endpoints for accessing different views of our datasets as well as aggregations.
+=======
+We proposed three different project ideas to Javi and decided to go with the second one, creating a dashboard for basketball coaches and data analysts. We made ourselves familiar with the dummy-fullstack repository and started implementing the backend. We created some API endpoints for accessing selected parts of our dataset (boxscore) as well as aggregations.
+
+#### Week 6 (27.03.23)
+We created the visual encoding sketch of our user interface. We also wrote an email to Fran to schedule a meeting so that we could gain some feedback on our idea. We specified our API design for communication between front- and backend and built a requirements document together and listed out all the features in detail.
+
+## API Endpoints
+- Complete boxscore data: `/api/data/games`
+- Boxscore data of a certain game:`/api/data/games/<int:game_id>`
+- Boxscore data of all games of a certain matchup: `/api/data/games/<int:home_team_id>_<int:visitor_team_id>`
+- Season-aggregated boxscore data of all teams in a given season: `/api/data/games/aggregated/<int:season>`
+>>>>>>> Stashed changes
 
 
 ## Versioning
