@@ -168,7 +168,7 @@ Because of our limited domain knowledge, the idea we suggested in our video pitc
 We proposed three different project ideas to Javi and decided to go with the second one, creating a dashboard for basketball coaches and data analysts. We made ourselves familiar with the dummy-fullstack repository and started implementing the backend. We created some API endpoints for accessing selected parts of our dataset (boxscore) as well as aggregations.
 
 #### Week 6 (27.03.23)
-We created the visual encoding sketch of our user interface. We also wrote an email to Fran to schedule a meeting so that we could gain some feedback on our idea. We specified our API design for communication between front- and backend and built a requirements document together and listed out all the features in detail.
+We accomplished several tasks to advance our project: we developed a visual encoding sketch for the user interface, reached out to Fran to schedule a meeting for feedback on our idea, finalized the API design for front-end and back-end communication, and collaboratively compiled a requirements document that thoroughly details all project features.
 
 ## API Endpoints
 - Complete boxscore data: `/api/data/games`
