@@ -34,34 +34,32 @@ class GamesResourceByMatchUp(Resource):
         match_up_data = home_data[home_data["VISITOR_TEAM_ID"] == int(visitor_team_id)]
         return match_up_data.to_dict("records")
     
-class GamesResourceAggregatedBySeason(Resource):
+class GamesResourceAggregatedByTeam(Resource):
     """Averaged statistics of each team in a given season. For query usage"""
 
-    def get(self, season: int):
-        data = pd.read_csv(path_name)
-        # select data from season
-        data_season = data[data['SEASON']==season]
+    def get(self, team_id: int):
+        # TODO: could have separate aggregations for whether team is home or away
 
-        # calculate for every team their average statistics
-        data_teams = []
-        for team_id in data_season['TEAM_ID_home'].unique():
-            curr_team_data = []
-            # do same selection for both home & away games
-            for s in ['home', 'away']:
-                df = data_season[data_season[f'TEAM_ID_{s}']==team_id]
-                df = df[[col for col in df.columns if col.endswith(f'_{s}')]]
-                df.columns = df.columns.str.rstrip(f'_{s}')
-                curr_team_data.append(df)
-            
-            curr_team_data = pd.concat(curr_team_data)
-            # aggregate data using mean()
-            curr_team_data_agg = curr_team_data.mean().to_frame().T
-            curr_team_data_agg['TEAM_ID'] = curr_team_data_agg['TEAM_ID'].astype(int)
-            data_teams.append(curr_team_data_agg)
-        
-        # combine aggregate stats of all teams
-        data_teams = pd.concat(data_teams)
-        return data_teams.to_dict("records")
+        # load data
+        data = pd.read_csv(path_name)
+
+        # only use season 2021
+        data = data[data['SEASON']==2021]
+
+        # select team data for home and away games
+        team_data = []
+        for s in ['home', 'away']:
+            df = data[data[f'TEAM_ID_{s}']==team_id]
+            df = df[[col for col in df.columns if col.endswith(f'_{s}')]]
+            df.columns = df.columns.str.rstrip(f'_{s}')
+            team_data.append(df)
+
+        # combine data
+        team_data = pd.concat(team_data)
+        # aggregate data by calculating mean
+        team_data_agg = team_data.mean().to_frame().T
+
+        return team_data_agg.to_dict("records")
 
 
     
