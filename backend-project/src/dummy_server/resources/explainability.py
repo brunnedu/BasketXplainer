@@ -1,4 +1,5 @@
 from flask_restful import Resource
+from flask import jsonify
 
 STATISTICS = ["2FG%", "3FG%", "Assists", "Rebounds"]
 
@@ -13,4 +14,4 @@ class GetShapleyValues(Resource):
             prediction[stat] = 2
         prediction["Average_score"] = 100
         prediction["Difference"] = 8
-        return prediction
+        return jsonify(prediction)

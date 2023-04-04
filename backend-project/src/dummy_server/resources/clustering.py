@@ -1,5 +1,6 @@
 from flask_restful import Resource
 import pandas as pd
+from flask import jsonify
 
 class GamesResourceClustering(Resource):
     """Averaged statistics of each team in a given season. For query usage"""
@@ -18,4 +19,4 @@ class GamesResourceClustering(Resource):
 
         data = dummy_data
 
-        return data.to_dict("records")
+        return jsonify(data.to_dict("records"))
