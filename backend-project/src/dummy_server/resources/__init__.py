@@ -1,3 +1,3 @@
-from . import games_data
+from . import games_data, clustering
 
-__all__ = ["games_data"]
+__all__ = ["games_data", "clustering"]
