@@ -13,4 +13,10 @@ def add_routes(app):
     api.add_resource(res.games_data.GamesResourceAggregatedByTeam, API + "teams/<int:team_id>")
     api.add_resource(res.clustering.GamesResourceClustering, API + "clustering")
 
+    # add resources for predictions
+    api.add_resource(res.prediction.GetPrediction, API + "prediction/<int:team_id_home>-<int:team_id_away>")
+
+    # add resources for explainability
+    api.add_resource(res.explainability.GetShapleyValues, API + "prediction/xai/<int:team_id_home>-<int:team_id_away>")
+
     return api
