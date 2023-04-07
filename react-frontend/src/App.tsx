@@ -203,8 +203,8 @@ const Scatterplot: React.FC<ScatterplotProps> = ({ points }) => {
     const svg = d3.select(svgRef.current);
 
     // Create scales for x and y coordinates
-    const xScale = d3.scaleLinear().domain([0, 1]).range([0, 300]);
-    const yScale = d3.scaleLinear().domain([0, 1]).range([0, 300]);
+    const xScale = d3.scaleLinear().domain([0, 1]).range([0, 100]);
+    const yScale = d3.scaleLinear().domain([0, 1]).range([0, 100]);
 
     // Add points to the scatterplot
     svg
@@ -214,7 +214,7 @@ const Scatterplot: React.FC<ScatterplotProps> = ({ points }) => {
       .append("circle")
       .attr("cx", (d) => xScale(d.x_coord))
       .attr("cy", (d) => yScale(d.y_coord))
-      .attr("r", 5)
+      .attr("r", 2)
       .attr("fill", (d) => colorMap[d.cluster_index])
       .on("mouseover", function (event, d) {
         // Show hover details on mouseover
@@ -237,7 +237,7 @@ const Scatterplot: React.FC<ScatterplotProps> = ({ points }) => {
     <>
       <div className="box">
         <h2>Tactical clustering</h2>
-        <svg ref={svgRef} width={300} height={300}></svg>
+        <svg ref={svgRef} viewBox="0 0 100 100" width="100%" height="auto"></svg>
       </div>
     </>
   );
