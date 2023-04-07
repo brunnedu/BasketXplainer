@@ -4,10 +4,20 @@ import './App.css';
 import axiosClient from './router/apiClient'
 import Slider from "@material-ui/core/Slider";
 import * as d3 from "d3";
+import { styled } from "@material-ui/core/styles";
 
 
 
 
+
+
+const VerticalSlider = styled(Slider)({
+  height: "100px !important",
+  margin: "auto 0 !important",
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "space-between",
+});
 
 interface BoxScores {
   AST: number;
@@ -21,11 +31,13 @@ interface BoxScores {
 interface PlayerStatsSliderProps {
   boxScores: BoxScores;
   onSliderChange: (key: keyof BoxScores, value: number) => void;
+  onMouseUp: any;
 }
 
 const BoxScoreSlider: React.FC<PlayerStatsSliderProps> = ({
   boxScores,
   onSliderChange,
+  onMouseUp,
 }) => {
 
   const handleSliderChange = (
@@ -58,21 +70,26 @@ const BoxScoreSlider: React.FC<PlayerStatsSliderProps> = ({
     <>
       <div className="box">
         <h2>Aggregated box score data</h2>
-        {Object.entries(boxScores).map(([key, value]) => (
-          <div key={key}>
-            <p>{key}</p>
-            <Slider
-              value={value}
-              onChange={(event, value) =>
-                handleSliderChange(key as keyof BoxScores, event, value)
-              }
-              aria-labelledby="continuous-slider"
-              min={minValueMapping[key]}
-              max={maxValueMapping[key]}
-              step={(maxValueMapping[key] - minValueMapping[key]) / 100}
-            />
-          </div>
-        ))}
+        <div style={{ display: "flex", alignItems: "center" }}>
+          {Object.entries(boxScores).map(([key, value]) => (
+            <div key={key} className='slidercontainer'>
+              <p>{key}</p>
+              <VerticalSlider
+                orientation="vertical"
+                value={value}
+                onChange={(event, value) =>
+                  handleSliderChange(key as keyof BoxScores, event, value)
+                }
+                aria-labelledby="continuous-slider"
+                min={minValueMapping[key]}
+                max={maxValueMapping[key]}
+                step={(maxValueMapping[key] - minValueMapping[key]) / 100}
+                draggable 
+                onChangeCommitted ={() => {onMouseUp();console.log("drag end")}}
+              />
+            </div>
+          ))}
+        </div>
       </div>
     </>
   );
@@ -237,7 +254,7 @@ const Scatterplot: React.FC<ScatterplotProps> = ({ points }) => {
     <>
       <div className="box">
         <h2>Tactical clustering</h2>
-        <svg ref={svgRef} viewBox="0 0 100 100" width="100%" height="auto"></svg>
+        <svg ref={svgRef} viewBox="0 0 100 100" width="100%"></svg>
       </div>
     </>
   );
@@ -319,25 +336,29 @@ function App() {
   };
 
   const handleSliderChangeLeft = (key: keyof BoxScores, value: number) => {
-    console.log(key, value,"left");
     var copy = {...boxScoresLeft};
     copy[key] = value;
     setBoxScoresLeft(copy);
-    console.log(copy);
-    updateEverything();
+    // updateEverything();
   };
 
   const handleSliderChangeRight = (key: keyof BoxScores, value: number) => {
-    console.log(key, value,"right");
+    // console.log(key, value,"right");
     var copy = {...boxScoresRight};
     copy[key] = value;
     setBoxScoresRight(copy);
-    console.log(copy);
+    // console.log(copy);
+    // updateEverything();
+  };
+
+  const onSliderMouseUp = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    console.log("mouse up");
     updateEverything();
   };
 
   //this function updates the shap values, winning probability and tactical clustering points
   const updateEverything = () => {
+    console.log("updateEverything")
     loadData(`api/prediction/xai/${selectedTeamLeft}-${selectedTeamRight}`).then(data => {
       console.log(data);
       setShapLeft(data);
@@ -366,7 +387,7 @@ function App() {
           <h1>HOME</h1>
           <DropdownMenu ids={ids} onSelection={handleSelectionLeft} />
         </div>
-        <BoxScoreSlider boxScores={boxScoresLeft} onSliderChange={handleSliderChangeLeft}/>
+        <BoxScoreSlider boxScores={boxScoresLeft} onSliderChange={handleSliderChangeLeft} onMouseUp={onSliderMouseUp}/>
         <ShapDisplay values={shapLeft}/>
         <WinChanceDisplay probability={probabilityLeft}/>
         <Scatterplot points={pointsLeft}/>
@@ -376,7 +397,7 @@ function App() {
           <h1>AWAY</h1>
           <DropdownMenu ids={ids} onSelection={handleSelectionRight} />
         </div>
-        <BoxScoreSlider boxScores={boxScoresRight} onSliderChange={handleSliderChangeRight}/>
+        <BoxScoreSlider boxScores={boxScoresRight} onSliderChange={handleSliderChangeRight} onMouseUp={onSliderMouseUp}/>
         <ShapDisplay values={shapRight}/>
         <WinChanceDisplay probability={1-probabilityLeft}/>
         <Scatterplot points={pointsRight}/>

@@ -52,3 +52,8 @@
   margin: auto;
   background-color: #e4c494;
 }
+
+.slidercontainer{
+  margin: 0 0% !important;
+  width: 14%;
+}
