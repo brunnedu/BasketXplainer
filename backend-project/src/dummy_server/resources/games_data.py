@@ -4,15 +4,46 @@ from flask_restful import Resource
 from flask import jsonify
 
 DATA_ROOT = os.path.join(".", "data")
-GAMES_FILE_NAME = "dataset_games.csv"
-path_name = os.path.join(DATA_ROOT, GAMES_FILE_NAME)
 
 
-class GamesResourceAggregatedByTeam(Resource):
+class GetTeamBoxscore(Resource):
     """Averaged statistics of each team in a given season. For query usage"""
 
-    def get(self, team_id: int):
+    def get(self, team_id: int, is_home: int):
         # TODO: could have separate aggregations for whether team is home or away
+
+        # cols that make up boxscore stats
+        BOXSCORE_COLS = ['FGM', 'FGA', 'FG3M', 'FG3A', 'FTM', 'FTA', 'OREB', 'DREB', 'AST', 'STL', 'BLK', 'TO', 'PF']
+
+        # load data
+        games = pd.read_csv(os.path.join(DATA_ROOT, "dataset_games.csv"))
+        games_details = pd.read_csv(os.path.join(DATA_ROOT, "dataset_games_details.csv"))
+
+        # only keep important cols
+        games = games[['GAME_DATE_EST', 'GAME_ID', 'GAME_STATUS_TEXT', 'HOME_TEAM_ID', 'VISITOR_TEAM_ID', 'SEASON']]
+        # join games to games_details for date information
+        games_details = games_details.merge(games, on='GAME_ID')
+
+        # add additional column indicating whether team is home or not
+        games_details['is_home'] = games_details['TEAM_ID'] == games_details['HOME_TEAM_ID']
+        games_details['date'] = pd.to_datetime(games_details['GAME_DATE_EST'])
+
+        # only use games during regular season (lasted from 19.10.2021 until 10.04.2022)
+        games_details = games_details[(pd.Timestamp('2021-10-19') <= games_details['date']) & (games_details['date'] <= pd.Timestamp('2022-04-10'))]
+
+        # select data from team at home or away
+        games_details = games_details[(games_details['TEAM_ID']==team_id) & (games_details['is_home']==is_home)][BOXSCORE_COLS+['GAME_ID']]
+
+        # sum over all players for each game and then average over all games
+        boxscore = games_details.groupby(['GAME_ID']).sum().mean().to_frame().T
+
+        return jsonify(boxscore.to_dict("records"))
+    
+
+class GetTeams(Resource):
+    """Get all team_ids"""
+
+    def get(self):
 
         # load data
         data = pd.read_csv(path_name)
@@ -20,49 +51,5 @@ class GamesResourceAggregatedByTeam(Resource):
         # only use season 2021
         data = data[data['SEASON']==2021]
 
-        # select team data for home and away games
-        team_data = []
-        for s in ['home', 'away']:
-            df = data[data[f'TEAM_ID_{s}']==team_id]
-            df = df[[col for col in df.columns if col.endswith(f'_{s}')]]
-            df.columns = df.columns.str.rstrip(f'_{s}')
-            team_data.append(df)
-
-        # combine data
-        team_data = pd.concat(team_data)
-        # aggregate data by calculating mean
-        team_data_agg = team_data.mean().to_frame().T
-
-        return jsonify(team_data_agg.to_dict("records"))
-
-
-class GamesResource(Resource):
-    """Games resources."""
-
-    def get(self):
-        """Get for all the teams"""
-        data = pd.read_csv(path_name)
-        # Convert to dictionary
-        return jsonify(data.to_dict("records"))
-
-
-class GamesResourceByID(Resource):
-    """Game given game id. For query usage"""
-
-    def get(self, game_id):
-        """Get for all the teams"""
-        data = pd.read_csv(path_name)
-        game_data = data[data["GAME_ID"] == int(game_id)]
-        # Convert to dictionary
-        return jsonify(game_data.to_dict("records"))
-
-
-class GamesResourceByMatchUp(Resource):
-    """Game given matchups. For query usage"""
-
-    def get(self, home_team_id, visitor_team_id):
-        data = pd.read_csv(path_name)
-        home_data = data[data["HOME_TEAM_ID"] == int(home_team_id)]
-        match_up_data = home_data[home_data["VISITOR_TEAM_ID"] == int(visitor_team_id)]
-        return jsonify(match_up_data.to_dict("records"))
+        return jsonify(data['TEAM_ID_home'].unique().tolist())
     
