@@ -5,7 +5,7 @@ import numpy as np
 
 STATISTICS = ["2FG%", "3FG%", "Assists", "Rebounds"]
 
-class GetShapleyValuesTeam(Resource):
+class GetSHAPValuesTeam(Resource):
     """Get the prediction btw two teams"""
 
     #TODO: THiS IS A PLACEHOLDER!!! Need to cahnge it later
@@ -19,7 +19,7 @@ class GetShapleyValuesTeam(Resource):
         return jsonify(prediction)
     
 
-class GetShapleyValuesBoxscore(Resource):
+class GetSHAPValuesBoxscore(Resource):
 
     def get(
             self, 
