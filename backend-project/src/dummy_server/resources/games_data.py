@@ -46,10 +46,16 @@ class GetTeams(Resource):
     def get(self):
 
         # load data
-        data = pd.read_csv(path_name)
+        games = pd.read_csv(os.path.join(DATA_ROOT, "dataset_games.csv"))
+        teams = pd.read_csv(os.path.join(DATA_ROOT, "dataset_teams.csv"))
 
         # only use season 2021
-        data = data[data['SEASON']==2021]
+        games = games[games['SEASON']==2021]
+        team_info = teams[teams['TEAM_ID'].isin(games['TEAM_ID_home'].unique())]
 
-        return jsonify(data['TEAM_ID_home'].unique().tolist())
+        # add name column that concatenates city with nickname
+        team_info['name'] = team_info.apply(lambda row: f"{row['CITY']} {row['NICKNAME']}", axis=1)
+
+        # return team_id and name
+        return jsonify(team_info[['TEAM_ID', 'name']].to_dict('records'))
     
