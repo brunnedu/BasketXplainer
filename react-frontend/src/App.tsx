@@ -19,13 +19,12 @@ const VerticalSlider = styled(Slider)({
   justifyContent: "space-between",
 });
 
+//for some reason defining this doesn't do anything
 interface BoxScores {
   AST: number;
-  FG3_PCT: number;
-  FG_PCT: number;
-  FT_PCT: number;
-  PTS: number;
-  REB: number;
+  BLK: number;
+  DREB: number;
+  FG3A: number;
 }
 
 interface PlayerStatsSliderProps {
@@ -50,20 +49,34 @@ const BoxScoreSlider: React.FC<PlayerStatsSliderProps> = ({
 
   const minValueMapping: { [key: string]: number } = {
     AST: 0,
-    FG3_PCT: 0,
-    FG_PCT: 0,
-    FT_PCT: 0,
-    PTS: 0,
-    REB: 0,
+    BLK: 0,
+    DREB: 0,
+    FG3A: 0,
+    FG3M: 0,
+    FGA: 0,
+    FGM: 0,
+    FTA: 0,
+    FTM: 0,
+    OREB: 0,
+    PF: 0,
+    STL: 0,
+    TO: 0,
   };
 
   const maxValueMapping: { [key: string]: number } = {
-    AST: 40,
-    FG3_PCT: 1,
-    FG_PCT: 1,
-    FT_PCT: 1,
-    PTS: 200,
-    REB: 100,
+    AST: 100,
+    BLK: 100,
+    DREB: 100,
+    FG3A: 100,
+    FG3M: 100,
+    FGA: 100,
+    FGM: 100,
+    FTA: 100,
+    FTM: 100,
+    OREB: 100,
+    PF: 100,
+    STL: 100,
+    TO: 100,
   };
 
   return (
@@ -85,7 +98,7 @@ const BoxScoreSlider: React.FC<PlayerStatsSliderProps> = ({
                 max={maxValueMapping[key]}
                 step={(maxValueMapping[key] - minValueMapping[key]) / 100}
                 draggable 
-                onChangeCommitted ={() => {onMouseUp();console.log("drag end")}}
+                onChangeCommitted ={() => {onMouseUp()}}
               />
             </div>
           ))}
@@ -266,7 +279,7 @@ const Scatterplot: React.FC<ScatterplotProps> = ({ points }) => {
 
 
 
-
+let scrolling = false;
 
 
 function App() {
@@ -303,6 +316,7 @@ function App() {
   const [probabilityLeft, setProbabilityLeft] = useState<number>(0.4);
   const [pointsLeft, setPointsLeft] = useState<any>([]);
   const [pointsRight, setPointsRight] = useState<any>([]);
+  
 
 
   // load list of teams when page is loaded
@@ -316,60 +330,79 @@ function App() {
 
 
 
-
   const handleSelectionLeft = (selectedId: number) => {
     setSelectedTeamLeft(selectedId);
-    loadData(`api/teams/${selectedId}`).then(data => {
-      console.log(data);
+    loadData(`api/boxscore/${selectedId}-1`).then(data => {
+      // console.log(data[0]);
       setBoxScoresLeft(data[0]);
     });
-    updateEverything();
   };
 
   const handleSelectionRight = (selectedId: number) => {
     setSelectedTeamRight(selectedId);
-    loadData(`api/teams/${selectedId}`).then(data => {
-      console.log(data);
+    loadData(`api/boxscore/${selectedId}-0`).then(data => {
+      // console.log(data[0]);
       setBoxScoresRight(data[0]);
     });
-    updateEverything();
   };
 
   const handleSliderChangeLeft = (key: keyof BoxScores, value: number) => {
     var copy = {...boxScoresLeft};
     copy[key] = value;
     setBoxScoresLeft(copy);
-    // updateEverything();
+    scrolling = true;
   };
 
   const handleSliderChangeRight = (key: keyof BoxScores, value: number) => {
-    // console.log(key, value,"right");
+    console.log(key, value,"right");
     var copy = {...boxScoresRight};
     copy[key] = value;
     setBoxScoresRight(copy);
     // console.log(copy);
-    // updateEverything();
+    scrolling = true;
   };
 
   const onSliderMouseUp = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     console.log("mouse up");
+    scrolling = false;
     updateEverything();
   };
 
-  //this function updates the shap values, winning probability and tactical clustering points
+  useEffect(() => {
+    if(boxScoresLeft["AST"] && boxScoresRight["AST"])
+      updateEverything();
+  }, [boxScoresLeft, boxScoresRight]);
+
+  //this function uses the 2 saved box scores to updates the shap values, winning probability and tactical clustering points
+  // <float:AST_home>-<float:BLK_home>-<float:DREB_home>-<float:FG3A_home>-<float:FG3M_home>-<float:FGA_home>-<float:FGM_home>-<float:FTA_home>-<float:FTM_home>-<float:OREB_home>-<float:PF_home>-<float:STL_home>-<float:TO_home>_<float:AST_away>-<float:BLK_away>-<float:DREB_away>-<float:FG3A_away>-<float:FG3M_away>-<float:FGA_away>-<float:FGM_away>-<float:FTA_away>-<float:FTM_away>-<float:OREB_away>-<float:PF_away>-<float:STL_away>-<float:TO_away>")
   const updateEverything = () => {
+    if(scrolling)return;
     console.log("updateEverything")
-    loadData(`api/prediction/xai/${selectedTeamLeft}-${selectedTeamRight}`).then(data => {
-      console.log(data);
+ 
+    let h = boxScoresLeft;
+    let a = boxScoresRight;
+    //convert box scores to string
+    let s: string = "";
+    for(let key in h){
+      s += h[key].toFixed(4) + "-";
+    }
+    s = s.slice(0, -1);
+    s += "_";
+    for(let key in a){
+      s += a[key].toFixed(4) + "-";
+    }
+    s = s.slice(0, -1);
+    loadData(`api/xai/${s}`).then(data => {
+      // console.log(data);
       setShapLeft(data);
       setShapRight(data);
     });
-    loadData(`api/prediction/${selectedTeamLeft}-${selectedTeamRight}`).then(data => {
-      console.log(data);
-      setProbabilityLeft(data);
+    loadData(`api/prediction/${s}`).then(data => {
+      // console.log(data);
+      setProbabilityLeft(data["winning_odds_home"]);
     });
-    loadData(`api/clustering`).then(data => {
-      console.log(data);
+    loadData(`api/clustering/${s}`).then(data => {
+      // console.log(data);
       setPointsLeft(data);
       setPointsRight(data);
     });
