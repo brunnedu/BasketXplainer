@@ -115,27 +115,38 @@ const BoxScoreSlider: React.FC<PlayerStatsSliderProps> = ({
 
 
 
-
+interface Team {
+  TEAM_ID: number;
+  name: string;
+}
 
 interface Props {
-  ids: number[];
-  onSelection: (selectedId: number) => void;
+  ids: Team[];
+  onSelection: (selectedId: Team) => void;
 }
 
 const DropdownMenu: React.FC<Props> = ({ ids, onSelection }) => {
-  const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [selectedTeam, setSelectedTeam] = useState<Team>();
 
   const handleSelection = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const id = parseInt(event.target.value);
-    setSelectedId(id);
-    onSelection(id);
+    let teams:Team[] = ids;
+    let target: string = event.target.value;
+    let team:Team = {TEAM_ID: 0, name: "placeholder"};
+    // find the team with the matching id
+    for (let i = 0; i < teams.length; i++) {
+      if (teams[i].name == target) {
+        team = teams[i];
+      }
+    }
+    setSelectedTeam(team);
+    onSelection(team);
   };
 
   return (
-    <select value={selectedId ?? ''} onChange={handleSelection}>
-      {ids.map((id) => (
-        <option key={id} value={id}>
-          {id}
+    <select value={selectedTeam?.name ?? ''} onChange={handleSelection}>
+      {ids.map((team) => (
+        <option key={team.TEAM_ID} value={team.name}>
+          {team.name}
         </option>
       ))}
     </select>
@@ -307,13 +318,14 @@ function App() {
     1610612738,
     1610612740,
   ];
-  const [selectedTeamLeft, setSelectedTeamLeft] = useState<Number>(1610612737);
-  const [selectedTeamRight, setSelectedTeamRight] = useState<Number>(1610612738);
+  const [availableTeams, setAvailableTeams] = useState<any>([{TEAM_ID: 1610612737, name: "Atlanta Hawks"}]);
+  const [selectedTeamLeft, setSelectedTeamLeft] = useState<Team>();
+  const [selectedTeamRight, setSelectedTeamRight] = useState<Team>();
   const [boxScoresLeft, setBoxScoresLeft] = useState<any>({});
   const [boxScoresRight, setBoxScoresRight] = useState<any>({});
   const [shapRight, setShapRight] = useState<any>({});
   const [shapLeft, setShapLeft] = useState<any>({});
-  const [probabilityLeft, setProbabilityLeft] = useState<number>(0.4);
+  const [probabilityLeft, setProbabilityLeft] = useState<number>(0.5);
   const [pointsLeft, setPointsLeft] = useState<any>([]);
   const [pointsRight, setPointsRight] = useState<any>([]);
   
@@ -321,26 +333,27 @@ function App() {
 
   // load list of teams when page is loaded
   useEffect(() => {
-    // loadData(`api/teams/`).then(data => {
-    //   console.log(data);
-    // });
-    handleSelectionLeft(1610612737);
-    handleSelectionRight(1610612738);
+    loadData(`api/teams`).then(data => {
+      console.log(data);
+      setAvailableTeams(data);
+    });
+    handleSelectionLeft({TEAM_ID: 1610612737, name: "Atlanta Hawks"});
+    handleSelectionRight({TEAM_ID: 1610612737, name: "Atlanta Hawks"});
   }, []);
 
 
 
-  const handleSelectionLeft = (selectedId: number) => {
-    setSelectedTeamLeft(selectedId);
-    loadData(`api/boxscore/${selectedId}-1`).then(data => {
+  const handleSelectionLeft = (selectedTeam: Team) => {
+    setSelectedTeamLeft(selectedTeam);
+    loadData(`api/boxscore/${selectedTeam.TEAM_ID}-1`).then(data => {
       // console.log(data[0]);
       setBoxScoresLeft(data[0]);
     });
   };
 
-  const handleSelectionRight = (selectedId: number) => {
-    setSelectedTeamRight(selectedId);
-    loadData(`api/boxscore/${selectedId}-0`).then(data => {
+  const handleSelectionRight = (selectedTeam: Team) => {
+    setSelectedTeamRight(selectedTeam);
+    loadData(`api/boxscore/${selectedTeam.TEAM_ID}-0`).then(data => {
       // console.log(data[0]);
       setBoxScoresRight(data[0]);
     });
@@ -418,21 +431,21 @@ function App() {
       <div className="left container">
         <div className="box">
           <h1>HOME</h1>
-          <DropdownMenu ids={ids} onSelection={handleSelectionLeft} />
+          <DropdownMenu ids={availableTeams} onSelection={handleSelectionLeft} />
         </div>
         <BoxScoreSlider boxScores={boxScoresLeft} onSliderChange={handleSliderChangeLeft} onMouseUp={onSliderMouseUp}/>
-        <ShapDisplay values={shapLeft}/>
         <WinChanceDisplay probability={probabilityLeft}/>
+        <ShapDisplay values={shapLeft}/>        
         <Scatterplot points={pointsLeft}/>
       </div>
       <div className="right container">
         <div className="box">
           <h1>AWAY</h1>
-          <DropdownMenu ids={ids} onSelection={handleSelectionRight} />
+          <DropdownMenu ids={availableTeams} onSelection={handleSelectionRight} />
         </div>
         <BoxScoreSlider boxScores={boxScoresRight} onSliderChange={handleSliderChangeRight} onMouseUp={onSliderMouseUp}/>
-        <ShapDisplay values={shapRight}/>
         <WinChanceDisplay probability={1-probabilityLeft}/>
+        <ShapDisplay values={shapRight}/>        
         <Scatterplot points={pointsRight}/>
       </div>
       <div
