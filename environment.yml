@@ -1,0 +1,13 @@
+name: b5-winning-in-basketball
+
+channels:
+  - conda-forge
+  - defaults
+
+dependencies:
+ - python
+ - pandas
+ - numpy
+ - lightgbm
+ - shap
+ - matplotlib
