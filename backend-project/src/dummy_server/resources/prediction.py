@@ -1,6 +1,8 @@
 from flask_restful import Resource
 from flask import jsonify
 import numpy as np
+import joblib
+from utils import load_model, PRED_COLS
 
 class GetPredictionTeam(Resource):
     """Get the prediction btw two teams"""
@@ -47,7 +49,7 @@ class GetPredictionBoxscore(Resource):
 
         # TODO: load model and perform inference
 
-        X = np.array([
+        X_inference = np.array([
             FGM_home, 
             FGA_home, 
             FG3M_home, 
@@ -74,7 +76,10 @@ class GetPredictionBoxscore(Resource):
             BLK_away, 
             TO_away, 
             PF_away
-        ])
+        ]).reshape(1, -1)
         
-        
-        return jsonify({'winning_odds_home': 0.37})
+        model = load_model()
+    
+        predicted_proba = model.predict(X_inference)[0]
+
+        return jsonify({'winning_odds_home': predicted_proba})
