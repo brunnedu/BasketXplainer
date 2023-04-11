@@ -1,10 +1,7 @@
 from flask_restful import Resource
 from flask import jsonify, request
 import pandas as pd
-import numpy as np
-import joblib
-from utils import DATA_ROOT, load_model, load_tree_explainer
-import os
+from .utils import DATA_ROOT, load_model, load_tree_explainer
 import shap
 
 STATISTICS = ["2FG%", "3FG%", "Assists", "Rebounds"]
@@ -56,7 +53,7 @@ class GetSHAPForcePlotBoxscore(Resource):
             ):
         """Get the SHAP feature importance values based on the boxscore stats"""
 
-        X_inference = {
+        X_inference = pd.DataFrame({
             'AST_home': [AST_home],
             'BLK_home': [BLK_home],
             'DREB_home': [DREB_home],
@@ -83,14 +80,14 @@ class GetSHAPForcePlotBoxscore(Resource):
             'PF_away': [PF_away],
             'STL_away': [STL_away],
             'TO_away': [TO_away]
-        }
+        })
 
 
         explainer = load_tree_explainer()
 
         shap_values = explainer.shap_values(X_inference)
 
-        force_plot = shap.force_plot(explainer.expected_value, shap_values[0], text_rotation=0, matplotlib=True, feature_names=X_inference.columns)
+        force_plot = shap.force_plot(explainer.expected_value, shap_values[0], text_rotation=0, matplotlib=False, feature_names=X_inference.columns)
 
         shap_html = f"<head>{shap.getjs()}</head><body>{force_plot.html()}</body>"
 

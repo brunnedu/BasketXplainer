@@ -1,8 +1,7 @@
 from flask_restful import Resource
 from flask import jsonify
 import numpy as np
-import joblib
-from utils import load_model, PRED_COLS
+from .utils import load_model, PRED_COLS
 
 class GetPredictionTeam(Resource):
     """Get the prediction btw two teams"""

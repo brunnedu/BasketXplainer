@@ -2,7 +2,7 @@ import os
 import pandas as pd
 from flask_restful import Resource
 from flask import jsonify
-from utils import DATA_ROOT, PRED_COLS
+from .utils import DATA_ROOT, PRED_COLS
 
 
 class GetTeamBoxscore(Resource):
@@ -11,7 +11,7 @@ class GetTeamBoxscore(Resource):
     def get(self, team_id: int, is_home: int):
         # TODO: could have separate aggregations for whether team is home or away
 
-        boxscores = pd.read_csv(os.path.join(DATA_ROOT, 'preprocessed', 'boxscores.csv'), index_col=0)
+        boxscores = pd.read_csv(os.path.join(DATA_ROOT, 'precomputed', 'boxscores.csv'), index_col=0)
 
         # filter precomputed boxscores
         team_boxscore = boxscores[(boxscores['TEAM_ID']==team_id) & (boxscores['is_home']==is_home)][PRED_COLS]
