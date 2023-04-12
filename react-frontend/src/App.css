@@ -3,7 +3,7 @@
 .App {
   width: 100vw;
   height: 100vh;
-  display: flex;
+  /* display: flex; */
   flex-direction: column;
   align-items: center;
   background-color: white;
@@ -28,7 +28,7 @@
   } */
 }
 
-.left {
+/* .left {
   position: absolute;
   left: 10%;
 }
@@ -36,15 +36,20 @@
 .right {
   position: absolute;
   right: 10%;
+} */
+
+h1 {
+  margin-top: 0px;
 }
 
 .container{
   top: 140px;
   width: 35%;
-  /* height: 100%; */
   z-index: 0;
   background-color: #F5EFE6;
-  padding-bottom: 100px;
+  padding: 30px 0px;
+  display: inline-block;
+  margin-left: 10%;
 }
 
 .box{
@@ -56,4 +61,31 @@
 .slidercontainer{
   margin: 0 0% !important;
   width: 14%;
+}
+
+.center{
+  margin: auto;
+  display: block;
+  width: 80%;
+}
+
+.center .box{
+  width: 87%;
+}
+
+#shapframe{
+  width: 100%;
+  height: 100%;
+  border: none;
+  overflow: hidden;
+}
+
+#shapbox{
+  height: 170px;
+}
+
+#clustering{
+  width: 60%;
+  margin: auto;
+  display: block;
 }

@@ -5,7 +5,8 @@ import axiosClient from './router/apiClient'
 import Slider from "@material-ui/core/Slider";
 import * as d3 from "d3";
 import { styled } from "@material-ui/core/styles";
-
+import Iframe from 'react-iframe'
+import BASE_URL from './router/apiClient'
 
 
 
@@ -123,10 +124,11 @@ interface Team {
 interface Props {
   ids: Team[];
   onSelection: (selectedId: Team) => void;
+  selectedTeam: Team | undefined;
 }
 
-const DropdownMenu: React.FC<Props> = ({ ids, onSelection }) => {
-  const [selectedTeam, setSelectedTeam] = useState<Team>();
+const DropdownMenu: React.FC<Props> = ({ ids, onSelection, selectedTeam }) => {
+  // const [selectedTeam, setSelectedTeam] = useState<Team>();
 
   const handleSelection = (event: React.ChangeEvent<HTMLSelectElement>) => {
     let teams:Team[] = ids;
@@ -138,7 +140,7 @@ const DropdownMenu: React.FC<Props> = ({ ids, onSelection }) => {
         team = teams[i];
       }
     }
-    setSelectedTeam(team);
+    // setSelectedTeam(team);
     onSelection(team);
   };
 
@@ -161,30 +163,28 @@ const DropdownMenu: React.FC<Props> = ({ ids, onSelection }) => {
 
 
 
-interface ShapValues {
-  "2FG%": number;
-  "3FG%": number;
-  "Assists": number;
-  "Average_score": number;
-  "Difference": number;
-  "Rebounds": number;
-}
+
 
 interface ShapDisplayProps {
-  values: ShapValues;
+  param: string;
 }
 
-const ShapDisplay: React.FC<ShapDisplayProps> = ({ values }) => {
+const ShapDisplay: React.FC<ShapDisplayProps> = ({ param }) => {
 
   return (
     <>
-      <div className="box">
+      <div className="box" id="shapbox">
         <h2>Shap values</h2>
-        {Object.entries(values).map(([key, value]) => (
-          <div key={key}>
-            <p>{key}:{value}</p>
-          </div>
-        ))}
+        {/* <Iframe 
+          url={url}
+          width="640px"
+          height="320px"
+          id="shapvalues"
+          className=""
+          display="block"
+          position="relative"
+        /> */}
+        <iframe id="shapframe" srcDoc={param}></iframe>
       </div>
     </>
   );
@@ -244,8 +244,8 @@ const Scatterplot: React.FC<ScatterplotProps> = ({ points }) => {
     const svg = d3.select(svgRef.current);
 
     // Create scales for x and y coordinates
-    const xScale = d3.scaleLinear().domain([0, 1]).range([0, 100]);
-    const yScale = d3.scaleLinear().domain([0, 1]).range([0, 100]);
+    const xScale = d3.scaleLinear().domain([0, 1]).range([10, 90]);
+    const yScale = d3.scaleLinear().domain([0, 1]).range([10, 90]);
 
     // Add points to the scatterplot
     svg
@@ -278,7 +278,7 @@ const Scatterplot: React.FC<ScatterplotProps> = ({ points }) => {
     <>
       <div className="box">
         <h2>Tactical clustering</h2>
-        <svg ref={svgRef} viewBox="0 0 100 100" width="100%"></svg>
+        <svg ref={svgRef} viewBox="0 0 100 100" id="clustering"></svg>
       </div>
     </>
   );
@@ -323,18 +323,16 @@ function App() {
   const [selectedTeamRight, setSelectedTeamRight] = useState<Team>();
   const [boxScoresLeft, setBoxScoresLeft] = useState<any>({});
   const [boxScoresRight, setBoxScoresRight] = useState<any>({});
-  const [shapRight, setShapRight] = useState<any>({});
-  const [shapLeft, setShapLeft] = useState<any>({});
+  const [shap, setShap] = useState<string>("");
   const [probabilityLeft, setProbabilityLeft] = useState<number>(0.5);
-  const [pointsLeft, setPointsLeft] = useState<any>([]);
-  const [pointsRight, setPointsRight] = useState<any>([]);
+  const [points, setPoints] = useState<any>([]);
   
 
 
   // load list of teams when page is loaded
   useEffect(() => {
     loadData(`api/teams`).then(data => {
-      console.log(data);
+      // console.log(data);
       setAvailableTeams(data);
     });
     handleSelectionLeft({TEAM_ID: 1610612737, name: "Atlanta Hawks"});
@@ -405,19 +403,21 @@ function App() {
       s += a[key].toFixed(4) + "-";
     }
     s = s.slice(0, -1);
-    loadData(`api/xai/${s}`).then(data => {
+
+
+    loadData(`api/shap/${s}`).then(data => {
       // console.log(data);
-      setShapLeft(data);
-      setShapRight(data);
+      setShap(data);
     });
+
+
     loadData(`api/prediction/${s}`).then(data => {
       // console.log(data);
       setProbabilityLeft(data["winning_odds_home"]);
     });
     loadData(`api/clustering/${s}`).then(data => {
       // console.log(data);
-      setPointsLeft(data);
-      setPointsRight(data);
+      setPoints(data);
     });
   }
 
@@ -431,33 +431,32 @@ function App() {
       <div className="left container">
         <div className="box">
           <h1>HOME</h1>
-          <DropdownMenu ids={availableTeams} onSelection={handleSelectionLeft} />
+          <DropdownMenu ids={availableTeams} onSelection={handleSelectionLeft} selectedTeam={selectedTeamLeft} />
         </div>
         <BoxScoreSlider boxScores={boxScoresLeft} onSliderChange={handleSliderChangeLeft} onMouseUp={onSliderMouseUp}/>
-        <WinChanceDisplay probability={probabilityLeft}/>
-        <ShapDisplay values={shapLeft}/>        
-        <Scatterplot points={pointsLeft}/>
+        <WinChanceDisplay probability={probabilityLeft}/>   
       </div>
       <div className="right container">
         <div className="box">
           <h1>AWAY</h1>
-          <DropdownMenu ids={availableTeams} onSelection={handleSelectionRight} />
+          <DropdownMenu ids={availableTeams} onSelection={handleSelectionRight} selectedTeam={selectedTeamRight} />
         </div>
         <BoxScoreSlider boxScores={boxScoresRight} onSliderChange={handleSliderChangeRight} onMouseUp={onSliderMouseUp}/>
-        <WinChanceDisplay probability={1-probabilityLeft}/>
-        <ShapDisplay values={shapRight}/>        
-        <Scatterplot points={pointsRight}/>
+        <WinChanceDisplay probability={1-probabilityLeft}/>      
       </div>
-      <div
-        id="tooltip"
-        style={{
-          position: "absolute",
-          backgroundColor: "white",
-          padding: "5px",
-          border: "1px solid black",
-          opacity: 0,
-        }}
+      <div className="center container">
+        <ShapDisplay param={shap}/>     
+        <div id="tooltip" style={{
+            position: "absolute",
+            backgroundColor: "white",
+            padding: "5px",
+            border: "1px solid black",
+            opacity: 0,
+          }}
         />
+        <Scatterplot points={points}/>
+      </div>
+
     </div>
   )
 }
