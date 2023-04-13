@@ -23,9 +23,6 @@ const VerticalSlider = styled(Slider)({
 //for some reason defining this doesn't do anything
 interface BoxScores {
   AST: number;
-  BLK: number;
-  DREB: number;
-  FG3A: number;
 }
 
 interface PlayerStatsSliderProps {
@@ -128,7 +125,6 @@ interface Props {
 }
 
 const DropdownMenu: React.FC<Props> = ({ ids, onSelection, selectedTeam }) => {
-  // const [selectedTeam, setSelectedTeam] = useState<Team>();
 
   const handleSelection = (event: React.ChangeEvent<HTMLSelectElement>) => {
     let teams:Team[] = ids;
@@ -140,7 +136,6 @@ const DropdownMenu: React.FC<Props> = ({ ids, onSelection, selectedTeam }) => {
         team = teams[i];
       }
     }
-    // setSelectedTeam(team);
     onSelection(team);
   };
 
@@ -175,15 +170,6 @@ const ShapDisplay: React.FC<ShapDisplayProps> = ({ param }) => {
     <>
       <div className="box" id="shapbox">
         <h2>Shap values</h2>
-        {/* <Iframe 
-          url={url}
-          width="640px"
-          height="320px"
-          id="shapvalues"
-          className=""
-          display="block"
-          position="relative"
-        /> */}
         <iframe id="shapframe" srcDoc={param}></iframe>
       </div>
     </>
@@ -266,7 +252,10 @@ const Scatterplot: React.FC<ScatterplotProps> = ({ points }) => {
           .style("top", `${event.pageY}px`);
       })
       .on("mousemove", function (event) {
-
+        // Move hover details on mousemove
+        d3.select("#tooltip")
+          .style("left", `${event.pageX+10}px`)
+          .style("top", `${event.pageY}px`);   
       })
       .on("mouseout", function (event, d) {
         // Hide hover details on mouseout
@@ -278,6 +267,14 @@ const Scatterplot: React.FC<ScatterplotProps> = ({ points }) => {
     <>
       <div className="box">
         <h2>Tactical clustering</h2>
+        <div id="tooltip" style={{
+            position: "absolute",
+            backgroundColor: "white",
+            padding: "5px",
+            border: "1px solid black",
+            opacity: 0,
+          }}
+        />
         <svg ref={svgRef} viewBox="0 0 100 100" id="clustering"></svg>
       </div>
     </>
@@ -446,14 +443,6 @@ function App() {
       </div>
       <div className="center container">
         <ShapDisplay param={shap}/>     
-        <div id="tooltip" style={{
-            position: "absolute",
-            backgroundColor: "white",
-            padding: "5px",
-            border: "1px solid black",
-            opacity: 0,
-          }}
-        />
         <Scatterplot points={points}/>
       </div>
 
