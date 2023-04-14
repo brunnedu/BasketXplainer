@@ -141,13 +141,21 @@ If all the steps have been successfully executed a new browser window will open 
 
 ## Milestones
 Document here the major milestones of your code and future planned steps.\
-- [x] Week 1
-  - [x] Completed Sub-task: [#20984ec2](https://gitlab.inf.ethz.ch/COURSE-XAI-IML22/dummy-fullstack/-/commit/20984ec2197fa8dcdc50f19723e5aa234b9588a3)
-  - [x] Completed Sub-task: ...
+- [x] Milestone 1
+  - [x] Completed Sub-task: [Video of our project proposal](https://polybox.ethz.ch/index.php/s/xL8F1FTcjtHjGXG)
 
-- [ ] Week 2
-  - [ ] Sub-task: [#2](https://gitlab.inf.ethz.ch/COURSE-XAI-IML22/dummy-fullstack/-/issues/2)
-  - [ ] Sub-task: ...
+- [x] Milestone 2
+  - [x] Sub-task: Add some endpoints
+  - [x] Sub-task: Create a [Mockup](https://www.figma.com/proto/f18XbpkllZJ8DrXw9BkxT4/AIX-Mockup?node-id=11-177&scaling=scale-down&page-id=0%3A1&starting-point-node-id=4%3A2)
+
+- [ ] Milestone 3
+
+- [ ] Milestone 4
+
+- [ ] Milestone 5
+
+- [ ] Final Submission
+
 
 Create a list subtask.\
 Open an issue for each subtask. Once you create a subtask, link the corresponding issue.\
