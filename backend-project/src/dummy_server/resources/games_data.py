@@ -3,7 +3,7 @@ import pandas as pd
 from flask_restful import Resource
 from flask import jsonify
 from flask import send_file
-from .utils import DATA_ROOT, PRED_COLS
+from .utils import DATA_ROOT, DATA_ROOT_FROM_ROUTER, PRED_COLS
 
 
 class GetTeamBoxscore(Resource):
@@ -24,7 +24,7 @@ class GetTeamLogo(Resource):
     """Get team logo for any team ID"""
 
     def get(self, team_id: int):
-        path = os.path.join(DATA_ROOT, "team_logos", f"{team_id}.png")
+        path = os.path.join(DATA_ROOT_FROM_ROUTER, "team_logos", f"{team_id}.png")
         return send_file(path, mimetype="image/png")
     
 

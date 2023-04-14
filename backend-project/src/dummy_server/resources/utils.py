@@ -5,6 +5,7 @@ import pickle
 
 # global constants
 DATA_ROOT = os.path.join(".", "data")
+DATA_ROOT_FROM_ROUTER = os.path.join("..", "..", "..", "data")
 PRED_COLS = ['AST', 'BLK', 'DREB', 'FG3A', 'FG3M', 'FGA', 'FGM', 'FTA', 'FTM', 'OREB', 'PF', 'STL', 'TO']
 
 
