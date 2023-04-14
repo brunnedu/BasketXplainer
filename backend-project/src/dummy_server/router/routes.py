@@ -7,6 +7,8 @@ API = "/api/"  # optional string
 def add_routes(app):
     api = Api(app)
 
+    api.add_resource(res.games_data.GetTeamLogo, API + "logo/<int:team_id>")
+
     api.add_resource(res.games_data.GetTeams, API + "teams")
     api.add_resource(res.games_data.GetTeamBoxscore, API + "boxscore/<int:team_id>-<int:is_home>")
 
