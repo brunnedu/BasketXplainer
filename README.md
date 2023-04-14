@@ -145,10 +145,11 @@ Document here the major milestones of your code and future planned steps.\
   - [x] Completed Sub-task: [Video of our project proposal](https://polybox.ethz.ch/index.php/s/xL8F1FTcjtHjGXG)
 
 - [x] Milestone 2
-  - [x] Sub-task: Add some endpoints
-  - [x] Sub-task: Create a [Mockup](https://www.figma.com/proto/f18XbpkllZJ8DrXw9BkxT4/AIX-Mockup?node-id=11-177&scaling=scale-down&page-id=0%3A1&starting-point-node-id=4%3A2)
+  - [x] Completed Sub-task: Add some endpoints
+  - [x] Completed Sub-task: Create a [Mockup](https://www.figma.com/proto/f18XbpkllZJ8DrXw9BkxT4/AIX-Mockup?node-id=11-177&scaling=scale-down&page-id=0%3A1&starting-point-node-id=4%3A2)
 
 - [ ] Milestone 3
+  - [ ] Sub-task: Static dashboard
 
 - [ ] Milestone 4
 
