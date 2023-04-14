@@ -182,6 +182,36 @@ const ShapDisplay: React.FC<ShapDisplayProps> = ({ param }) => {
 
 
 
+
+interface TeamSelectorProps {
+  title: string;
+  availableTeams: Team[];
+  selectedTeam: Team;
+  setSelectedTeam: (selectedId: Team) => void;
+}
+
+const TeamSelector: React.FC<TeamSelectorProps> = ({ title, availableTeams, selectedTeam, setSelectedTeam }) => {
+  const BASE_URL = process.env.NODE_ENV==="production"? `http://be.${window.location.hostname}/api/v1`:"http://localhost:8000/"
+
+  return (
+    <>
+      <div className="box">
+        <h1>{title}</h1>
+        <img id="team_logo" src={BASE_URL + "api/logo/" + selectedTeam.TEAM_ID} alt="team logo" />
+        <DropdownMenu ids={availableTeams} onSelection={setSelectedTeam} selectedTeam={selectedTeam} />
+      </div>
+    </>
+  );
+};
+
+
+
+
+
+
+
+
+
 interface WinChanceDisplayProps {
   probability: number;
 }
@@ -316,8 +346,8 @@ function App() {
     1610612740,
   ];
   const [availableTeams, setAvailableTeams] = useState<any>([{TEAM_ID: 1610612737, name: "Atlanta Hawks"}]);
-  const [selectedTeamLeft, setSelectedTeamLeft] = useState<Team>();
-  const [selectedTeamRight, setSelectedTeamRight] = useState<Team>();
+  const [selectedTeamLeft, setSelectedTeamLeft] = useState<Team>({TEAM_ID: 1610612737, name: "Atlanta Hawks"});
+  const [selectedTeamRight, setSelectedTeamRight] = useState<Team>({TEAM_ID: 1610612737, name: "Atlanta Hawks"});
   const [boxScoresLeft, setBoxScoresLeft] = useState<any>({});
   const [boxScoresRight, setBoxScoresRight] = useState<any>({});
   const [shap, setShap] = useState<string>("");
@@ -426,18 +456,12 @@ function App() {
       <header className="App-header"> Winning odds predictions
       </header>
       <div className="left container">
-        <div className="box">
-          <h1>HOME</h1>
-          <DropdownMenu ids={availableTeams} onSelection={handleSelectionLeft} selectedTeam={selectedTeamLeft} />
-        </div>
+        <TeamSelector title='HOME' availableTeams={availableTeams} selectedTeam={selectedTeamLeft} setSelectedTeam={handleSelectionLeft}/>
         <BoxScoreSlider boxScores={boxScoresLeft} onSliderChange={handleSliderChangeLeft} onMouseUp={onSliderMouseUp}/>
         <WinChanceDisplay probability={probabilityLeft}/>   
       </div>
       <div className="right container">
-        <div className="box">
-          <h1>AWAY</h1>
-          <DropdownMenu ids={availableTeams} onSelection={handleSelectionRight} selectedTeam={selectedTeamRight} />
-        </div>
+        <TeamSelector title='AWAY' availableTeams={availableTeams} selectedTeam={selectedTeamRight} setSelectedTeam={handleSelectionRight}/>
         <BoxScoreSlider boxScores={boxScoresRight} onSliderChange={handleSliderChangeRight} onMouseUp={onSliderMouseUp}/>
         <WinChanceDisplay probability={1-probabilityLeft}/>      
       </div>
