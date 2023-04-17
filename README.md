@@ -179,13 +179,6 @@ We proposed three different project ideas to Javi and decided to go with the sec
 #### Week 6 (27.03.23)
 We accomplished several tasks to advance our project: we developed a visual encoding sketch for the user interface, reached out to Fran to schedule a meeting for feedback on our idea, finalized the API design for front-end and back-end communication, and collaboratively compiled a requirements document that thoroughly details all project features.
 
-## API Endpoints
-- Complete boxscore data: `/api/data/games`
-- Boxscore data of a certain game:`/api/data/games/<int:game_id>`
-- Boxscore data of all games of a certain matchup: `/api/data/games/<int:home_team_id>_<int:visitor_team_id>`
-- Season-aggregated boxscore data of all teams in a given season: `/api/data/games/aggregated/<int:season>`
-
-
 ## Versioning
 Create stable versions of your code each week by using gitlab tags.\
 Take a look at [Gitlab Tags](https://docs.gitlab.com/ee/topics/git/tags.html) for more details. 
