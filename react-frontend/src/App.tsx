@@ -5,7 +5,7 @@ import axiosClient from './router/apiClient'
 import Slider from "@material-ui/core/Slider";
 import * as d3 from "d3";
 import { styled } from "@material-ui/core/styles";
-import Iframe from 'react-iframe'
+
 import BASE_URL from './router/apiClient'
 
 
@@ -340,11 +340,6 @@ function App() {
 
 
 
-  const ids = [
-    1610612737,
-    1610612738,
-    1610612740,
-  ];
   const [availableTeams, setAvailableTeams] = useState<any>([{TEAM_ID: 1610612737, name: "Atlanta Hawks"}]);
   const [selectedTeamLeft, setSelectedTeamLeft] = useState<Team>({TEAM_ID: 1610612737, name: "Atlanta Hawks"});
   const [selectedTeamRight, setSelectedTeamRight] = useState<Team>({TEAM_ID: 1610612737, name: "Atlanta Hawks"});
