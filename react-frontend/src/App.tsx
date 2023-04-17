@@ -245,56 +245,77 @@ interface ScatterplotProps {
   points: Point[];
 }
 
-const colorMap: { [key: number]: string } = {
-  0: "red",
-  1: "blue",
-  2: "green",
-  3: "orange",
-  4: "purple",
-  5: "yellow",
-};
 
+let addedPoints:boolean = false;
 const Scatterplot: React.FC<ScatterplotProps> = ({ points }) => {
   const svgRef = useRef<SVGSVGElement>(null);
+  const xScale = d3.scaleLinear().domain([-5, 5]).range([10, 90]);
+  const yScale = d3.scaleLinear().domain([-5, 5]).range([10, 90]);
+  const colorMap: { [key: number]: string } = {
+    0: "red",
+    1: "blue",
+    2: "green",
+    3: "orange",
+    4: "purple",
+    5: "yellow",
+  };
+  
 
   useEffect(() => {
+    if(points.length === 0){
+      return;
+    }
     const svg = d3.select(svgRef.current);
 
-    // Create scales for x and y coordinates
-    const xScale = d3.scaleLinear().domain([-4, 4]).range([10, 90]);
-    const yScale = d3.scaleLinear().domain([-4, 4]).range([10, 90]);
-
-    console.log(points[0])
-
-    // Add points to the scatterplot
-    svg
+    if(!addedPoints){
+      addedPoints = true;
+      // Add points to the scatterplot
+      console.log("adding points");
+      svg
+        .selectAll("circle")
+        .data(points)
+        .enter()
+        .append("circle")
+        .attr("cx", (d) => xScale(d.x_coord))
+        .attr("cy", (d) => yScale(d.y_coord))
+        .attr("r", 2)
+        .attr("fill", (d) => colorMap[d===points[0] ? 4 : (d===points[1] ? 5 : d.cluster)])
+        .on("mouseover", function (event, d) {
+          // Show hover details on mouseover
+          d3.select("#tooltip")
+            .style("opacity", 1)
+            .html(`${JSON.stringify(d).replaceAll("{", "").replaceAll("}", "").replaceAll(",", "<br>")}`)
+            .style("left", `${event.pageX+10}px`)
+            .style("top", `${event.pageY}px`);
+        })
+        .on("mousemove", function (event) {
+          // Move hover details on mousemove
+          d3.select("#tooltip")
+            .style("left", `${event.pageX+10}px`)
+            .style("top", `${event.pageY}px`);   
+        })
+        .on("mouseout", function (event, d) {
+          // Hide hover details on mouseout
+          d3.select("#tooltip").style("opacity", 0).html("");
+        });
+    } else {
+      // Update point locations
+      console.log("updating points");
+      svg
       .selectAll("circle")
       .data(points)
-      .enter()
-      .append("circle")
+      .transition()
+      .duration(1000)
       .attr("cx", (d) => xScale(d.x_coord))
       .attr("cy", (d) => yScale(d.y_coord))
-      .attr("r", 2)
-      .attr("fill", (d) => colorMap[d===points[0] ? 4 : (d===points[1] ? 5 : d.cluster)])
-      .on("mouseover", function (event, d) {
-        // Show hover details on mouseover
-        d3.select("#tooltip")
-          .style("opacity", 1)
-          .html(`${JSON.stringify(d).replaceAll("{", "").replaceAll("}", "").replaceAll(",", "<br>")}`)
-          .style("left", `${event.pageX+10}px`)
-          .style("top", `${event.pageY}px`);
-      })
-      .on("mousemove", function (event) {
-        // Move hover details on mousemove
-        d3.select("#tooltip")
-          .style("left", `${event.pageX+10}px`)
-          .style("top", `${event.pageY}px`);   
-      })
-      .on("mouseout", function (event, d) {
-        // Hide hover details on mouseout
-        d3.select("#tooltip").style("opacity", 0).html("");
-      });
+    }
+
+
+
+
+
   }, [points]);
+
 
   return (
     <>
