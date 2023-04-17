@@ -2,10 +2,10 @@ import { useEffect, useState, useRef } from 'react';
 import React from 'react';
 import './App.css';
 import axiosClient from './router/apiClient'
+import Popup from './components/Popup';
 import Slider from "@material-ui/core/Slider";
 import * as d3 from "d3";
 import { styled } from "@material-ui/core/styles";
-
 import BASE_URL from './router/apiClient'
 
 
@@ -234,6 +234,9 @@ const WinChanceDisplay: React.FC<WinChanceDisplayProps> = ({ probability }) => {
 
 
 
+
+
+
 interface Point {
   x_coord: number;
   y_coord: number;
@@ -309,11 +312,6 @@ const Scatterplot: React.FC<ScatterplotProps> = ({ points }) => {
       .attr("cx", (d) => xScale(d.x_coord))
       .attr("cy", (d) => yScale(d.y_coord))
     }
-
-
-
-
-
   }, [points]);
 
 
@@ -335,8 +333,6 @@ const Scatterplot: React.FC<ScatterplotProps> = ({ points }) => {
 
 
 let scrolling = false;
-
-
 function App() {
 
   function loadData(url: string): Promise<any | undefined> {
@@ -476,7 +472,8 @@ function App() {
       <div className="right container">
         <TeamSelector title='AWAY' availableTeams={availableTeams} selectedTeam={selectedTeamRight} setSelectedTeam={handleSelectionRight}/>
         <BoxScoreSlider boxScores={boxScoresRight} onSliderChange={handleSliderChangeRight} onMouseUp={onSliderMouseUp}/>
-        <WinChanceDisplay probability={1-probabilityLeft}/>      
+        <WinChanceDisplay probability={1-probabilityLeft}/>   
+        <Popup text="This is the text that will be displayed in the popup" />   
       </div>
       <div className="center container">
         <ShapDisplay param={shap}/>     
