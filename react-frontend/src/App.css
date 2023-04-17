@@ -59,14 +59,22 @@ h1 {
 }
 
 .slidercontainer{
-  margin: 0 0% !important;
-  width: 14%;
+  /* margin: 0 0% !important;
+  width: 14%; */
+  width: 40px;
+  display: inline-block;
+}
+
+.allSliders{
+  /* display: flex;
+  align-items: center; */
 }
 
 .center{
   margin: auto;
   display: block;
   width: 80%;
+  padding-bottom: 400px;
 }
 
 .center .box{
@@ -92,4 +100,14 @@ h1 {
 
 #team_logo{
   width: 100%;
+}
+
+#tooltip{
+  position: absolute;
+  background-color: white;
+  padding: 5px;
+  border: 1px solid black;
+  opacity: 0;
+  max-width: 200px;
+  word-wrap: break-word;
 }

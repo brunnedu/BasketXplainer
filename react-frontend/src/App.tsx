@@ -81,7 +81,7 @@ const BoxScoreSlider: React.FC<PlayerStatsSliderProps> = ({
     <>
       <div className="box">
         <h2>Aggregated box score data</h2>
-        <div style={{ display: "flex", alignItems: "center" }}>
+        <div className='allSliders'>
           {Object.entries(boxScores).map(([key, value]) => (
             <div key={key} className='slidercontainer'>
               <p>{key}</p>
@@ -237,7 +237,7 @@ const WinChanceDisplay: React.FC<WinChanceDisplayProps> = ({ probability }) => {
 interface Point {
   x_coord: number;
   y_coord: number;
-  cluster_index: number;
+  cluster: number;
   hover_details: string;
 }
 
@@ -251,6 +251,7 @@ const colorMap: { [key: number]: string } = {
   2: "green",
   3: "orange",
   4: "purple",
+  5: "yellow",
 };
 
 const Scatterplot: React.FC<ScatterplotProps> = ({ points }) => {
@@ -260,8 +261,10 @@ const Scatterplot: React.FC<ScatterplotProps> = ({ points }) => {
     const svg = d3.select(svgRef.current);
 
     // Create scales for x and y coordinates
-    const xScale = d3.scaleLinear().domain([0, 1]).range([10, 90]);
-    const yScale = d3.scaleLinear().domain([0, 1]).range([10, 90]);
+    const xScale = d3.scaleLinear().domain([-4, 4]).range([10, 90]);
+    const yScale = d3.scaleLinear().domain([-4, 4]).range([10, 90]);
+
+    console.log(points[0])
 
     // Add points to the scatterplot
     svg
@@ -272,12 +275,12 @@ const Scatterplot: React.FC<ScatterplotProps> = ({ points }) => {
       .attr("cx", (d) => xScale(d.x_coord))
       .attr("cy", (d) => yScale(d.y_coord))
       .attr("r", 2)
-      .attr("fill", (d) => colorMap[d.cluster_index])
+      .attr("fill", (d) => colorMap[d===points[0] ? 4 : (d===points[1] ? 5 : d.cluster)])
       .on("mouseover", function (event, d) {
         // Show hover details on mouseover
         d3.select("#tooltip")
           .style("opacity", 1)
-          .html(`<div>${d.hover_details}</div>`)
+          .html(`${JSON.stringify(d).replaceAll("{", "").replaceAll("}", "").replaceAll(",", "<br>")}`)
           .style("left", `${event.pageX+10}px`)
           .style("top", `${event.pageY}px`);
       })
@@ -289,7 +292,7 @@ const Scatterplot: React.FC<ScatterplotProps> = ({ points }) => {
       })
       .on("mouseout", function (event, d) {
         // Hide hover details on mouseout
-        d3.select("#tooltip").style("opacity", 0);
+        d3.select("#tooltip").style("opacity", 0).html("");
       });
   }, [points]);
 
@@ -297,14 +300,7 @@ const Scatterplot: React.FC<ScatterplotProps> = ({ points }) => {
     <>
       <div className="box">
         <h2>Tactical clustering</h2>
-        <div id="tooltip" style={{
-            position: "absolute",
-            backgroundColor: "white",
-            padding: "5px",
-            border: "1px solid black",
-            opacity: 0,
-          }}
-        />
+        <div id="tooltip"/>
         <svg ref={svgRef} viewBox="0 0 100 100" id="clustering"></svg>
       </div>
     </>
@@ -387,7 +383,7 @@ function App() {
   };
 
   const handleSliderChangeRight = (key: keyof BoxScores, value: number) => {
-    console.log(key, value,"right");
+    // console.log(key, value,"right");
     var copy = {...boxScoresRight};
     copy[key] = value;
     setBoxScoresRight(copy);
@@ -439,6 +435,7 @@ function App() {
     });
     loadData(`api/clustering/${s}`).then(data => {
       // console.log(data);
+      // console.log("COORDINATE OF FIRST POINT:" + data[0]["x_coord"] + " " + data[0]["y_coord"]);
       setPoints(data);
     });
   }
