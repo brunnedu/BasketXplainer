@@ -182,14 +182,6 @@ We accomplished several tasks to advance our project: we developed a visual enco
 #### Week 7 & 8 (03.04.23 & 10.04.23)
 We added a help button to our visual encoding sketch and successfully built the front-end based on it. Additionally, we were able to update the back-end from a mock state to a functional state, which allowed us to make actual predictions on real data. Furthermore, we scheduled a meeting with Fran to discuss the project, ensuring that we stay on track and continue moving forward.
 
-
-## API Endpoints
-- Complete boxscore data: `/api/data/games`
-- Boxscore data of a certain game:`/api/data/games/<int:game_id>`
-- Boxscore data of all games of a certain matchup: `/api/data/games/<int:home_team_id>_<int:visitor_team_id>`
-- Season-aggregated boxscore data of all teams in a given season: `/api/data/games/aggregated/<int:season>`
-
-
 ## Versioning
 Create stable versions of your code each week by using gitlab tags.\
 Take a look at [Gitlab Tags](https://docs.gitlab.com/ee/topics/git/tags.html) for more details. 
