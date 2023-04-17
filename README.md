@@ -179,6 +179,10 @@ We proposed three different project ideas to Javi and decided to go with the sec
 #### Week 6 (27.03.23)
 We accomplished several tasks to advance our project: we developed a visual encoding sketch for the user interface, reached out to Fran to schedule a meeting for feedback on our idea, finalized the API design for front-end and back-end communication, and collaboratively compiled a requirements document that thoroughly details all project features.
 
+#### Week 7 & 8 (03.04.23 & 10.04.23)
+We added a help button to our visual encoding sketch and successfully built the front-end based on it. Additionally, we were able to update the back-end from a mock state to a functional state, which allowed us to make actual predictions on real data. Furthermore, we scheduled a meeting with Fran to discuss the project, ensuring that we stay on track and continue moving forward.
+
+
 ## API Endpoints
 - Complete boxscore data: `/api/data/games`
 - Boxscore data of a certain game:`/api/data/games/<int:game_id>`
