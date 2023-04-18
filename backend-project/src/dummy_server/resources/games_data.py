@@ -1,8 +1,9 @@
 import os
+
 import pandas as pd
+from flask import jsonify, send_file
 from flask_restful import Resource
-from flask import jsonify
-from flask import send_file
+
 from .utils import DATA_ROOT, PRED_COLS
 
 
@@ -46,4 +47,23 @@ class GetTeams(Resource):
 
         # return team_id and name
         return jsonify(team_info[['TEAM_ID', 'name']].to_dict('records'))
+    
+
+class GetBoxscoreBounds(Resource):
+    """Get lower and upper bounds for boxscore stats"""
+
+    def get(self):
+        
+        # load precompouted boxscores
+        boxscores = pd.read_csv(os.path.join(DATA_ROOT, 'precomputed', 'boxscores.csv'), index_col=0)
+
+        # calculate min and max and add a buffer of half a standard deviation
+        mins = boxscores.min()-0.5*boxscores.std()
+        maxs = boxscores.max()+0.5*boxscores.std()
+
+        bounds = {
+            col: [mins[col], maxs[col]] for col in PRED_COLS
+        }
+
+        return jsonify(bounds)
     

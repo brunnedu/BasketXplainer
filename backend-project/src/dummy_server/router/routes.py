@@ -1,5 +1,5 @@
-from flask_restful import Api
 import dummy_server.resources as res
+from flask_restful import Api
 
 API = "/api/"  # optional string
 
@@ -11,6 +11,7 @@ def add_routes(app):
 
     api.add_resource(res.games_data.GetTeams, API + "teams")
     api.add_resource(res.games_data.GetTeamBoxscore, API + "boxscore/<int:team_id>-<int:is_home>")
+    api.add_resource(res.games_data.GetBoxscoreBounds, API + "boxscore/bounds")
 
     api.add_resource(res.clustering.GetClusteringTeam, API + "clustering/teams")
     api.add_resource(res.prediction.GetPredictionTeam, API + "prediction/teams/<int:team_id_home>-<int:team_id_away>")

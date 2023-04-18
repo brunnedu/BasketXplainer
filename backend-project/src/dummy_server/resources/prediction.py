@@ -1,7 +1,9 @@
-from flask_restful import Resource
-from flask import jsonify
 import numpy as np
-from .utils import load_model, PRED_COLS
+from flask import jsonify
+from flask_restful import Resource
+
+from .utils import PRED_COLS, load_model
+
 
 class GetPredictionTeam(Resource):
     """Get the prediction btw two teams"""
@@ -17,64 +19,64 @@ class GetPredictionBoxscore(Resource):
 
     def get(
             self, 
-            FGM_home, 
-            FGA_home, 
-            FG3M_home, 
-            FG3A_home, 
-            FTM_home, 
-            FTA_home, 
-            OREB_home, 
-            DREB_home, 
-            AST_home, 
-            STL_home, 
-            BLK_home, 
-            TO_home, 
-            PF_home, 
-            FGM_away, 
-            FGA_away, 
-            FG3M_away, 
-            FG3A_away, 
-            FTM_away, 
-            FTA_away, 
-            OREB_away, 
-            DREB_away, 
-            AST_away, 
-            STL_away, 
-            BLK_away, 
-            TO_away, 
-            PF_away
+            AST_home,
+            BLK_home,
+            DREB_home,
+            FG3A_home,
+            FG3M_home,
+            FGA_home,
+            FGM_home,
+            FTA_home,
+            FTM_home,
+            OREB_home,
+            PF_home,
+            STL_home,
+            TO_home,
+            AST_away,
+            BLK_away,
+            DREB_away,
+            FG3A_away,
+            FG3M_away,
+            FGA_away,
+            FGM_away,
+            FTA_away,
+            FTM_away,
+            OREB_away,
+            PF_away,
+            STL_away,
+            TO_away
             ):
         """Get the predicted winning odds of the home team based on the boxscore stats"""
 
         # TODO: load model and perform inference
 
         X_inference = np.array([
-            FGM_home, 
-            FGA_home, 
-            FG3M_home, 
-            FG3A_home, 
-            FTM_home, 
-            FTA_home, 
-            OREB_home, 
-            DREB_home, 
-            AST_home, 
-            STL_home, 
-            BLK_home, 
-            TO_home, 
-            PF_home, 
-            FGM_away, 
-            FGA_away, 
-            FG3M_away, 
-            FG3A_away, 
-            FTM_away, 
-            FTA_away, 
-            OREB_away, 
-            DREB_away, 
-            AST_away, 
-            STL_away, 
-            BLK_away, 
-            TO_away, 
-            PF_away
+            AST_home,
+            BLK_home,
+            DREB_home,
+            FG3A_home,
+            FG3M_home,
+            FGA_home,
+            FGM_home,
+            FTA_home,
+            FTM_home,
+            OREB_home,
+            PF_home,
+            STL_home,
+            TO_home,
+            AST_away,
+            BLK_away,
+            DREB_away,
+            FG3A_away,
+            FG3M_away,
+            FGA_away,
+            FGM_away,
+            FTA_away,
+            FTM_away,
+            OREB_away,
+            PF_away,
+            STL_away,
+            TO_away
         ]).reshape(1, -1)
         
         model = load_model()
