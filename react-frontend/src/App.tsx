@@ -29,12 +29,14 @@ interface PlayerStatsSliderProps {
   boxScores: BoxScores;
   onSliderChange: (key: keyof BoxScores, value: number) => void;
   onMouseUp: any;
+  boxScoreBoundaries: any;
 }
 
 const BoxScoreSlider: React.FC<PlayerStatsSliderProps> = ({
   boxScores,
   onSliderChange,
   onMouseUp,
+  boxScoreBoundaries,
 }) => {
 
   const handleSliderChange = (
@@ -92,9 +94,9 @@ const BoxScoreSlider: React.FC<PlayerStatsSliderProps> = ({
                   handleSliderChange(key as keyof BoxScores, event, value)
                 }
                 aria-labelledby="continuous-slider"
-                min={minValueMapping[key]}
-                max={maxValueMapping[key]}
-                step={(maxValueMapping[key] - minValueMapping[key]) / 100}
+                min={boxScoreBoundaries[key][0]}
+                max={boxScoreBoundaries[key][1]}
+                step={(boxScoreBoundaries[key][1] - boxScoreBoundaries[key][0]) / 100}
                 draggable 
                 onChangeCommitted ={() => {onMouseUp()}}
               />
@@ -358,6 +360,7 @@ function App() {
   const [selectedTeamRight, setSelectedTeamRight] = useState<Team>({TEAM_ID: 1610612737, name: "Atlanta Hawks"});
   const [boxScoresLeft, setBoxScoresLeft] = useState<any>({});
   const [boxScoresRight, setBoxScoresRight] = useState<any>({});
+  const [boxScoreBoundaries, setBoxScoreBoundaries] = useState<any>({});
   const [shap, setShap] = useState<string>("");
   const [probabilityLeft, setProbabilityLeft] = useState<number>(0.5);
   const [points, setPoints] = useState<any>([]);
@@ -366,12 +369,16 @@ function App() {
 
   // load list of teams when page is loaded
   useEffect(() => {
-    loadData(`api/teams`).then(data => {
+    loadData(`api/boxscore/bounds`).then(data => {
       // console.log(data);
-      setAvailableTeams(data);
+      setBoxScoreBoundaries(data)
+      loadData(`api/teams`).then(data => {
+        // console.log(data);
+        setAvailableTeams(data);
+        handleSelectionLeft({TEAM_ID: 1610612737, name: "Atlanta Hawks"})
+        handleSelectionRight({TEAM_ID: 1610612737, name: "Atlanta Hawks"});
+      });
     });
-    handleSelectionLeft({TEAM_ID: 1610612737, name: "Atlanta Hawks"});
-    handleSelectionRight({TEAM_ID: 1610612737, name: "Atlanta Hawks"});
   }, []);
 
 
@@ -466,12 +473,12 @@ function App() {
       </header>
       <div className="left container">
         <TeamSelector title='HOME' availableTeams={availableTeams} selectedTeam={selectedTeamLeft} setSelectedTeam={handleSelectionLeft}/>
-        <BoxScoreSlider boxScores={boxScoresLeft} onSliderChange={handleSliderChangeLeft} onMouseUp={onSliderMouseUp}/>
+        <BoxScoreSlider boxScores={boxScoresLeft} onSliderChange={handleSliderChangeLeft} onMouseUp={onSliderMouseUp} boxScoreBoundaries={boxScoreBoundaries}/>
         <WinChanceDisplay probability={probabilityLeft}/>   
       </div>
       <div className="right container">
         <TeamSelector title='AWAY' availableTeams={availableTeams} selectedTeam={selectedTeamRight} setSelectedTeam={handleSelectionRight}/>
-        <BoxScoreSlider boxScores={boxScoresRight} onSliderChange={handleSliderChangeRight} onMouseUp={onSliderMouseUp}/>
+        <BoxScoreSlider boxScores={boxScoresRight} onSliderChange={handleSliderChangeRight} onMouseUp={onSliderMouseUp} boxScoreBoundaries={boxScoreBoundaries}/>
         <WinChanceDisplay probability={1-probabilityLeft}/>   
         <Popup text="This is the text that will be displayed in the popup" />   
       </div>
