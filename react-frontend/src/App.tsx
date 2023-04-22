@@ -289,15 +289,15 @@ const Scatterplot: React.FC<ScatterplotProps> = ({ points }) => {
           // Show hover details on mouseover
           d3.select("#tooltip")
             .style("opacity", 1)
-            .html(`${JSON.stringify(d).replaceAll("{", "").replaceAll("}", "").replaceAll(",", "<br>")}`)
+            .html(`${JSON.stringify(d).replaceAll("{", "").replaceAll("}", "").replaceAll(",", "<br>").replaceAll("\"", "")}`)
             .style("left", `${event.pageX+10}px`)
-            .style("top", `${event.pageY}px`);
+            .style("top", `${event.pageY-1100}px`);
         })
         .on("mousemove", function (event) {
           // Move hover details on mousemove
           d3.select("#tooltip")
             .style("left", `${event.pageX+10}px`)
-            .style("top", `${event.pageY}px`);   
+            .style("top", `${event.pageY-1100}px`);   
         })
         .on("mouseout", function (event, d) {
           // Hide hover details on mouseout
