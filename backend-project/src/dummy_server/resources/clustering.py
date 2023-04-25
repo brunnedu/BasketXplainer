@@ -1,9 +1,12 @@
-from flask_restful import Resource
-import pandas as pd
-from flask import jsonify
-from .utils import DATA_ROOT, get_clustering
 import os
+
+import pandas as pd
 import sklearn
+from flask import jsonify
+from flask_restful import Resource
+
+from .utils import DATA_ROOT, PRED_COLS, get_clustering
+
 
 class GetClusteringTeam(Resource):
 
@@ -77,11 +80,19 @@ class GetClusteringBoxscore(Resource):
             'is_home': [True, False],
             'TEAM_ID': [1, 0],
         })
-        df_boxscores = pd.concat([df_boxscores, df_custom], axis=0)
 
-        print(sklearn.__version__)
+        # calculate clustering from boxscores of original teams (doesn't change)
+        df_clustering, scaler, pca = get_clustering(df_boxscores, n_components=2, n_clusters=3)
 
-        # calculate clustering
-        df_clustering = get_clustering(df_boxscores, n_components=2, n_clusters=3)
+        # calculate clustering of custom teams
+        df_custom_clustering = df_custom.copy()
+        custom_scaled = scaler.transform(df_custom_clustering[PRED_COLS])
+        custom_pca = pca.transform(custom_scaled)
+
+        df_custom_clustering['x_coord'] = [coord[0] for coord in custom_pca]
+        df_custom_clustering['y_coord'] = [coord[1] for coord in custom_pca]
+
+        # combine clustering data from original teams and custom teams
+        df_clustering = pd.concat([df_clustering, df_custom_clustering], axis=0)
 
         return jsonify(df_clustering.to_dict("records"))
