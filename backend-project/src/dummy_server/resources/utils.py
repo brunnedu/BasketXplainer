@@ -1,10 +1,11 @@
 import os
-import pandas as pd
-import lightgbm as lgb
 import pickle
-from sklearn.preprocessing import StandardScaler
+
+import lightgbm as lgb
+import pandas as pd
 from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
 
 # global constants
 DATA_ROOT = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "..", "..", "data"))
@@ -65,23 +66,23 @@ def get_clustering(df_boxscores: pd.DataFrame, n_components: int = 2, n_clusters
     Add clustering columns to boxscore dataframe
     """
     
-    df_cluster = df_boxscores.copy()
+    df_clustering = df_boxscores.copy()
     
     # standardize data
     scaler = StandardScaler()
-    scaled_data = scaler.fit_transform(df_cluster[PRED_COLS])
+    scaled_data = scaler.fit_transform(df_clustering[PRED_COLS])
     
     # perform pca
     pca = PCA(n_components=n_components)
     pca_data = pca.fit_transform(scaled_data)
     
     # perform kmeans
-    kmeans = KMeans(n_clusters=n_clusters, n_init=10)
-    kmeans.fit(pca_data)
+    # kmeans = KMeans(n_clusters=n_clusters, n_init=10)
+    # kmeans.fit(pca_data)
     
     # add clustering columns
-    df_cluster['x_coord'] = [coord[0] for coord in pca_data]
-    df_cluster['y_coord'] = [coord[1] for coord in pca_data]
-    df_cluster['cluster'] = kmeans.labels_
+    df_clustering['x_coord'] = [coord[0] for coord in pca_data]
+    df_clustering['y_coord'] = [coord[1] for coord in pca_data]
+    # df_cluster['cluster'] = kmeans.labels_
     
-    return df_cluster
+    return df_clustering, scaler, pca
