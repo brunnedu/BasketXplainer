@@ -1,7 +1,7 @@
 import os
 
 import pandas as pd
-from flask import jsonify, send_file
+from flask import jsonify, make_response, send_file
 from flask_restful import Resource
 
 from .utils import DATA_ROOT, PRED_COLS
@@ -19,6 +19,48 @@ class GetTeamBoxscore(Resource):
         team_boxscore = boxscores[(boxscores['TEAM_ID']==team_id) & (boxscores['is_home']==is_home)][PRED_COLS]
 
         return jsonify(team_boxscore.to_dict("records"))
+    
+
+class GetBoxscoresHome(Resource):
+    """Averaged statistics of each team in a given season. For query usage"""
+
+    def get(self):
+        # TODO: could have separate aggregations for whether team is home or away
+
+        boxscores = pd.read_csv(os.path.join(DATA_ROOT, 'precomputed', 'boxscores.csv'), index_col=0)
+
+        # filter precomputed boxscores
+        home_boxscores = boxscores[boxscores['is_home']][PRED_COLS]
+
+        # build csv response
+        csv = home_boxscores.to_csv(index=False)
+
+        response = make_response(csv)
+        response.headers['Content-Disposition'] = 'attachment; filename=boxscores_home.csv'
+        response.headers['Content-Type'] = 'text/csv'
+
+        return response
+    
+
+class GetBoxscoresAway(Resource):
+    """Averaged statistics of each team in a given season. For query usage"""
+
+    def get(self):
+        # TODO: could have separate aggregations for whether team is home or away
+
+        boxscores = pd.read_csv(os.path.join(DATA_ROOT, 'precomputed', 'boxscores.csv'), index_col=0)
+
+        # filter precomputed boxscores
+        away_boxscores = boxscores[~boxscores['is_home']][PRED_COLS]
+
+        # build csv response
+        csv = away_boxscores.to_csv(index=False)
+
+        response = make_response(csv)
+        response.headers['Content-Disposition'] = 'attachment; filename=boxscores_away.csv'
+        response.headers['Content-Type'] = 'text/csv'
+
+        return response
     
 
 class GetTeamLogo(Resource):
