@@ -1,10 +1,12 @@
 import os
 
+import numpy as np
 import pandas as pd
 from flask import jsonify, send_file
 from flask_restful import Resource
+from sklearn.preprocessing import StandardScaler
 
-from .utils import DATA_ROOT, PRED_COLS
+from .utils import DATA_ROOT, PRED_COLS, closest_point, get_season_games
 
 
 class GetTeamBoxscore(Resource):
@@ -66,4 +68,94 @@ class GetBoxscoreBounds(Resource):
         }
 
         return jsonify(bounds)
+    
+
+class GetSimilarMatchups(Resource):
+    """Get previous games between similar teams"""
+
+    def get(self, 
+            AST_home,
+            BLK_home,
+            DREB_home,
+            FG3A_home,
+            FG3M_home,
+            FGA_home,
+            FGM_home,
+            FTA_home,
+            FTM_home,
+            OREB_home,
+            PF_home,
+            STL_home,
+            TO_home,
+            AST_away,
+            BLK_away,
+            DREB_away,
+            FG3A_away,
+            FG3M_away,
+            FGA_away,
+            FGM_away,
+            FTA_away,
+            FTM_away,
+            OREB_away,
+            PF_away,
+            STL_away,
+            TO_away
+            ):
+
+        # load precomputed boxscores
+        boxscores = pd.read_csv(os.path.join(DATA_ROOT, 'precomputed', 'boxscores.csv'), index_col=0)
+
+        # standardize original boxscores
+        scaler = StandardScaler()
+        boxscores[PRED_COLS] = scaler.fit_transform(boxscores[PRED_COLS].values)
+
+        boxscore_home = np.array([
+            AST_home,
+            BLK_home,
+            DREB_home,
+            FG3A_home,
+            FG3M_home,
+            FGA_home,
+            FGM_home,
+            FTA_home,
+            FTM_home,
+            OREB_home,
+            PF_home,
+            STL_home,
+            TO_home,
+        ]).reshape(1, -1)
+
+        boxscore_away = np.array([
+            AST_away,
+            BLK_away,
+            DREB_away,
+            FG3A_away,
+            FG3M_away,
+            FGA_away,
+            FGM_away,
+            FTA_away,
+            FTM_away,
+            OREB_away,
+            PF_away,
+            STL_away,
+            TO_away
+        ]).reshape(1, -1)
+
+        # standardize custom boxscores
+        boxscore_home = scaler.transform(boxscore_home)
+        boxscore_away = scaler.transform(boxscore_away)
+        
+        # retrieve most similar teams
+        similar_home_id = boxscores[boxscores['is_home']].iloc[closest_point(boxscore_home, boxscores[boxscores['is_home']][PRED_COLS])]['TEAM_ID']
+        similar_away_id = boxscores[~boxscores['is_home']].iloc[closest_point(boxscore_away, boxscores[~boxscores['is_home']][PRED_COLS])]['TEAM_ID']
+
+        # load games from season 2021
+        games = get_season_games(2021)
+        similar_games = games[(games['TEAM_ID_home']==similar_home_id) & (games['TEAM_ID_away']==similar_away_id)]
+
+        return jsonify(similar_games.to_dict('records'))
+
+
+
+
     
