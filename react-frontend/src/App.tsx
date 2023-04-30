@@ -140,7 +140,7 @@ const ShapDisplay: React.FC<ShapDisplayProps> = ({ param }) => {
   return (
     <>
       <div className="box" id="shapbox">
-        <h2>Shap values</h2>
+        <h2>Feature importance</h2>
         <iframe id="shapframe" srcDoc={param}></iframe>
       </div>
     </>
@@ -211,8 +211,7 @@ const WinChanceDisplay: React.FC<WinChanceDisplayProps> = ({ probability }) => {
 interface Point {
   x_coord: number;
   y_coord: number;
-  cluster: number;
-  hover_details: string;
+  is_home: number;
 }
 
 interface ScatterplotProps {
@@ -253,7 +252,7 @@ const Scatterplot: React.FC<ScatterplotProps> = ({ points }) => {
         .attr("cx", (d) => xScale(d.x_coord))
         .attr("cy", (d) => yScale(d.y_coord))
         .attr("r", 2)
-        .attr("fill", (d) => colorMap[d===points[0] ? 4 : (d===points[1] ? 5 : d.cluster)])
+        .attr("fill", (d) => colorMap[d===points[0] ? 4 : (d===points[1] ? 5 : (d.is_home ? 1 : 2))])
         .on("mouseover", function (event, d) {
           // Show hover details on mouseover
           d3.select("#tooltip")
