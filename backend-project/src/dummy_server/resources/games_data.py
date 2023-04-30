@@ -193,8 +193,11 @@ class GetSimilarMatchups(Resource):
 
         # load games from season 2021
         games = get_season_games(2021)
-        similar_games = games[(games['TEAM_ID_home']==similar_home_id) & (games['TEAM_ID_away']==similar_away_id)]
+        similar_games = games[(games['TEAM_ID_home']==similar_home_id) & (games['TEAM_ID_away']==similar_away_id)].copy()
 
+        # check if there are no similar games
+        if len(similar_games) == 0:
+            return jsonify(similar_games.to_dict('records'))
 
         # do some post processing of the column names and values
         teams = pd.read_csv(os.path.join(DATA_ROOT, "dataset_teams.csv"))
