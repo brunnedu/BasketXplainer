@@ -3,6 +3,7 @@ import React from 'react';
 import './App.css';
 import axiosClient from './router/apiClient'
 import Popup from './components/Popup';
+import ParallelCoordinates from './components/ParallelCoordinates';
 import Slider from "@material-ui/core/Slider";
 import * as d3 from "d3";
 import { styled } from "@material-ui/core/styles";
@@ -45,38 +46,6 @@ const BoxScoreSlider: React.FC<PlayerStatsSliderProps> = ({
     value: number | number[]
   ) => {
     onSliderChange(key, value as number);
-  };
-
-  const minValueMapping: { [key: string]: number } = {
-    AST: 0,
-    BLK: 0,
-    DREB: 0,
-    FG3A: 0,
-    FG3M: 0,
-    FGA: 0,
-    FGM: 0,
-    FTA: 0,
-    FTM: 0,
-    OREB: 0,
-    PF: 0,
-    STL: 0,
-    TO: 0,
-  };
-
-  const maxValueMapping: { [key: string]: number } = {
-    AST: 100,
-    BLK: 100,
-    DREB: 100,
-    FG3A: 100,
-    FG3M: 100,
-    FGA: 100,
-    FGM: 100,
-    FTA: 100,
-    FTM: 100,
-    OREB: 100,
-    PF: 100,
-    STL: 100,
-    TO: 100,
   };
 
   return (
@@ -334,6 +303,37 @@ const Scatterplot: React.FC<ScatterplotProps> = ({ points }) => {
 
 
 
+
+
+
+// interface ParallelCoordinatesDisplayProps {
+//   home: boolean;
+// }
+
+// const ParallelCoordinatesDisplay: React.FC<ParallelCoordinatesDisplayProps> = ({ home }) => {
+
+  
+
+//   return (
+//     <>
+//       <div className="box">
+//         <h2>Parallel Coordinates</h2>
+//         <ParallelCoordinates></ParallelCoordinates>
+//       </div>
+//     </>
+//   );
+// };
+
+
+
+
+
+
+
+
+
+
+
 let scrolling = false;
 function App() {
 
@@ -364,6 +364,11 @@ function App() {
   const [shap, setShap] = useState<string>("");
   const [probabilityLeft, setProbabilityLeft] = useState<number>(0.5);
   const [points, setPoints] = useState<any>([]);
+
+
+  const [parallelCoordinatesDataHome, setParallelCoordinatesDataHome] = useState<string>("");
+  const [parallelCoordinatesDataAway, setParallelCoordinatesDataAway] = useState<string>("");
+
   
 
 
@@ -377,6 +382,15 @@ function App() {
         setAvailableTeams(data);
         handleSelectionLeft({TEAM_ID: 1610612737, name: "Atlanta Hawks"})
         handleSelectionRight({TEAM_ID: 1610612737, name: "Atlanta Hawks"});
+
+        loadData(`api/boxscores/home`).then(data => {
+          // console.log(data);
+          setParallelCoordinatesDataHome(data);
+        });
+        loadData(`api/boxscores/away`).then(data => {
+          // console.log(data);
+          setParallelCoordinatesDataAway(data);
+        });
       });
     });
   }, []);
@@ -474,12 +488,20 @@ function App() {
       <div className="left container">
         <TeamSelector title='HOME' availableTeams={availableTeams} selectedTeam={selectedTeamLeft} setSelectedTeam={handleSelectionLeft}/>
         <BoxScoreSlider boxScores={boxScoresLeft} onSliderChange={handleSliderChangeLeft} onMouseUp={onSliderMouseUp} boxScoreBoundaries={boxScoreBoundaries}/>
-        <WinChanceDisplay probability={probabilityLeft}/>   
+        <WinChanceDisplay probability={probabilityLeft}/>
+        <div className="box">
+          <h2>Parallel Coordinates</h2>
+          <ParallelCoordinates data_orig={parallelCoordinatesDataHome} limits={boxScoreBoundaries}></ParallelCoordinates>
+        </div> 
       </div>
       <div className="right container">
         <TeamSelector title='AWAY' availableTeams={availableTeams} selectedTeam={selectedTeamRight} setSelectedTeam={handleSelectionRight}/>
         <BoxScoreSlider boxScores={boxScoresRight} onSliderChange={handleSliderChangeRight} onMouseUp={onSliderMouseUp} boxScoreBoundaries={boxScoreBoundaries}/>
         <WinChanceDisplay probability={1-probabilityLeft}/>   
+        <div className="box">
+          <h2>Parallel Coordinates</h2>
+          <ParallelCoordinates data_orig={parallelCoordinatesDataAway} limits={boxScoreBoundaries}></ParallelCoordinates>
+        </div>
         <Popup text="This is the text that will be displayed in the popup" />   
       </div>
       <div className="center container">

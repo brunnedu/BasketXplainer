@@ -29,26 +29,24 @@
   } */
 }
 
-/* .left {
-  position: absolute;
-  left: 10%;
+.left {
+  margin-left: 10%;
 }
 
 .right {
-  position: absolute;
-  right: 10%;
-} */
+  margin-left: 0%;
+}
 
 h1 {
   margin-top: 0px;
 }
 
 .container{
-  width: 35%;
+  width: 40%;
   background-color: #F5EFE6;
   padding-top: 30px;
   display: inline-block;
-  margin-left: 10%;
+  /* margin-left: 10%; */
   position: relative;
 }
 
@@ -101,6 +99,7 @@ h1 {
 
 #team_logo{
   width: 100%;
+  max-width: 170px;
 }
 
 #tooltip{
