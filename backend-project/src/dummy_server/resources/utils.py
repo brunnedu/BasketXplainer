@@ -99,7 +99,6 @@ def get_clustering(df_boxscores: pd.DataFrame, n_components: int = 2, n_clusters
 
 def get_season_games(season=2021):
     games = pd.read_csv(os.path.join(DATA_ROOT, 'dataset_games.csv'))
-    games = games[['TEAM_ID_home', 'TEAM_ID_away', 'HOME_TEAM_WINS', 'GAME_ID', 'GAME_DATE_EST']]
     
     regular_games = games[(REGULAR_SEASON_DURATION[season][0] <= pd.to_datetime(games['GAME_DATE_EST'])) & (pd.to_datetime(games['GAME_DATE_EST']) <= REGULAR_SEASON_DURATION[season][1])]
     

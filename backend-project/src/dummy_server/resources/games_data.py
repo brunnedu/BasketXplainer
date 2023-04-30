@@ -153,6 +153,26 @@ class GetSimilarMatchups(Resource):
         games = get_season_games(2021)
         similar_games = games[(games['TEAM_ID_home']==similar_home_id) & (games['TEAM_ID_away']==similar_away_id)]
 
+
+        # do some post processing of the column names and values
+        teams = pd.read_csv(os.path.join(DATA_ROOT, "dataset_teams.csv"))
+        teams['name'] = teams.apply(lambda row: f"{row['CITY']} {row['NICKNAME']}", axis=1)
+        id2name = {team_id: team_name for team_id, team_name in zip(teams['TEAM_ID'], teams['name'])}
+
+        # replace team_ids with actual team names
+        similar_games['Home Team'] = similar_games['TEAM_ID_home'].apply(lambda team_id: id2name.get(team_id))
+        similar_games['Away Team'] = similar_games['TEAM_ID_away'].apply(lambda team_id: id2name.get(team_id))
+
+        # format date nicely as well as which team won
+        similar_games['date'] = pd.to_datetime(similar_games['GAME_DATE_EST'])
+        similar_games['Game Date'] = similar_games['date'].dt.strftime('%d. %B %Y')
+        similar_games['Winning Team'] = similar_games.apply(lambda row: f"Home ({row['Home Team']})" if row['HOME_TEAM_WINS'] else f"Away ({row['Away Team']})", axis=1)
+        similar_games['Score'] = similar_games.apply(lambda row: f"{int(row['PTS_home'])}-{int(row['PTS_away'])}", axis=1)
+
+        # sort games by date and select columns to be displayed
+        similar_games = similar_games.sort_values('date')
+        similar_games = similar_games[['Game Date', 'Home Team', 'Away Team', 'Winning Team', 'Score']]
+
         return jsonify(similar_games.to_dict('records'))
 
 
