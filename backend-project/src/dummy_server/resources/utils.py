@@ -2,6 +2,7 @@ import os
 import pickle
 
 import lightgbm as lgb
+import numpy as np
 import pandas as pd
 from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
@@ -9,7 +10,15 @@ from sklearn.preprocessing import StandardScaler
 
 # global constants
 DATA_ROOT = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "..", "..", "data"))
+
 PRED_COLS = ['AST', 'BLK', 'DREB', 'FG3A', 'FG3M', 'FGA', 'FGM', 'FTA', 'FTM', 'OREB', 'PF', 'STL', 'TO']
+
+REGULAR_SEASON_DURATION = {
+    2021: ('2021-10-19', '2022-04-10'),
+    2020: ('2020-12-22', '2021-05-16'),
+    2018: ('2018-10-16', '2019-04-10'),
+    2017: ('2017-10-17', '2018-04-11'),
+}
 
 
 def load_model(path_to_model_str: str = os.path.join(DATA_ROOT, 'precomputed', 'lightgbm.txt')):
@@ -86,3 +95,17 @@ def get_clustering(df_boxscores: pd.DataFrame, n_components: int = 2, n_clusters
     # df_cluster['cluster'] = kmeans.labels_
     
     return df_clustering, scaler, pca
+
+
+def get_season_games(season=2021):
+    games = pd.read_csv(os.path.join(DATA_ROOT, 'dataset_games.csv'))
+    
+    regular_games = games[(REGULAR_SEASON_DURATION[season][0] <= pd.to_datetime(games['GAME_DATE_EST'])) & (pd.to_datetime(games['GAME_DATE_EST']) <= REGULAR_SEASON_DURATION[season][1])]
+    
+    return regular_games
+
+
+def closest_point(point, points):
+    deltas = points - point
+    dist_2 = np.einsum('ij,ij->i', deltas, deltas)
+    return np.argmin(dist_2)
