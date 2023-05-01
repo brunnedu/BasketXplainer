@@ -4,8 +4,9 @@ import pandas as pd
 import sklearn
 from flask import jsonify
 from flask_restful import Resource
+from sklearn.cluster import KMeans
 
-from .utils import DATA_ROOT, PRED_COLS, get_clustering
+from .utils import DATA_ROOT, PRED_COLS, calculate_ratings, get_clustering, CLUSTERING_PRED
 
 
 class GetClusteringTeam(Resource):
@@ -26,7 +27,7 @@ class GetClusteringTeam(Resource):
 
         return jsonify(data.to_dict("records"))
     
-
+# testapi: http://127.0.0.1:8000/api/clustering/10.0-10.0-10.0-10.0-10.0-10.5-1.0-1.0-1.0-1.0-1.0-1.0-1.0_10.0-10.0-10.0-10.0-10.0-10.5-1.0-1.0-1.0-1.0-1.0-1.0-1.0
 class GetClusteringBoxscore(Resource):
 
     def get(
@@ -82,17 +83,17 @@ class GetClusteringBoxscore(Resource):
         })
 
         # calculate clustering from boxscores of original teams (doesn't change)
-        df_clustering, scaler, pca = get_clustering(df_boxscores, n_components=2, n_clusters=3)
+        df_clustering = calculate_ratings(df_boxscores)
 
         # calculate clustering of custom teams
-        df_custom_clustering = df_custom.copy()
-        custom_scaled = scaler.transform(df_custom_clustering[PRED_COLS])
-        custom_pca = pca.transform(custom_scaled)
-
-        df_custom_clustering['x_coord'] = [coord[0] for coord in custom_pca]
-        df_custom_clustering['y_coord'] = [coord[1] for coord in custom_pca]
+        df_custom_clustering = calculate_ratings(df_custom.copy())
 
         # combine clustering data from original teams and custom teams
         df_clustering = pd.concat([df_clustering, df_custom_clustering], axis=0)
+
+        # fit the clustering model using ratings
+        kmeans = KMeans(n_clusters=3)
+        kmeans.fit(df_clustering[CLUSTERING_PRED])
+        df_clustering['cluster'] = kmeans.labels_
 
         return jsonify(df_clustering.to_dict("records"))

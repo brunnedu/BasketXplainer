@@ -12,6 +12,7 @@ from sklearn.preprocessing import StandardScaler
 DATA_ROOT = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "..", "..", "data"))
 
 PRED_COLS = ['AST', 'BLK', 'DREB', 'FG3A', 'FG3M', 'FGA', 'FGM', 'FTA', 'FTM', 'OREB', 'PF', 'STL', 'TO']
+CLUSTERING_PRED = ["OR", "DR"]
 
 REGULAR_SEASON_DURATION = {
     2021: ('2021-10-19', '2022-04-10'),
@@ -95,6 +96,23 @@ def get_clustering(df_boxscores: pd.DataFrame, n_components: int = 2, n_clusters
     # df_cluster['cluster'] = kmeans.labels_
     
     return df_clustering, scaler, pca
+
+def calculate_ratings(boxscore): 
+    boxscore_ratings = boxscore.copy()
+    for index, row in boxscore_ratings.iterrows():
+        boxscore_ratings.loc[index, "point"] = 2 * (row["FGM"] + 0.5 * row["FG3M"]) + row["FTM"]
+        boxscore_ratings.loc[index, "possession"] = 0.5 * (row["FGA"] + 0.475 * row["FTA"] - row["OREB"] + row["TO"])
+    
+    mean_possession = boxscore_ratings["possession"].mean()
+
+    for index, row in boxscore_ratings.iterrows():
+        # Offensive Rating (OR) = 100 / (TmPoss + OppPoss) * Pts
+        boxscore_ratings.loc[index, "OR"] = (100 * row["point"]) / (row["possession"] + mean_possession)
+        
+        boxscore_ratings.loc[index, "DR"] = 100 * (row["BLK"] + row["DREB"] + row["STL"]) / (row["possession"] + mean_possession)
+
+    boxscore_ratings.drop("is_home", axis =1 ,inplace= True)
+    return boxscore_ratings.groupby("TEAM_ID").mean()
 
 
 def get_season_games(season=2021):
