@@ -70,6 +70,7 @@ h1 {
 
 .center{
   margin: auto;
+  margin-top: -4px;
   display: block;
   width: 80%;
   padding-bottom: 400px;
@@ -97,9 +98,14 @@ h1 {
   display: block;
 }
 
-#team_logo{
+.team_logo{
   width: 100%;
   max-width: 170px;
+}
+
+.small_team_logo{
+  width: 100%;
+  max-width: 50px;
 }
 
 #tooltip{

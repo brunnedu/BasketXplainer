@@ -168,7 +168,7 @@ const TeamSelector: React.FC<TeamSelectorProps> = ({ title, availableTeams, sele
     <>
       <div className="box">
         <h1>{title}</h1>
-        <img id="team_logo" src={BASE_URL + "api/logo/" + selectedTeam.TEAM_ID} alt="team logo" />
+        <img className="team_logo" src={BASE_URL + "api/logo/" + selectedTeam.TEAM_ID} alt="team logo" />
         <DropdownMenu ids={availableTeams} onSelection={setSelectedTeam} selectedTeam={selectedTeam} />
       </div>
     </>
@@ -198,10 +198,6 @@ const WinChanceDisplay: React.FC<WinChanceDisplayProps> = ({ probability }) => {
     </>
   );
 };
-
-
-
-
 
 
 
@@ -305,23 +301,51 @@ const Scatterplot: React.FC<ScatterplotProps> = ({ points }) => {
 
 
 
-// interface ParallelCoordinatesDisplayProps {
-//   home: boolean;
+// args are an array of these objects:
+// AST_away : 24 AST_home : 28 Away Team : "Boston Celtics" FG3_PCT_away : 0.268 FG3_PCT_home : 0.351 FG_PCT_away : 0.44 FG_PCT_home : 0.506 FT_PCT_away : 0.824 FT_PCT_home : 0.833 GAME_DATE_EST : "2021-11-17" GAME_ID : 22100215 GAME_STATUS_TEXT : "Final" Game Date : "17. November 2021" HOME_TEAM_ID : 1610612737 HOME_TEAM_WINS : 1 Home Team : "Atlanta Hawks" PTS_away : 99 PTS_home : 110 REB_away : 42 REB_home : 40 SEASON : 2021 Score : "110-99" TEAM_ID_away : 1610612738 TEAM_ID_home : 1610612737 VISITOR_TEAM_ID : 1610612738 Winning Team : "Home (Atlanta Hawks)" date : "Wed, 17 Nov 2021 00:00:00 GMT"
+
+// interface SimilarMatchupsProps {
+//   away_team: string;
+//   game_date: string;
+//   home_team: string;
+//   score: string;
+//   winning_team: string;
 // }
 
-// const ParallelCoordinatesDisplay: React.FC<ParallelCoordinatesDisplayProps> = ({ home }) => {
+interface SimilarMatchupsDisplayProps {
+  matchups: any[];
+  selectedTeamLeft: Team;
+  selectedTeamRight: Team;
+}
 
-  
+const SimilarMatchupsDisplay: React.FC<SimilarMatchupsDisplayProps> = ({ matchups, selectedTeamLeft, selectedTeamRight }) => {
+  const BASE_URL = process.env.NODE_ENV==="production"? `http://be.${window.location.hostname}/api/v1`:"http://localhost:8000/"
+  console.log(matchups)
 
-//   return (
-//     <>
-//       <div className="box">
-//         <h2>Parallel Coordinates</h2>
-//         <ParallelCoordinates></ParallelCoordinates>
-//       </div>
-//     </>
-//   );
-// };
+  return (
+    <>
+      <div className="box">
+        <h2>Similar matchups</h2>
+        {/* {matchup["Game Date"]}: <img className="small_team_logo" src={BASE_URL + "api/logo/" + selectedTeamLeft.TEAM_ID} alt="team logo" /> {matchup["Score"]} <img className="small_team_logo" src={BASE_URL + "api/logo/" + selectedTeamRight.TEAM_ID} alt="team logo" /> */}
+        {/* For each matchup, display the date, the score and the 2 team logos on each side of the score  */}
+        <table>
+          <tbody>
+            {matchups.map((matchup) => (
+              <tr className="matchup" key={matchup["Game Date"] + " " + matchup["Score"]}>
+                <td>{matchup["Game Date"]}</td>
+                <td>{matchup["Home Team"]}<img className="small_team_logo" src={BASE_URL + "api/logo/" + matchup["TEAM_ID_home"]} alt="team logo" /></td>
+                <td>{matchup["Score"]}</td>
+                <td><img className="small_team_logo" src={BASE_URL + "api/logo/" + matchup["TEAM_ID_away"]} alt="team logo" />{matchup["Away Team"]}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+      </div>
+    </>
+  );
+};
+
 
 
 
@@ -356,17 +380,20 @@ function App() {
 
   const [availableTeams, setAvailableTeams] = useState<any>([{TEAM_ID: 1610612737, name: "Atlanta Hawks"}]);
   const [selectedTeamLeft, setSelectedTeamLeft] = useState<Team>({TEAM_ID: 1610612737, name: "Atlanta Hawks"});
-  const [selectedTeamRight, setSelectedTeamRight] = useState<Team>({TEAM_ID: 1610612737, name: "Atlanta Hawks"});
+  const [selectedTeamRight, setSelectedTeamRight] = useState<Team>({TEAM_ID: 1610612738, name: 'Boston Celtics'});
+
   const [boxScoresLeft, setBoxScoresLeft] = useState<any>({});
   const [boxScoresRight, setBoxScoresRight] = useState<any>({});
   const [boxScoreBoundaries, setBoxScoreBoundaries] = useState<any>({});
+
   const [shap, setShap] = useState<string>("");
   const [probabilityLeft, setProbabilityLeft] = useState<number>(0.5);
   const [points, setPoints] = useState<any>([]);
 
-
   const [parallelCoordinatesDataHome, setParallelCoordinatesDataHome] = useState<string>("");
   const [parallelCoordinatesDataAway, setParallelCoordinatesDataAway] = useState<string>("");
+  const [SimilarMatchups, setSimilarMatchups] = useState<any>([]);
+  
 
   
 
@@ -380,7 +407,7 @@ function App() {
         // console.log(data);
         setAvailableTeams(data);
         handleSelectionLeft({TEAM_ID: 1610612737, name: "Atlanta Hawks"})
-        handleSelectionRight({TEAM_ID: 1610612737, name: "Atlanta Hawks"});
+        handleSelectionRight({TEAM_ID: 1610612738, name: 'Boston Celtics'});
 
         loadData(`api/boxscores/home`).then(data => {
           // console.log(data);
@@ -475,6 +502,10 @@ function App() {
       // console.log("COORDINATE OF FIRST POINT:" + data[0]["x_coord"] + " " + data[0]["y_coord"]);
       setPoints(data);
     });
+    loadData(`api/similar_games/${s}`).then(data => {
+      console.log(data);
+      setSimilarMatchups(data);
+    });
   }
 
 
@@ -504,6 +535,7 @@ function App() {
         <Popup text="This is the text that will be displayed in the popup" />   
       </div>
       <div className="center container">
+        <SimilarMatchupsDisplay matchups={SimilarMatchups} selectedTeamLeft={selectedTeamLeft} selectedTeamRight={selectedTeamRight}/>
         <ShapDisplay param={shap}/>     
         <Scatterplot points={points}/>
       </div>

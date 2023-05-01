@@ -216,7 +216,7 @@ class GetSimilarMatchups(Resource):
 
         # sort games by date and select columns to be displayed
         similar_games = similar_games.sort_values('date')
-        similar_games = similar_games[['Game Date', 'Home Team', 'Away Team', 'Winning Team', 'Score']]
+        # similar_games = similar_games[['Game Date', 'Home Team', 'Away Team', 'Winning Team', 'Score']]
 
         return jsonify(similar_games.to_dict('records'))
 

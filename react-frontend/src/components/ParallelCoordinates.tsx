@@ -24,7 +24,7 @@ const ParallelCoordinates: React.FC<ParallelCoordinatesProps> = ({ data_orig, li
   //   [2, 45], 
   // ];
   // console.log(data_orig);
-  if(data_orig == "") return (<div></div>);
+  if(data_orig === "") return (<div></div>);
 
   var columns: Array<string>;
   var data: Array<Array<number>>;
@@ -76,7 +76,7 @@ const ParallelCoordinates: React.FC<ParallelCoordinatesProps> = ({ data_orig, li
   //   }
   // ];
   var limits2:any = [];
-  for (var i = 0; i < columns.length; i++) {
+  for (i = 0; i < columns.length; i++) {
     var name:string = columns[i].trim();
     var limit = limits[name];
     limits2.push({
