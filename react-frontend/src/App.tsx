@@ -115,7 +115,7 @@ const DropdownMenu: React.FC<Props> = ({ ids, onSelection, selectedTeam, title }
   };
 
   return (
-    <select value={selectedTeam?.name ?? ''} onChange={handleSelection}>
+    <select value={selectedTeam?.name ?? ''} onChange={handleSelection} className={"select_" + title}>
       {ids.map((team) => (
         <option key={team.TEAM_ID + "_" + title} value={team.name}>
           {team.name}
@@ -187,7 +187,7 @@ const WinChanceDisplay: React.FC<WinChanceDisplayProps> = ({ probability }) => {
 
   return (
     <>
-      <div className="box">
+      <div className="box winprob">
         <h2>Winning probability</h2>
         <p>{probability*100}%</p>
       </div>
@@ -393,7 +393,8 @@ function App() {
   const [DisplayRestOfApp, setDisplayRestOfApp] = useState<boolean>(false);
 
   //User tutorial stuff
-  // const [ShowTeamSelectorPopup, setDisplayRestOfApp] = useState<boolean>(false);
+  const [ShowTeamSelectorPopup, setShowTeamSelectorPopup] = useState<boolean>(false);
+  const [ShowRestOfAppPopup, setShowRestOfAppPopup] = useState<boolean>(false);
   
 
   
@@ -416,6 +417,7 @@ function App() {
         // console.log(data);
         data = data.concat({TEAM_ID: 0, name: "Unknown Team"})
         setAvailableTeams(data);
+        setShowTeamSelectorPopup(true);
         // handleSelectionLeft({TEAM_ID: 1610612737, name: "Atlanta Hawks"})
         // handleSelectionRight({TEAM_ID: 1610612738, name: 'Boston Celtics'});
         // setSelectedTeamLeft({TEAM_ID: 0, name: "Unknown Team"});
@@ -433,6 +435,9 @@ function App() {
     });
     if(selectedTeamRight.TEAM_ID !== 0 && selectedTeam.TEAM_ID !== 0){
       console.log("displaying rest of app");
+      if(DisplayRestOfApp === false){
+        setShowRestOfAppPopup(true);
+      }
       setDisplayRestOfApp(true);
     }
   };
@@ -445,6 +450,9 @@ function App() {
     });
     if(selectedTeamLeft.TEAM_ID !== 0 && selectedTeam.TEAM_ID !== 0){
       console.log("displaying rest of app");
+      if(DisplayRestOfApp === false){
+        setShowRestOfAppPopup(true);
+      }
       setDisplayRestOfApp(true);
     }
   };
@@ -534,7 +542,6 @@ function App() {
             <ParallelCoordinates data_orig={parallelCoordinatesDataHome} limits={boxScoreBoundaries}></ParallelCoordinates>
           </div>
         </>}
-
       </div>
       <div className="right container">
         <TeamSelector title='AWAY' availableTeams={availableTeams} selectedTeam={selectedTeamRight} setSelectedTeam={handleSelectionRight}/>
@@ -548,13 +555,25 @@ function App() {
           </div>
         </>}   
       </div>
+      <Steps
+          enabled={ShowTeamSelectorPopup}
+          steps={[ { element: ".select_HOME", intro: "Hello step" }, { element: ".select_AWAY", intro: "World step" } ]}
+          initialStep={0}
+          onExit={() => { setShowTeamSelectorPopup(false); }}
+        />
       {DisplayRestOfApp && <>
         <div className="center container">
           <SimilarMatchupsDisplay matchups={SimilarMatchups} selectedTeamLeft={selectedTeamLeft} selectedTeamRight={selectedTeamRight}/>
           <ShapDisplay param={shap}/>     
           <Scatterplot points={points}/>
         </div>
-      </>} 
+      </>}
+      <Steps
+          enabled={ShowRestOfAppPopup}
+          steps={[ { element: ".allSliders", intro: "Hello step" }, { element: ".winprob", intro: "World step" } ]}
+          initialStep={0}
+          onExit={() => { setShowRestOfAppPopup(false); }}
+        /> 
     </div>
   )
 }
