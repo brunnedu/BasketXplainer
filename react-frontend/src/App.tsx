@@ -8,6 +8,8 @@ import Slider from "@material-ui/core/Slider";
 import * as d3 from "d3";
 import { styled } from "@material-ui/core/styles";
 import BASE_URL from './router/apiClient'
+import { Steps, Hints } from "intro.js-react";
+import "intro.js/introjs.css";
 
 
 
@@ -166,7 +168,7 @@ const TeamSelector: React.FC<TeamSelectorProps> = ({ title, availableTeams, sele
 
   return (
     <>
-      <div className="box">
+      <div className="box teamselector">
         <h1>{title}</h1>
         <img className="team_logo" src={BASE_URL + "api/logo/" + selectedTeam.TEAM_ID} alt="team logo" />
         <DropdownMenu ids={availableTeams} onSelection={setSelectedTeam} selectedTeam={selectedTeam} />
@@ -403,20 +405,19 @@ function App() {
     loadData(`api/boxscore/bounds`).then(data => {
       // console.log(data);
       setBoxScoreBoundaries(data)
+      loadData(`api/boxscores/home`).then(data => {
+        // console.log(data);
+        setParallelCoordinatesDataHome(data);
+      });
+      loadData(`api/boxscores/away`).then(data => {
+        // console.log(data);
+        setParallelCoordinatesDataAway(data);
+      });
       loadData(`api/teams`).then(data => {
         // console.log(data);
         setAvailableTeams(data);
         handleSelectionLeft({TEAM_ID: 1610612737, name: "Atlanta Hawks"})
         handleSelectionRight({TEAM_ID: 1610612738, name: 'Boston Celtics'});
-
-        loadData(`api/boxscores/home`).then(data => {
-          // console.log(data);
-          setParallelCoordinatesDataHome(data);
-        });
-        loadData(`api/boxscores/away`).then(data => {
-          // console.log(data);
-          setParallelCoordinatesDataAway(data);
-        });
       });
     });
   }, []);

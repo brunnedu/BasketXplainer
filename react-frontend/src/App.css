@@ -2,6 +2,7 @@
 
 .App {
   width: 100vw;
+  max-width: 1300px;
   height: 100vh;
   /* display: flex; */
   flex-direction: column;
@@ -101,6 +102,7 @@ h1 {
 .team_logo{
   width: 100%;
   max-width: 170px;
+  display: block;
 }
 
 .small_team_logo{
@@ -148,4 +150,8 @@ h1 {
   background-color: white;
   padding: 20px;
   border-radius: 10px;
+}
+
+.teamselector{
+  min-height: 260px;
 }
