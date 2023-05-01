@@ -95,14 +95,16 @@ interface Props {
   ids: Team[];
   onSelection: (selectedId: Team) => void;
   selectedTeam: Team | undefined;
+  title: string;
 }
 
-const DropdownMenu: React.FC<Props> = ({ ids, onSelection, selectedTeam }) => {
+const DropdownMenu: React.FC<Props> = ({ ids, onSelection, selectedTeam, title }) => {
 
   const handleSelection = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    // console.log("handleSelection");
     let teams:Team[] = ids;
     let target: string = event.target.value;
-    let team:Team = {TEAM_ID: 0, name: "placeholder"};
+    let team:Team = {TEAM_ID: 0, name: "Unknown Team"};
     // find the team with the matching id
     for (let i = 0; i < teams.length; i++) {
       if (teams[i].name == target) {
@@ -115,11 +117,33 @@ const DropdownMenu: React.FC<Props> = ({ ids, onSelection, selectedTeam }) => {
   return (
     <select value={selectedTeam?.name ?? ''} onChange={handleSelection}>
       {ids.map((team) => (
-        <option key={team.TEAM_ID} value={team.name}>
+        <option key={team.TEAM_ID + "_" + title} value={team.name}>
           {team.name}
         </option>
       ))}
     </select>
+  );
+};
+
+interface TeamSelectorProps {
+  title: string;
+  availableTeams: Team[];
+  selectedTeam: Team;
+  setSelectedTeam: (selectedId: Team) => void;
+}
+
+const TeamSelector: React.FC<TeamSelectorProps> = ({ title, availableTeams, selectedTeam, setSelectedTeam }) => {
+  const BASE_URL = process.env.NODE_ENV==="production"? `http://be.${window.location.hostname}/api/v1`:"http://localhost:8000/"
+
+  return (
+    <>
+      <div className="box teamselector">
+        <h1>{title}</h1>
+        {/* {selectedTeam.TEAM_ID !== 0 && <img className="team_logo" src={BASE_URL + "api/logo/" + selectedTeam.TEAM_ID} alt="team logo" />} */}
+        <img className="team_logo" src={selectedTeam.TEAM_ID !== 0 ? BASE_URL + "api/logo/" + selectedTeam.TEAM_ID : "https://i.imgur.com/fStsxCy.png"} alt="team logo" />
+        <DropdownMenu ids={availableTeams} onSelection={setSelectedTeam} selectedTeam={selectedTeam} title={title} />
+      </div>
+    </>
   );
 };
 
@@ -148,36 +172,6 @@ const ShapDisplay: React.FC<ShapDisplayProps> = ({ param }) => {
     </>
   );
 };
-
-
-
-
-
-
-
-
-interface TeamSelectorProps {
-  title: string;
-  availableTeams: Team[];
-  selectedTeam: Team;
-  setSelectedTeam: (selectedId: Team) => void;
-}
-
-const TeamSelector: React.FC<TeamSelectorProps> = ({ title, availableTeams, selectedTeam, setSelectedTeam }) => {
-  const BASE_URL = process.env.NODE_ENV==="production"? `http://be.${window.location.hostname}/api/v1`:"http://localhost:8000/"
-
-  return (
-    <>
-      <div className="box teamselector">
-        <h1>{title}</h1>
-        <img className="team_logo" src={BASE_URL + "api/logo/" + selectedTeam.TEAM_ID} alt="team logo" />
-        <DropdownMenu ids={availableTeams} onSelection={setSelectedTeam} selectedTeam={selectedTeam} />
-      </div>
-    </>
-  );
-};
-
-
 
 
 
@@ -380,9 +374,9 @@ function App() {
 
 
 
-  const [availableTeams, setAvailableTeams] = useState<any>([{TEAM_ID: 1610612737, name: "Atlanta Hawks"}]);
-  const [selectedTeamLeft, setSelectedTeamLeft] = useState<Team>({TEAM_ID: 1610612737, name: "Atlanta Hawks"});
-  const [selectedTeamRight, setSelectedTeamRight] = useState<Team>({TEAM_ID: 1610612738, name: 'Boston Celtics'});
+  const [availableTeams, setAvailableTeams] = useState<any>([{TEAM_ID: 0, name: "Unknown Team"}]);
+  const [selectedTeamLeft, setSelectedTeamLeft] = useState<Team>({TEAM_ID: 0, name: "Unknown Team"});
+  const [selectedTeamRight, setSelectedTeamRight] = useState<Team>({TEAM_ID: 0, name: "Unknown Team"});
 
   const [boxScoresLeft, setBoxScoresLeft] = useState<any>({});
   const [boxScoresRight, setBoxScoresRight] = useState<any>({});
@@ -395,6 +389,11 @@ function App() {
   const [parallelCoordinatesDataHome, setParallelCoordinatesDataHome] = useState<string>("");
   const [parallelCoordinatesDataAway, setParallelCoordinatesDataAway] = useState<string>("");
   const [SimilarMatchups, setSimilarMatchups] = useState<any>([]);
+
+  const [DisplayRestOfApp, setDisplayRestOfApp] = useState<boolean>(false);
+
+  //User tutorial stuff
+  // const [ShowTeamSelectorPopup, setDisplayRestOfApp] = useState<boolean>(false);
   
 
   
@@ -415,9 +414,11 @@ function App() {
       });
       loadData(`api/teams`).then(data => {
         // console.log(data);
+        data = data.concat({TEAM_ID: 0, name: "Unknown Team"})
         setAvailableTeams(data);
-        handleSelectionLeft({TEAM_ID: 1610612737, name: "Atlanta Hawks"})
-        handleSelectionRight({TEAM_ID: 1610612738, name: 'Boston Celtics'});
+        // handleSelectionLeft({TEAM_ID: 1610612737, name: "Atlanta Hawks"})
+        // handleSelectionRight({TEAM_ID: 1610612738, name: 'Boston Celtics'});
+        // setSelectedTeamLeft({TEAM_ID: 0, name: "Unknown Team"});
       });
     });
   }, []);
@@ -430,6 +431,10 @@ function App() {
       // console.log(data[0]);
       setBoxScoresLeft(data[0]);
     });
+    if(selectedTeamRight.TEAM_ID !== 0 && selectedTeam.TEAM_ID !== 0){
+      console.log("displaying rest of app");
+      setDisplayRestOfApp(true);
+    }
   };
 
   const handleSelectionRight = (selectedTeam: Team) => {
@@ -438,6 +443,10 @@ function App() {
       // console.log(data[0]);
       setBoxScoresRight(data[0]);
     });
+    if(selectedTeamLeft.TEAM_ID !== 0 && selectedTeam.TEAM_ID !== 0){
+      console.log("displaying rest of app");
+      setDisplayRestOfApp(true);
+    }
   };
 
   const handleSliderChangeLeft = (key: keyof BoxScores, value: number) => {
@@ -518,29 +527,34 @@ function App() {
       </header>
       <div className="left container">
         <TeamSelector title='HOME' availableTeams={availableTeams} selectedTeam={selectedTeamLeft} setSelectedTeam={handleSelectionLeft}/>
-        <BoxScoreSlider boxScores={boxScoresLeft} onSliderChange={handleSliderChangeLeft} onMouseUp={onSliderMouseUp} boxScoreBoundaries={boxScoreBoundaries}/>
-        <WinChanceDisplay probability={probabilityLeft}/>
-        <div className="box">
-          <h2>Parallel Coordinates</h2>
-          <ParallelCoordinates data_orig={parallelCoordinatesDataHome} limits={boxScoreBoundaries}></ParallelCoordinates>
-        </div> 
+        {DisplayRestOfApp && <>
+          <BoxScoreSlider boxScores={boxScoresLeft} onSliderChange={handleSliderChangeLeft} onMouseUp={onSliderMouseUp} boxScoreBoundaries={boxScoreBoundaries} />
+          <WinChanceDisplay probability={probabilityLeft} /><div className="box">
+            <h2>Parallel Coordinates</h2>
+            <ParallelCoordinates data_orig={parallelCoordinatesDataHome} limits={boxScoreBoundaries}></ParallelCoordinates>
+          </div>
+        </>}
+
       </div>
       <div className="right container">
         <TeamSelector title='AWAY' availableTeams={availableTeams} selectedTeam={selectedTeamRight} setSelectedTeam={handleSelectionRight}/>
-        <BoxScoreSlider boxScores={boxScoresRight} onSliderChange={handleSliderChangeRight} onMouseUp={onSliderMouseUp} boxScoreBoundaries={boxScoreBoundaries}/>
-        <WinChanceDisplay probability={1-probabilityLeft}/>   
-        <div className="box">
-          <h2>Parallel Coordinates</h2>
-          <ParallelCoordinates data_orig={parallelCoordinatesDataAway} limits={boxScoreBoundaries}></ParallelCoordinates>
+        <Popup text="This is the text that will be displayed in the popup" />
+        {DisplayRestOfApp && <>
+          <BoxScoreSlider boxScores={boxScoresRight} onSliderChange={handleSliderChangeRight} onMouseUp={onSliderMouseUp} boxScoreBoundaries={boxScoreBoundaries}/>
+          <WinChanceDisplay probability={1-probabilityLeft}/>   
+          <div className="box">
+            <h2>Parallel Coordinates</h2>
+            <ParallelCoordinates data_orig={parallelCoordinatesDataAway} limits={boxScoreBoundaries}></ParallelCoordinates>
+          </div>
+        </>}   
+      </div>
+      {DisplayRestOfApp && <>
+        <div className="center container">
+          <SimilarMatchupsDisplay matchups={SimilarMatchups} selectedTeamLeft={selectedTeamLeft} selectedTeamRight={selectedTeamRight}/>
+          <ShapDisplay param={shap}/>     
+          <Scatterplot points={points}/>
         </div>
-        <Popup text="This is the text that will be displayed in the popup" />   
-      </div>
-      <div className="center container">
-        <SimilarMatchupsDisplay matchups={SimilarMatchups} selectedTeamLeft={selectedTeamLeft} selectedTeamRight={selectedTeamRight}/>
-        <ShapDisplay param={shap}/>     
-        <Scatterplot points={points}/>
-      </div>
-
+      </>} 
     </div>
   )
 }
