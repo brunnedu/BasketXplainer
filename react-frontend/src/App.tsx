@@ -557,7 +557,7 @@ function App() {
       </div>
       <Steps
           enabled={ShowTeamSelectorPopup}
-          steps={[ { element: ".select_HOME", intro: "Hello step" }, { element: ".select_AWAY", intro: "World step" } ]}
+          steps={[ { element: ".select_HOME", intro: "Welcome to the NBA Matchup Analyzer 👋 <br/> Start by choosing the Home Team for the analysis." }, { element: ".select_AWAY", intro: "Now choose the Away Team to see the results!" } ]}
           initialStep={0}
           onExit={() => { setShowTeamSelectorPopup(false); }}
         />
@@ -570,7 +570,7 @@ function App() {
       </>}
       <Steps
           enabled={ShowRestOfAppPopup}
-          steps={[ { element: ".allSliders", intro: "Hello step" }, { element: ".winprob", intro: "World step" } ]}
+          steps={[ { element: ".allSliders", intro: "Nice! <br/> Here is a quick walkthrough of what all the elements do." }, { element: ".winprob", intro: "We will go through all of them one by one." } ]}
           initialStep={0}
           onExit={() => { setShowRestOfAppPopup(false); }}
         /> 
