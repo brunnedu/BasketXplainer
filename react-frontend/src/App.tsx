@@ -11,6 +11,8 @@ import BASE_URL from './router/apiClient'
 import { Steps, Hints } from "intro.js-react";
 import "intro.js/introjs.css";
 
+// let DEV_MODE = true;
+let DEV_MODE = false;
 
 
 
@@ -310,11 +312,9 @@ const Scatterplot: React.FC<ScatterplotProps> = ({ points }) => {
 
 interface SimilarMatchupsDisplayProps {
   matchups: any[];
-  selectedTeamLeft: Team;
-  selectedTeamRight: Team;
 }
 
-const SimilarMatchupsDisplay: React.FC<SimilarMatchupsDisplayProps> = ({ matchups, selectedTeamLeft, selectedTeamRight }) => {
+const SimilarMatchupsDisplay: React.FC<SimilarMatchupsDisplayProps> = ({ matchups }) => {
   const BASE_URL = process.env.NODE_ENV==="production"? `http://be.${window.location.hostname}/api/v1`:"http://localhost:8000/"
   console.log(matchups)
 
@@ -418,9 +418,13 @@ function App() {
         data = data.concat({TEAM_ID: 0, name: "Unknown Team"})
         setAvailableTeams(data);
         setShowTeamSelectorPopup(true);
-        // handleSelectionLeft({TEAM_ID: 1610612737, name: "Atlanta Hawks"})
-        // handleSelectionRight({TEAM_ID: 1610612738, name: 'Boston Celtics'});
-        // setSelectedTeamLeft({TEAM_ID: 0, name: "Unknown Team"});
+        if(DEV_MODE){
+          handleSelectionLeft({TEAM_ID: 1610612737, name: "Atlanta Hawks"})
+          handleSelectionRight({TEAM_ID: 1610612738, name: 'Boston Celtics'});
+          setDisplayRestOfApp(true);
+        }
+
+
       });
     });
   }, []);
@@ -556,20 +560,20 @@ function App() {
         </>}   
       </div>
       <Steps
-          enabled={ShowTeamSelectorPopup}
+          enabled={ShowTeamSelectorPopup && !DEV_MODE}
           steps={[ { element: ".select_HOME", intro: "Welcome to the NBA Matchup Analyzer 👋 <br/> Start by choosing the Home Team for the analysis." }, { element: ".select_AWAY", intro: "Now choose the Away Team to see the results!" } ]}
           initialStep={0}
           onExit={() => { setShowTeamSelectorPopup(false); }}
         />
       {DisplayRestOfApp && <>
         <div className="center container">
-          <SimilarMatchupsDisplay matchups={SimilarMatchups} selectedTeamLeft={selectedTeamLeft} selectedTeamRight={selectedTeamRight}/>
+          <SimilarMatchupsDisplay matchups={SimilarMatchups}/>
           <ShapDisplay param={shap}/>     
           <Scatterplot points={points}/>
         </div>
       </>}
       <Steps
-          enabled={ShowRestOfAppPopup}
+          enabled={ShowRestOfAppPopup && !DEV_MODE}
           steps={[ { element: ".allSliders", intro: "Nice! <br/> Here is a quick walkthrough of what all the elements do." }, { element: ".winprob", intro: "We will go through all of them one by one." } ]}
           initialStep={0}
           onExit={() => { setShowRestOfAppPopup(false); }}
