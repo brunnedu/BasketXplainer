@@ -206,90 +206,81 @@ interface Point {
   x_coord: number;
   y_coord: number;
   is_home: number;
+  TEAM_ID: number;
 }
 
 interface ScatterplotProps {
   points: Point[];
 }
 
-
-let addedPoints:boolean = false;
+let addedPoints: boolean = false;
 const Scatterplot: React.FC<ScatterplotProps> = ({ points }) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const xScale = d3.scaleLinear().domain([-5, 5]).range([10, 90]);
   const yScale = d3.scaleLinear().domain([-5, 5]).range([10, 90]);
-  const colorMap: { [key: number]: string } = {
-    0: "red",
-    1: "blue",
-    2: "green",
-    3: "orange",
-    4: "purple",
-    5: "yellow",
-  };
-  
 
   useEffect(() => {
-    if(points.length === 0){
+    if (points.length === 0) {
       return;
     }
     const svg = d3.select(svgRef.current);
 
-    if(!addedPoints){
+    if (!addedPoints) {
       addedPoints = true;
+
       // Add points to the scatterplot
-      console.log("adding points");
+      console.log('adding points');
       svg
-        .selectAll("circle")
+        .selectAll('image')
         .data(points)
         .enter()
-        .append("circle")
-        .attr("cx", (d) => xScale(d.x_coord))
-        .attr("cy", (d) => yScale(d.y_coord))
-        .attr("r", 2)
-        .attr("fill", (d) => colorMap[d===points[0] ? 4 : (d===points[1] ? 5 : (d.is_home ? 1 : 2))])
-        .on("mouseover", function (event, d) {
+        .append('image')
+        .attr('x', (d) => xScale(d.x_coord) - 2)
+        .attr('y', (d) => yScale(d.y_coord) - 2)
+        .attr('width', 8)
+        .attr('height', 8)
+        .attr('href', (d) => `http://localhost:8000/api/logo/${d.TEAM_ID}`)
+        .on('mouseover', function (event, d) {
           // Show hover details on mouseover
-          d3.select("#tooltip")
-            .style("opacity", 1)
-            .html(`${JSON.stringify(d).replaceAll("{", "").replaceAll("}", "").replaceAll(",", "<br>").replaceAll("\"", "")}`)
-            .style("left", `${event.pageX+10}px`)
-            .style("top", `${event.pageY-1100}px`);
+          d3.select('#tooltip')
+            .style('opacity', 1)
+            .html(`${JSON.stringify(d).replaceAll('{', '').replaceAll('}', '').replaceAll(',', '<br>').replaceAll('"', '')}`)
+            .style('left', `${event.pageX + 10}px`)
+            .style('top', `${event.pageY - 1100}px`);
         })
-        .on("mousemove", function (event) {
+        .on('mousemove', function (event) {
           // Move hover details on mousemove
-          d3.select("#tooltip")
-            .style("left", `${event.pageX+10}px`)
-            .style("top", `${event.pageY-1100}px`);   
+          d3.select('#tooltip')
+            .style('left', `${event.pageX + 10}px`)
+            .style('top', `${event.pageY - 1100}px`);
         })
-        .on("mouseout", function (event, d) {
+        .on('mouseout', function (event, d) {
           // Hide hover details on mouseout
-          d3.select("#tooltip").style("opacity", 0).html("");
+          d3.select('#tooltip').style('opacity', 0).html('');
         });
     } else {
       // Update point locations
-      console.log("updating points");
+      console.log('updating points');
       svg
-      .selectAll("circle")
-      .data(points)
-      .transition()
-      .duration(1000)
-      .attr("cx", (d) => xScale(d.x_coord))
-      .attr("cy", (d) => yScale(d.y_coord))
+        .selectAll('image')
+        .data(points)
+        .transition()
+        .duration(1000)
+        .attr('x', (d) => xScale(d.x_coord) - 2)
+        .attr('y', (d) => yScale(d.y_coord) - 2);
     }
   }, [points]);
 
-
   return (
     <>
-      <div className="box">
+      <div className='box'>
         <h2>Tactical clustering</h2>
-        <div id="tooltip"/>
-        <svg ref={svgRef} viewBox="0 0 100 100" id="clustering"></svg>
+        <div id='tooltip' />
+        <svg ref={svgRef} viewBox='0 0 100 100' id='clustering'></svg>
       </div>
     </>
   );
 };
-
 
 
 
