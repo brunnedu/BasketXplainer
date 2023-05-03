@@ -18,7 +18,7 @@ let DEV_MODE = false;
 
 
 const VerticalSlider = styled(Slider)({
-  height: "100px !important",
+  height: "170px !important",
   margin: "auto 0 !important",
   display: "flex",
   flexDirection: "column",
@@ -54,28 +54,25 @@ const BoxScoreSlider: React.FC<PlayerStatsSliderProps> = ({
 
   return (
     <>
-      <div className="box">
-        <h2>Aggregated box score data</h2>
-        <div className='allSliders'>
-          {Object.entries(boxScores).map(([key, value]) => (
-            <div key={key} className='slidercontainer'>
-              <p>{key}</p>
-              <VerticalSlider
-                orientation="vertical"
-                value={value}
-                onChange={(event, value) =>
-                  handleSliderChange(key as keyof BoxScores, event, value)
-                }
-                aria-labelledby="continuous-slider"
-                min={boxScoreBoundaries[key][0]}
-                max={boxScoreBoundaries[key][1]}
-                step={(boxScoreBoundaries[key][1] - boxScoreBoundaries[key][0]) / 100}
-                draggable 
-                onChangeCommitted ={() => {onMouseUp()}}
-              />
-            </div>
-          ))}
-        </div>
+      <div className='allSliders'>
+        {Object.entries(boxScores).map(([key, value]) => (
+          <div key={key} className='slidercontainer'>
+            {/* <p>{key}</p> */}
+            <VerticalSlider
+              orientation="vertical"
+              value={value}
+              onChange={(event, value) =>
+                handleSliderChange(key as keyof BoxScores, event, value)
+              }
+              aria-labelledby="continuous-slider"
+              min={Math.floor(boxScoreBoundaries[key][0])}
+              max={Math.ceil(boxScoreBoundaries[key][1])}
+              step={(boxScoreBoundaries[key][1] - boxScoreBoundaries[key][0]) / 100}
+              draggable 
+              onChangeCommitted ={() => {onMouseUp()}}
+            />
+          </div>
+        ))}
       </div>
     </>
   );
@@ -307,7 +304,7 @@ interface SimilarMatchupsDisplayProps {
 
 const SimilarMatchupsDisplay: React.FC<SimilarMatchupsDisplayProps> = ({ matchups }) => {
   const BASE_URL = process.env.NODE_ENV==="production"? `http://be.${window.location.hostname}/api/v1`:"http://localhost:8000/"
-  console.log(matchups)
+  // console.log(matchups)
 
   return (
     <>
@@ -348,7 +345,7 @@ let scrolling = false;
 function App() {
 
   function loadData(url: string): Promise<any | undefined> {
-    console.log(url)
+    // console.log(url)
     const promise = axiosClient.get<any>(url)
     return promise
       .then((res) => {
@@ -460,7 +457,7 @@ function App() {
   };
 
   const handleSliderChangeRight = (key: keyof BoxScores, value: number) => {
-    // console.log(key, value,"right");
+    console.log(key, value,"right");
     var copy = {...boxScoresRight};
     copy[key] = value;
     setBoxScoresRight(copy);
@@ -516,7 +513,7 @@ function App() {
       setPoints(data);
     });
     loadData(`api/similar_games/${s}`).then(data => {
-      console.log(data);
+      // console.log(data);
       setSimilarMatchups(data);
     });
   }
@@ -531,23 +528,24 @@ function App() {
       <div className="left container">
         <TeamSelector title='HOME' availableTeams={availableTeams} selectedTeam={selectedTeamLeft} setSelectedTeam={handleSelectionLeft}/>
         {DisplayRestOfApp && <>
-          <BoxScoreSlider boxScores={boxScoresLeft} onSliderChange={handleSliderChangeLeft} onMouseUp={onSliderMouseUp} boxScoreBoundaries={boxScoreBoundaries} />
-          <WinChanceDisplay probability={probabilityLeft} /><div className="box">
-            <h2>Parallel Coordinates</h2>
-            <ParallelCoordinates data_orig={parallelCoordinatesDataHome} limits={boxScoreBoundaries}></ParallelCoordinates>
+          <div className="box sliderbox">
+            <h2>Aggregated box score data</h2>
+            <ParallelCoordinates data_orig={parallelCoordinatesDataHome} limits={boxScoreBoundaries} custom={boxScoresLeft}></ParallelCoordinates>
+            <BoxScoreSlider boxScores={boxScoresLeft} onSliderChange={handleSliderChangeLeft} onMouseUp={onSliderMouseUp} boxScoreBoundaries={boxScoreBoundaries} />
           </div>
+          <WinChanceDisplay probability={probabilityLeft} />
         </>}
       </div>
       <div className="right container">
         <TeamSelector title='AWAY' availableTeams={availableTeams} selectedTeam={selectedTeamRight} setSelectedTeam={handleSelectionRight}/>
         <Popup text="This is the text that will be displayed in the popup" />
         {DisplayRestOfApp && <>
-          <BoxScoreSlider boxScores={boxScoresRight} onSliderChange={handleSliderChangeRight} onMouseUp={onSliderMouseUp} boxScoreBoundaries={boxScoreBoundaries}/>
-          <WinChanceDisplay probability={1-probabilityLeft}/>   
-          <div className="box">
-            <h2>Parallel Coordinates</h2>
-            <ParallelCoordinates data_orig={parallelCoordinatesDataAway} limits={boxScoreBoundaries}></ParallelCoordinates>
+          <div className="box sliderbox">
+            <h2>Aggregated box score data</h2>
+            <ParallelCoordinates data_orig={parallelCoordinatesDataAway} limits={boxScoreBoundaries} custom={boxScoresRight}></ParallelCoordinates>
+            <BoxScoreSlider boxScores={boxScoresRight} onSliderChange={handleSliderChangeRight} onMouseUp={onSliderMouseUp} boxScoreBoundaries={boxScoreBoundaries}/>
           </div>
+          <WinChanceDisplay probability={1-probabilityLeft}/>   
         </>}   
       </div>
       <Steps

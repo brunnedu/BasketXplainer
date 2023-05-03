@@ -15,15 +15,16 @@ HighchartsParallelCoordinates(Highcharts);
 interface ParallelCoordinatesProps {
   data_orig: string;
   limits: any;
+  custom: any;
 }
 
-const ParallelCoordinates: React.FC<ParallelCoordinatesProps> = ({ data_orig, limits }) => {
+const ParallelCoordinates: React.FC<ParallelCoordinatesProps> = ({ data_orig, limits, custom }) => {
   // example format
   // data = [
   //   [0, 30], 
   //   [2, 45], 
   // ];
-  // console.log(data_orig);
+  // console.log("ParallelCoordinates update");
   if(data_orig === "") return (<div></div>);
 
   var columns: Array<string>;
@@ -43,7 +44,18 @@ const ParallelCoordinates: React.FC<ParallelCoordinatesProps> = ({ data_orig, li
 
   // console.log(columns);
   // console.log(data);
+  // console.log(custom);
 
+  //add custom to data
+  row = [];
+  var keys = Object.keys(custom);
+  for (i = 0; i < keys.length; i++) {
+    var key = keys[i];
+    row.push(custom[key]);
+  }
+  data.push(row);
+
+  // console.log(data);
 
   // console.log(limits);
   //limits looks like this
@@ -79,12 +91,19 @@ const ParallelCoordinates: React.FC<ParallelCoordinatesProps> = ({ data_orig, li
   for (i = 0; i < columns.length; i++) {
     var name:string = columns[i].trim();
     var limit = limits[name];
+    var limit0 = Math.floor(limit[0]);
+    var limit1 = Math.ceil(limit[1]);
+    var tickAmount = 1;
+    var tickInterval = (limit1 - limit0) / tickAmount;
     limits2.push({
       type: 'linear',
-      min: limit[0],
-      max: limit[1],
+      min: limit0,
+      max: limit1,
       startOnTick: false,
-      reversed: true,
+      // endOnTick: true,
+      reversed: false,
+      // tickAmount: tickAmount,
+      tickInterval: 1,
     });
   }
 
@@ -94,7 +113,7 @@ const ParallelCoordinates: React.FC<ParallelCoordinatesProps> = ({ data_orig, li
     chart: {
       type: 'line',
       backgroundColor: '#e4c494',
-      width: 400,
+      width: 350,
       height: 300,
       parallelCoordinates: true,
       parallelAxes: {
@@ -108,10 +127,12 @@ const ParallelCoordinates: React.FC<ParallelCoordinatesProps> = ({ data_orig, li
       categories: columns,
       offset: 10,
     },
-    yAxis:limits2,
+    // the y axis needs to be reversed and needs to have limits
+    yAxis: limits2,
     series: data.map((set, i) => ({
       name: `Line ${i}`,
       data: set,
+      color: (i == 31 ? '#00FF00' : 'rgba(0, 0, 0, 0.2)'),
     })),
     credits: {
       enabled: false,

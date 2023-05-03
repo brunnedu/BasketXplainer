@@ -60,13 +60,17 @@ h1 {
 .slidercontainer{
   /* margin: 0 0% !important;
   width: 14%; */
-  width: 40px;
+  width: 25.3px;
   display: inline-block;
 }
 
 .allSliders{
   /* display: flex;
   align-items: center; */
+  position: absolute;
+  left: 9px;
+  top: 162px;
+  
 }
 
 .center{
@@ -154,4 +158,13 @@ h1 {
 
 .teamselector{
   min-height: 260px;
+}
+
+.sliderbox{
+  position: relative;
+  height: 363px;
+}
+
+.sliderbox > div{
+  position: absolute;
 }
