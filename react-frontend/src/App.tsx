@@ -117,7 +117,8 @@ const DropdownMenu: React.FC<Props> = ({ ids, onSelection, selectedTeam, title }
     <select value={selectedTeam?.name ?? ''} onChange={handleSelection} className={"select_" + title}>
       {ids.map((team) => (
         <option key={team.TEAM_ID + "_" + title} value={team.name}>
-          {team.name}
+          {team.name} 
+          
         </option>
       ))}
     </select>
@@ -137,7 +138,6 @@ const TeamSelector: React.FC<TeamSelectorProps> = ({ title, availableTeams, sele
   return (
     <>
       <div className="box teamselector">
-        <h1>{title}</h1>
         {/* {selectedTeam.TEAM_ID !== 0 && <img className="team_logo" src={BASE_URL + "api/logo/" + selectedTeam.TEAM_ID} alt="team logo" />} */}
         <img className="team_logo" src={selectedTeam.TEAM_ID !== 0 ? BASE_URL + "api/logo/" + selectedTeam.TEAM_ID : "https://i.imgur.com/fStsxCy.png"} alt="team logo" />
         <DropdownMenu ids={availableTeams} onSelection={setSelectedTeam} selectedTeam={selectedTeam} title={title} />
@@ -188,7 +188,7 @@ const WinChanceDisplay: React.FC<WinChanceDisplayProps> = ({ probability }) => {
     <>
       <div className="box winprob">
         <h2>Winning probability</h2>
-        <p>{probability*100}%</p>
+        <p>{Math.round(probability*100)}%</p>
       </div>
     </>
   );
@@ -316,10 +316,10 @@ const SimilarMatchupsDisplay: React.FC<SimilarMatchupsDisplayProps> = ({ matchup
           <tbody>
             {matchups.map((matchup) => (
               <tr className="matchup" key={matchup["Game Date"] + " " + matchup["Score"]}>
-                <td>{matchup["Game Date"]}</td>
-                <td>{matchup["Home Team"]}<img className="small_team_logo" src={BASE_URL + "api/logo/" + matchup["TEAM_ID_home"]} alt="team logo" /></td>
-                <td>{matchup["Score"]}</td>
-                <td><img className="small_team_logo" src={BASE_URL + "api/logo/" + matchup["TEAM_ID_away"]} alt="team logo" />{matchup["Away Team"]}</td>
+                <td className='date_td'>{matchup["Game Date"]}</td>
+                <td className='home_td'>{matchup["Home Team"]}<img className="small_team_logo" src={BASE_URL + "api/logo/" + matchup["TEAM_ID_home"]} alt="team logo" /></td>
+                <td className='matchup_td'>{matchup["Score"]}</td>
+                <td className='away_td'><img className="small_team_logo" src={BASE_URL + "api/logo/" + matchup["TEAM_ID_away"]} alt="team logo" />{matchup["Away Team"]}</td>
               </tr>
             ))}
           </tbody>
@@ -523,9 +523,9 @@ function App() {
 
   return (
     <div className="App">
-      <header className="App-header"> Winning odds predictions
-      </header>
+      {/* <header className="App-header"> Winning odds predictions</header> */}
       <div className="left container">
+        <h1 className='side_title'>HOME</h1>
         <TeamSelector title='HOME' availableTeams={availableTeams} selectedTeam={selectedTeamLeft} setSelectedTeam={handleSelectionLeft}/>
         {DisplayRestOfApp && <>
           <div className="box sliderbox">
@@ -537,6 +537,7 @@ function App() {
         </>}
       </div>
       <div className="right container">
+        <h1 className='side_title'>AWAY</h1>
         <TeamSelector title='AWAY' availableTeams={availableTeams} selectedTeam={selectedTeamRight} setSelectedTeam={handleSelectionRight}/>
         <Popup text="This is the text that will be displayed in the popup" />
         {DisplayRestOfApp && <>
