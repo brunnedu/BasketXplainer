@@ -139,7 +139,7 @@ const TeamSelector: React.FC<TeamSelectorProps> = ({ title, availableTeams, sele
     <>
       <div className="box teamselector">
         {/* {selectedTeam.TEAM_ID !== 0 && <img className="team_logo" src={BASE_URL + "api/logo/" + selectedTeam.TEAM_ID} alt="team logo" />} */}
-        <img className="team_logo" src={selectedTeam.TEAM_ID !== 0 ? BASE_URL + "api/logo/" + selectedTeam.TEAM_ID : "https://i.imgur.com/fStsxCy.png"} alt="team logo" />
+        <img className="team_logo" src={BASE_URL + "api/logo/" + selectedTeam.TEAM_ID} alt="team logo" />
         <DropdownMenu ids={availableTeams} onSelection={setSelectedTeam} selectedTeam={selectedTeam} title={title} />
       </div>
     </>
@@ -236,7 +236,7 @@ const Scatterplot: React.FC<ScatterplotProps> = ({ points }) => {
         .attr('y', (d) => yScale(d.y_coord) - 2)
         .attr('width', 8)
         .attr('height', 8)
-        .attr('href', (d) => `http://localhost:8000/api/logo/${d.TEAM_ID}`)
+        .attr('href', (d) => `http://localhost:8000/api/logo/${d.TEAM_ID == 0 ? 5 : (d.TEAM_ID == 1 ? 4 : d.TEAM_ID)}`)
         .on('mouseover', function (event, d) {
           // Show hover details on mouseover
           d3.select('#tooltip')
@@ -310,7 +310,6 @@ const SimilarMatchupsDisplay: React.FC<SimilarMatchupsDisplayProps> = ({ matchup
     <>
       <div className="box">
         <h2>Similar matchups</h2>
-        {/* {matchup["Game Date"]}: <img className="small_team_logo" src={BASE_URL + "api/logo/" + selectedTeamLeft.TEAM_ID} alt="team logo" /> {matchup["Score"]} <img className="small_team_logo" src={BASE_URL + "api/logo/" + selectedTeamRight.TEAM_ID} alt="team logo" /> */}
         {/* For each matchup, display the date, the score and the 2 team logos on each side of the score  */}
         <table>
           <tbody>
@@ -454,6 +453,7 @@ function App() {
     copy[key] = value;
     setBoxScoresLeft(copy);
     scrolling = true;
+    setSelectedTeamLeft({TEAM_ID: 4, name: "Custom Team"});
   };
 
   const handleSliderChangeRight = (key: keyof BoxScores, value: number) => {
@@ -463,6 +463,7 @@ function App() {
     setBoxScoresRight(copy);
     // console.log(copy);
     scrolling = true;
+    setSelectedTeamRight({TEAM_ID: 5, name: "Custom Team"});
   };
 
   const onSliderMouseUp = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
