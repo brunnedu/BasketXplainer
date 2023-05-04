@@ -18,7 +18,7 @@ let DEV_MODE = false;
 
 
 const VerticalSlider = styled(Slider)({
-  height: "100px !important",
+  height: "170px !important",
   margin: "auto 0 !important",
   display: "flex",
   flexDirection: "column",
@@ -54,28 +54,25 @@ const BoxScoreSlider: React.FC<PlayerStatsSliderProps> = ({
 
   return (
     <>
-      <div className="box">
-        <h2>Aggregated box score data</h2>
-        <div className='allSliders'>
-          {Object.entries(boxScores).map(([key, value]) => (
-            <div key={key} className='slidercontainer'>
-              <p>{key}</p>
-              <VerticalSlider
-                orientation="vertical"
-                value={value}
-                onChange={(event, value) =>
-                  handleSliderChange(key as keyof BoxScores, event, value)
-                }
-                aria-labelledby="continuous-slider"
-                min={boxScoreBoundaries[key][0]}
-                max={boxScoreBoundaries[key][1]}
-                step={(boxScoreBoundaries[key][1] - boxScoreBoundaries[key][0]) / 100}
-                draggable 
-                onChangeCommitted ={() => {onMouseUp()}}
-              />
-            </div>
-          ))}
-        </div>
+      <div className='allSliders'>
+        {Object.entries(boxScores).map(([key, value]) => (
+          <div key={key} className='slidercontainer'>
+            {/* <p>{key}</p> */}
+            <VerticalSlider
+              orientation="vertical"
+              value={value}
+              onChange={(event, value) =>
+                handleSliderChange(key as keyof BoxScores, event, value)
+              }
+              aria-labelledby="continuous-slider"
+              min={Math.floor(boxScoreBoundaries[key][0])}
+              max={Math.ceil(boxScoreBoundaries[key][1])}
+              step={(boxScoreBoundaries[key][1] - boxScoreBoundaries[key][0]) / 100}
+              draggable 
+              onChangeCommitted ={() => {onMouseUp()}}
+            />
+          </div>
+        ))}
       </div>
     </>
   );
@@ -120,7 +117,8 @@ const DropdownMenu: React.FC<Props> = ({ ids, onSelection, selectedTeam, title }
     <select value={selectedTeam?.name ?? ''} onChange={handleSelection} className={"select_" + title}>
       {ids.map((team) => (
         <option key={team.TEAM_ID + "_" + title} value={team.name}>
-          {team.name}
+          {team.name} 
+          
         </option>
       ))}
     </select>
@@ -140,9 +138,8 @@ const TeamSelector: React.FC<TeamSelectorProps> = ({ title, availableTeams, sele
   return (
     <>
       <div className="box teamselector">
-        <h1>{title}</h1>
         {/* {selectedTeam.TEAM_ID !== 0 && <img className="team_logo" src={BASE_URL + "api/logo/" + selectedTeam.TEAM_ID} alt="team logo" />} */}
-        <img className="team_logo" src={selectedTeam.TEAM_ID !== 0 ? BASE_URL + "api/logo/" + selectedTeam.TEAM_ID : "https://i.imgur.com/fStsxCy.png"} alt="team logo" />
+        <img className="team_logo" src={BASE_URL + "api/logo/" + selectedTeam.TEAM_ID} alt="team logo" />
         <DropdownMenu ids={availableTeams} onSelection={setSelectedTeam} selectedTeam={selectedTeam} title={title} />
       </div>
     </>
@@ -191,7 +188,7 @@ const WinChanceDisplay: React.FC<WinChanceDisplayProps> = ({ probability }) => {
     <>
       <div className="box winprob">
         <h2>Winning probability</h2>
-        <p>{probability*100}%</p>
+        <p>{Math.round(probability*100)}%</p>
       </div>
     </>
   );
@@ -228,8 +225,30 @@ const Scatterplot: React.FC<ScatterplotProps> = ({ points }) => {
     if (!addedPoints) {
       addedPoints = true;
 
+      // // Add x-axis
+      // svg.append("g")
+      // .attr("font-size", 5)
+      // .attr("transform", "translate(5,85)")
+      // .call(d3.axisBottom(xScale))
+      // .append("text")
+      // .attr("transform", "translate(5,5)")
+      // .attr("class", "axis-label")
+      // .style("text-anchor", "middle")
+      // .text("Offence rating");
+
+      // // Add y-axis
+      // svg.append("g")
+      //   .attr("font-size", 5)
+      //   .attr("transform", "translate(15,5)")
+      //   .call(d3.axisLeft(yScale))
+      //   .append("text")
+      //   .attr("transform", "rotate(-90) translate(5,5)")
+      //   .attr("class", "axis-label")
+      //   .style("text-anchor", "middle")
+      //   .text("Defence rating");
+
+
       // Add points to the scatterplot
-      console.log('adding points');
       svg
         .selectAll('image')
         .data(points)
@@ -239,7 +258,7 @@ const Scatterplot: React.FC<ScatterplotProps> = ({ points }) => {
         .attr('y', (d) => yScale(d.y_coord) - 2)
         .attr('width', 8)
         .attr('height', 8)
-        .attr('href', (d) => `http://localhost:8000/api/logo/${d.TEAM_ID}`)
+        .attr('href', (d) => `http://localhost:8000/api/logo/${d.TEAM_ID == 0 ? 5 : (d.TEAM_ID == 1 ? 4 : d.TEAM_ID)}`)
         .on('mouseover', function (event, d) {
           // Show hover details on mouseover
           d3.select('#tooltip')
@@ -258,9 +277,11 @@ const Scatterplot: React.FC<ScatterplotProps> = ({ points }) => {
           // Hide hover details on mouseout
           d3.select('#tooltip').style('opacity', 0).html('');
         });
-    } else {
+
+
+
+      } else {
       // Update point locations
-      console.log('updating points');
       svg
         .selectAll('image')
         .data(points)
@@ -277,6 +298,8 @@ const Scatterplot: React.FC<ScatterplotProps> = ({ points }) => {
         <h2>Tactical clustering</h2>
         <div id='tooltip' />
         <svg ref={svgRef} viewBox='0 0 100 100' id='clustering'></svg>
+        <div className="yaxis">Defence rating</div>
+        <div className="xaxis">Offence rating</div>
       </div>
     </>
   );
@@ -307,22 +330,21 @@ interface SimilarMatchupsDisplayProps {
 
 const SimilarMatchupsDisplay: React.FC<SimilarMatchupsDisplayProps> = ({ matchups }) => {
   const BASE_URL = process.env.NODE_ENV==="production"? `http://be.${window.location.hostname}/api/v1`:"http://localhost:8000/"
-  console.log(matchups)
+  // console.log(matchups)
 
   return (
     <>
       <div className="box">
         <h2>Similar matchups</h2>
-        {/* {matchup["Game Date"]}: <img className="small_team_logo" src={BASE_URL + "api/logo/" + selectedTeamLeft.TEAM_ID} alt="team logo" /> {matchup["Score"]} <img className="small_team_logo" src={BASE_URL + "api/logo/" + selectedTeamRight.TEAM_ID} alt="team logo" /> */}
         {/* For each matchup, display the date, the score and the 2 team logos on each side of the score  */}
         <table>
           <tbody>
             {matchups.map((matchup) => (
               <tr className="matchup" key={matchup["Game Date"] + " " + matchup["Score"]}>
-                <td>{matchup["Game Date"]}</td>
-                <td>{matchup["Home Team"]}<img className="small_team_logo" src={BASE_URL + "api/logo/" + matchup["TEAM_ID_home"]} alt="team logo" /></td>
-                <td>{matchup["Score"]}</td>
-                <td><img className="small_team_logo" src={BASE_URL + "api/logo/" + matchup["TEAM_ID_away"]} alt="team logo" />{matchup["Away Team"]}</td>
+                <td className='date_td'>{matchup["Game Date"]}</td>
+                <td className='home_td'>{matchup["Home Team"]}<img className="small_team_logo" src={BASE_URL + "api/logo/" + matchup["TEAM_ID_home"]} alt="team logo" /></td>
+                <td className='matchup_td'>{matchup["Score"]}</td>
+                <td className='away_td'><img className="small_team_logo" src={BASE_URL + "api/logo/" + matchup["TEAM_ID_away"]} alt="team logo" />{matchup["Away Team"]}</td>
               </tr>
             ))}
           </tbody>
@@ -457,15 +479,17 @@ function App() {
     copy[key] = value;
     setBoxScoresLeft(copy);
     scrolling = true;
+    setSelectedTeamLeft({TEAM_ID: 4, name: "Custom Team"});
   };
 
   const handleSliderChangeRight = (key: keyof BoxScores, value: number) => {
-    // console.log(key, value,"right");
+    console.log(key, value,"right");
     var copy = {...boxScoresRight};
     copy[key] = value;
     setBoxScoresRight(copy);
     // console.log(copy);
     scrolling = true;
+    setSelectedTeamRight({TEAM_ID: 5, name: "Custom Team"});
   };
 
   const onSliderMouseUp = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -516,7 +540,7 @@ function App() {
       setPoints(data);
     });
     loadData(`api/similar_games/${s}`).then(data => {
-      console.log(data);
+      // console.log(data);
       setSimilarMatchups(data);
     });
   }
@@ -526,28 +550,30 @@ function App() {
 
   return (
     <div className="App">
-      <header className="App-header"> Winning odds predictions
-      </header>
+      {/* <header className="App-header"> Winning odds predictions</header> */}
       <div className="left container">
+        <h1 className='side_title'>HOME</h1>
         <TeamSelector title='HOME' availableTeams={availableTeams} selectedTeam={selectedTeamLeft} setSelectedTeam={handleSelectionLeft}/>
         {DisplayRestOfApp && <>
-          <BoxScoreSlider boxScores={boxScoresLeft} onSliderChange={handleSliderChangeLeft} onMouseUp={onSliderMouseUp} boxScoreBoundaries={boxScoreBoundaries} />
-          <WinChanceDisplay probability={probabilityLeft} /><div className="box">
-            <h2>Parallel Coordinates</h2>
-            <ParallelCoordinates data_orig={parallelCoordinatesDataHome} limits={boxScoreBoundaries}></ParallelCoordinates>
+          <div className="box sliderbox">
+            <h2>Aggregated box score data</h2>
+            <ParallelCoordinates data_orig={parallelCoordinatesDataHome} limits={boxScoreBoundaries} custom={boxScoresLeft}></ParallelCoordinates>
+            <BoxScoreSlider boxScores={boxScoresLeft} onSliderChange={handleSliderChangeLeft} onMouseUp={onSliderMouseUp} boxScoreBoundaries={boxScoreBoundaries} />
           </div>
+          <WinChanceDisplay probability={probabilityLeft} />
         </>}
       </div>
       <div className="right container">
+        <h1 className='side_title'>AWAY</h1>
         <TeamSelector title='AWAY' availableTeams={availableTeams} selectedTeam={selectedTeamRight} setSelectedTeam={handleSelectionRight}/>
         <Popup text="This is the text that will be displayed in the popup" />
         {DisplayRestOfApp && <>
-          <BoxScoreSlider boxScores={boxScoresRight} onSliderChange={handleSliderChangeRight} onMouseUp={onSliderMouseUp} boxScoreBoundaries={boxScoreBoundaries}/>
-          <WinChanceDisplay probability={1-probabilityLeft}/>   
-          <div className="box">
-            <h2>Parallel Coordinates</h2>
-            <ParallelCoordinates data_orig={parallelCoordinatesDataAway} limits={boxScoreBoundaries}></ParallelCoordinates>
+          <div className="box sliderbox">
+            <h2>Aggregated box score data</h2>
+            <ParallelCoordinates data_orig={parallelCoordinatesDataAway} limits={boxScoreBoundaries} custom={boxScoresRight}></ParallelCoordinates>
+            <BoxScoreSlider boxScores={boxScoresRight} onSliderChange={handleSliderChangeRight} onMouseUp={onSliderMouseUp} boxScoreBoundaries={boxScoreBoundaries}/>
           </div>
+          <WinChanceDisplay probability={1-probabilityLeft}/>   
         </>}   
       </div>
       <Steps

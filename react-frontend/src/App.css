@@ -10,7 +10,7 @@
   background-color: white;
   /* font-family: "Neucha", cursive; */
   font-family: var(--default-regular-font, -apple-system),BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans",Ubuntu,Cantarell,"Helvetica Neue",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
-
+  padding-top: 80px;
 }
 
 .App-header {
@@ -46,6 +46,7 @@ h1 {
   width: 40%;
   background-color: #F5EFE6;
   padding-top: 30px;
+  padding-bottom: 25px;
   display: inline-block;
   /* margin-left: 10%; */
   position: relative;
@@ -55,18 +56,41 @@ h1 {
   width: 70%;
   margin: auto;
   background-color: #e4c494;
+  margin-top: 25px;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 3px 4px 8px -2px rgba(0,0,0,0.75);
+  position: relative;
+}
+
+h2{
+  margin: 0px;
+  text-align: center;
+}
+
+h1{
+  margin: 0px;
+  text-align: center;
+}
+
+.side_title{
+  font-size: 80px;
 }
 
 .slidercontainer{
   /* margin: 0 0% !important;
   width: 14%; */
-  width: 40px;
+  width: 25.3px;
   display: inline-block;
 }
 
 .allSliders{
   /* display: flex;
   align-items: center; */
+  position: absolute;
+  left: 24px;
+  top: 162px;
+  
 }
 
 .center{
@@ -103,6 +127,12 @@ h1 {
   width: 100%;
   max-width: 170px;
   display: block;
+  margin: auto;
+}
+
+.teamselector > select{
+  margin: auto;
+  display: block;
 }
 
 .small_team_logo{
@@ -131,6 +161,9 @@ h1 {
   position: absolute;
   top: 10px;
   right: 10px;
+  color: white;
+  font-weight: bold;
+  font-size: 31px;
 }
 
 .popup-background {
@@ -153,5 +186,84 @@ h1 {
 }
 
 .teamselector{
-  min-height: 260px;
+  min-height: 190px;
+}
+
+.sliderbox{
+  position: relative;
+  height: 363px;
+}
+
+.sliderbox > div{
+  position: absolute;
+}
+
+table{
+  width: 100%;
+}
+
+.date_td{
+  width: 100px;
+  width: 20%;
+}
+
+.home_td{
+  width: 120px;
+  width: 26%;
+  text-align: right;
+}
+
+.matchup_td{
+  width: 60px;
+  width: 8%;
+  text-align: center;
+}
+
+.away_td{
+  width: 120px;
+  width: 25%;
+  text-align: left;
+}
+
+td{
+  display: inline-block;
+}
+
+.winprob > p{
+  margin: 0px;
+  text-align: center;
+  font-size: 50px;
+  font-weight: bold;  
+}
+
+
+.yaxis{
+  position: absolute;
+  left: 100px;
+  top: 300px;
+  background-image: url("https://i.imgur.com/ASQ7wKp.png");
+  color: white;
+  font-weight: bold;
+  font-size: 15px;
+  transform: rotate(270deg);
+  width: 360px;
+  height: 60px;
+  background-repeat: no-repeat;
+  text-align: center;
+  line-height: 50px;
+}
+
+.xaxis{
+  position: absolute;
+  left: 340px;
+  top: 540px;
+  background-image: url("https://i.imgur.com/ASQ7wKp.png");
+  color: white;
+  font-weight: bold;
+  font-size: 15px;
+  width: 360px;
+  height: 60px;
+  background-repeat: no-repeat;
+  text-align: center;
+  line-height: 50px;
 }
