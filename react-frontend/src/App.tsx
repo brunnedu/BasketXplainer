@@ -225,8 +225,30 @@ const Scatterplot: React.FC<ScatterplotProps> = ({ points }) => {
     if (!addedPoints) {
       addedPoints = true;
 
+      // // Add x-axis
+      // svg.append("g")
+      // .attr("font-size", 5)
+      // .attr("transform", "translate(5,85)")
+      // .call(d3.axisBottom(xScale))
+      // .append("text")
+      // .attr("transform", "translate(5,5)")
+      // .attr("class", "axis-label")
+      // .style("text-anchor", "middle")
+      // .text("Offence rating");
+
+      // // Add y-axis
+      // svg.append("g")
+      //   .attr("font-size", 5)
+      //   .attr("transform", "translate(15,5)")
+      //   .call(d3.axisLeft(yScale))
+      //   .append("text")
+      //   .attr("transform", "rotate(-90) translate(5,5)")
+      //   .attr("class", "axis-label")
+      //   .style("text-anchor", "middle")
+      //   .text("Defence rating");
+
+
       // Add points to the scatterplot
-      console.log('adding points');
       svg
         .selectAll('image')
         .data(points)
@@ -255,9 +277,11 @@ const Scatterplot: React.FC<ScatterplotProps> = ({ points }) => {
           // Hide hover details on mouseout
           d3.select('#tooltip').style('opacity', 0).html('');
         });
-    } else {
+
+
+
+      } else {
       // Update point locations
-      console.log('updating points');
       svg
         .selectAll('image')
         .data(points)
@@ -274,6 +298,8 @@ const Scatterplot: React.FC<ScatterplotProps> = ({ points }) => {
         <h2>Tactical clustering</h2>
         <div id='tooltip' />
         <svg ref={svgRef} viewBox='0 0 100 100' id='clustering'></svg>
+        <div className="yaxis">Defence rating</div>
+        <div className="xaxis">Offence rating</div>
       </div>
     </>
   );
@@ -344,7 +370,7 @@ let scrolling = false;
 function App() {
 
   function loadData(url: string): Promise<any | undefined> {
-    // console.log(url)
+    console.log(url)
     const promise = axiosClient.get<any>(url)
     return promise
       .then((res) => {
