@@ -98,7 +98,7 @@ class GetClusteringBoxscore(Resource):
         return jsonify(df_clustering.to_dict("records"))
 
     
-# testapi: http://127.0.0.1:8000/api/clustering/10.0-10.0-10.0-10.0-10.0-10.5-1.0-1.0-1.0-1.0-1.0-1.0-1.0_10.0-10.0-10.0-10.0-10.0-10.5-1.0-1.0-1.0-1.0-1.0-1.0-1.0
+# testapi: http://127.0.0.1:8000/api/clustering_advanced_stat/10.0-10.0-10.0-10.0-10.0-10.5-1.0-1.0-1.0-1.0-1.0-1.0-1.0_10.0-10.0-10.0-10.0-10.0-10.5-1.0-1.0-1.0-1.0-1.0-1.0-1.0
 class GetClusteringBoxscoreAdvancedStat(Resource):
 
     def get(
