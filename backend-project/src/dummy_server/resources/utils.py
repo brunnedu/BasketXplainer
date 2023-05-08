@@ -112,7 +112,7 @@ def calculate_ratings(boxscore):
         boxscore_ratings.loc[index, "DR"] = 100 * (row["BLK"] + row["DREB"] + row["STL"]) / (row["possession"] + mean_possession)
 
     boxscore_ratings.drop("is_home", axis =1 ,inplace= True)
-    return boxscore_ratings.groupby("TEAM_ID").mean()
+    return boxscore_ratings.groupby("TEAM_ID",as_index=False).mean()
 
 
 def get_season_games(season=2021):
