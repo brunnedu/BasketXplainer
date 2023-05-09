@@ -475,7 +475,7 @@ function App() {
   };
 
   const handleSliderChangeRight = (key: keyof BoxScores, value: number) => {
-    console.log(key, value,"right");
+    // console.log(key, value,"right");
     var copy = {...boxScoresRight};
     copy[key] = value;
     setBoxScoresRight(copy);
@@ -549,7 +549,7 @@ function App() {
         {DisplayRestOfApp && <>
           <div className="box sliderbox">
             <h2>Aggregated box score data</h2>
-            <ParallelCoordinates data_orig={parallelCoordinatesDataHome} limits={boxScoreBoundaries} custom={boxScoresLeft}></ParallelCoordinates>
+            <ParallelCoordinates data_orig={parallelCoordinatesDataHome} limits={boxScoreBoundaries} custom={boxScoresLeft} scrolling={scrolling}></ParallelCoordinates>
             <BoxScoreSlider boxScores={boxScoresLeft} onSliderChange={handleSliderChangeLeft} onMouseUp={onSliderMouseUp} boxScoreBoundaries={boxScoreBoundaries} />
           </div>
           <WinChanceDisplay probability={probabilityLeft} />
@@ -562,7 +562,7 @@ function App() {
         {DisplayRestOfApp && <>
           <div className="box sliderbox">
             <h2>Aggregated box score data</h2>
-            <ParallelCoordinates data_orig={parallelCoordinatesDataAway} limits={boxScoreBoundaries} custom={boxScoresRight}></ParallelCoordinates>
+            <ParallelCoordinates data_orig={parallelCoordinatesDataAway} limits={boxScoreBoundaries} custom={boxScoresRight} scrolling={scrolling}></ParallelCoordinates>
             <BoxScoreSlider boxScores={boxScoresRight} onSliderChange={handleSliderChangeRight} onMouseUp={onSliderMouseUp} boxScoreBoundaries={boxScoreBoundaries}/>
           </div>
           <WinChanceDisplay probability={1-probabilityLeft}/>   

@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { Component  } from "react";
+
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import HighchartsExporting from 'highcharts/modules/exporting';
@@ -17,10 +18,21 @@ interface ParallelCoordinatesProps {
   data_orig: string;
   limits: any;
   custom: any;
+  scrolling: boolean;
 }
 
-const ParallelCoordinates: React.FC<ParallelCoordinatesProps> = React.memo(({ data_orig, limits, custom }) => {
-  console.log("ParallelCoordinates update");
+const arePropsEqual = (prevProps: ParallelCoordinatesProps, nextProps: ParallelCoordinatesProps) => {
+  if (nextProps.scrolling) return true;
+  return (
+    prevProps.data_orig === nextProps.data_orig &&
+    prevProps.limits === nextProps.limits &&
+    prevProps.custom === nextProps.custom
+  );
+};
+
+
+const ParallelCoordinates: React.FC<ParallelCoordinatesProps> = React.memo(({ data_orig, limits, custom, scrolling }) => {
+  console.log("ParallelCoordinates update " + scrolling);
   if(data_orig === "") return (<div></div>);
 
   var columns: Array<string>;
@@ -94,7 +106,7 @@ const ParallelCoordinates: React.FC<ParallelCoordinatesProps> = React.memo(({ da
 
 
   return <HighchartsReact highcharts={Highcharts} options={getOptions()} />;
-});
+},arePropsEqual);
 
 
 export default ParallelCoordinates;
