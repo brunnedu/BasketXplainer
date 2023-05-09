@@ -2,8 +2,7 @@ import numpy as np
 from flask import jsonify
 from flask_restful import Resource
 
-from .utils import PRED_COLS, load_model
-
+from .utils import PRED_COLS, load_model, load_new_stat_classifier
 
 class GetPredictionTeam(Resource):
     """Get the prediction btw two teams"""
@@ -84,3 +83,59 @@ class GetPredictionBoxscore(Resource):
         predicted_proba = model.predict(X_inference)[0]
 
         return jsonify({'winning_odds_home': predicted_proba})
+    
+    
+class GetPredictionBoxscoreNewStats(Resource):
+
+    def get(
+            self, 
+            AST_home, 
+            BLK_home,
+            DREB_home, 
+            OREB_home, 
+            STL_home, 
+            FGA_home,
+            FG3A_home, 
+            FTA_home,
+            TO_home, 
+            AST_away, 
+            BLK_away, 
+            DREB_away,
+            OREB_away, 
+            STL_away, 
+            FGA_away, 
+            FG3A_away, 
+            FTA_away, 
+            TO_away
+            ):
+        """Get the predicted winning odds of the home team based on the boxscore stats"""
+
+        # TODO: load model and perform inference
+
+        X_inference = np.array([
+            AST_home, 
+            BLK_home,
+            DREB_home, 
+            OREB_home, 
+            STL_home, 
+            FGA_home,
+            FG3A_home, 
+            FTA_home,
+            TO_home, 
+            AST_away, 
+            BLK_away, 
+            DREB_away,
+            OREB_away, 
+            STL_away, 
+            FGA_away, 
+            FG3A_away, 
+            FTA_away, 
+            TO_away
+        ]).reshape(1, -1)
+        
+        model = load_new_stat_classifier()
+    
+        predicted_proba = model.predict_proba(X_inference)[0].tolist()
+
+        return jsonify({'winning_odds_home': predicted_proba})
+
