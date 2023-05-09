@@ -36,6 +36,15 @@ def load_model(path_to_model_str: str = os.path.join(DATA_ROOT, 'precomputed', '
 
     return model
 
+def load_new_stat_classifier(path_to_model_str: str = os.path.join(DATA_ROOT, 'precomputed', 'classifier_new_stats.pkl')):
+    """
+    Load sitred lgbm model with new stats
+    """
+    with open(path_to_model_str, 'rb') as f:
+        clf = pickle.load(f)
+
+    return clf
+
 
 def load_tree_explainer(path_to_tree_explainer: str = os.path.join(DATA_ROOT, 'precomputed', 'TreeExplainer.pkl')):
     """
