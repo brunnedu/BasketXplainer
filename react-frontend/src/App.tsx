@@ -200,9 +200,8 @@ const WinChanceDisplay: React.FC<WinChanceDisplayProps> = ({ probability }) => {
 
 
 interface Point {
-  x_coord: number;
-  y_coord: number;
-  is_home: number;
+  OR: number;
+  DR: number;
   TEAM_ID: number;
 }
 
@@ -213,8 +212,8 @@ interface ScatterplotProps {
 let addedPoints: boolean = false;
 const Scatterplot: React.FC<ScatterplotProps> = ({ points }) => {
   const svgRef = useRef<SVGSVGElement>(null);
-  const xScale = d3.scaleLinear().domain([-5, 5]).range([10, 90]);
-  const yScale = d3.scaleLinear().domain([-5, 5]).range([10, 90]);
+  const xScale = d3.scaleLinear().domain([100, 120]).range([10, 90]);
+  const yScale = d3.scaleLinear().domain([50, 40]).range([10, 90]);
 
   useEffect(() => {
     if (points.length === 0) {
@@ -225,27 +224,21 @@ const Scatterplot: React.FC<ScatterplotProps> = ({ points }) => {
     if (!addedPoints) {
       addedPoints = true;
 
-      // // Add x-axis
-      // svg.append("g")
-      // .attr("font-size", 5)
-      // .attr("transform", "translate(5,85)")
-      // .call(d3.axisBottom(xScale))
-      // .append("text")
-      // .attr("transform", "translate(5,5)")
-      // .attr("class", "axis-label")
-      // .style("text-anchor", "middle")
-      // .text("Offence rating");
+      const process_tooltip = (d: any) => {
+        //Round every float to 2 decimals
+        for (let key in d) {
+          if (typeof d[key] === 'number') {
+            d[key] = Math.round(d[key] * 100) / 100;
+          }
+        }
 
-      // // Add y-axis
-      // svg.append("g")
-      //   .attr("font-size", 5)
-      //   .attr("transform", "translate(15,5)")
-      //   .call(d3.axisLeft(yScale))
-      //   .append("text")
-      //   .attr("transform", "rotate(-90) translate(5,5)")
-      //   .attr("class", "axis-label")
-      //   .style("text-anchor", "middle")
-      //   .text("Defence rating");
+        delete d.TEAM_ID;
+        delete d.OR;
+        delete d.DR;
+        delete d.cluster;
+
+        return `${JSON.stringify(d).replaceAll('{', '').replaceAll('}', '').replaceAll(',', '<br>').replaceAll('"', '')}`;
+      };
 
 
       // Add points to the scatterplot
@@ -254,8 +247,8 @@ const Scatterplot: React.FC<ScatterplotProps> = ({ points }) => {
         .data(points)
         .enter()
         .append('image')
-        .attr('x', (d) => xScale(d.x_coord) - 2)
-        .attr('y', (d) => yScale(d.y_coord) - 2)
+        .attr('x', (d) => xScale(d.OR))
+        .attr('y', (d) => yScale(d.DR))
         .attr('width', 8)
         .attr('height', 8)
         .attr('href', (d) => `http://localhost:8000/api/logo/${d.TEAM_ID == 0 ? 5 : (d.TEAM_ID == 1 ? 4 : d.TEAM_ID)}`)
@@ -263,15 +256,15 @@ const Scatterplot: React.FC<ScatterplotProps> = ({ points }) => {
           // Show hover details on mouseover
           d3.select('#tooltip')
             .style('opacity', 1)
-            .html(`${JSON.stringify(d).replaceAll('{', '').replaceAll('}', '').replaceAll(',', '<br>').replaceAll('"', '')}`)
+            .html(`${process_tooltip(d)}`)
             .style('left', `${event.pageX + 10}px`)
-            .style('top', `${event.pageY - 1100}px`);
+            .style('top', `${event.pageY + 10}px`);
         })
         .on('mousemove', function (event) {
           // Move hover details on mousemove
           d3.select('#tooltip')
             .style('left', `${event.pageX + 10}px`)
-            .style('top', `${event.pageY - 1100}px`);
+            .style('top', `${event.pageY + 10}px`);
         })
         .on('mouseout', function (event, d) {
           // Hide hover details on mouseout
@@ -287,8 +280,8 @@ const Scatterplot: React.FC<ScatterplotProps> = ({ points }) => {
         .data(points)
         .transition()
         .duration(1000)
-        .attr('x', (d) => xScale(d.x_coord) - 2)
-        .attr('y', (d) => yScale(d.y_coord) - 2);
+        .attr('x', (d) => xScale(d.OR))
+        .attr('y', (d) => yScale(d.DR));
     }
   }, [points]);
 
@@ -296,7 +289,6 @@ const Scatterplot: React.FC<ScatterplotProps> = ({ points }) => {
     <>
       <div className='box'>
         <h2>Tactical clustering</h2>
-        <div id='tooltip' />
         <svg ref={svgRef} viewBox='0 0 100 100' id='clustering'></svg>
         <div className="yaxis">Defence rating</div>
         <div className="xaxis">Offence rating</div>
@@ -534,7 +526,7 @@ function App() {
       // console.log(data);
       setProbabilityLeft(data["winning_odds_home"]);
     });
-    loadData(`api/clustering/${s}`).then(data => {
+    loadData(`api/clustering_advanced_stat/${s}`).then(data => {
       // console.log(data);
       // console.log("COORDINATE OF FIRST POINT:" + data[0]["x_coord"] + " " + data[0]["y_coord"]);
       setPoints(data);
@@ -595,6 +587,7 @@ function App() {
           initialStep={0}
           onExit={() => { setShowRestOfAppPopup(false); }}
         /> 
+      <div id='tooltip' />
     </div>
   )
 }

@@ -113,7 +113,7 @@ const ParallelCoordinates: React.FC<ParallelCoordinatesProps> = ({ data_orig, li
     chart: {
       type: 'line',
       backgroundColor: '#e4c494',
-      width: 350,
+      width: 450,
       height: 300,
       parallelCoordinates: true,
       parallelAxes: {
