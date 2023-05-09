@@ -268,3 +268,7 @@ td{
   text-align: center;
   line-height: 50px;
 }
+
+.highcharts-root{
+  contain: strict;
+}
