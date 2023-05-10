@@ -3,15 +3,6 @@ from flask import jsonify
 from flask_restful import Resource
 
 from .utils import PRED_COLS, load_model, load_new_stat_classifier
-
-class GetPredictionTeam(Resource):
-    """Get the prediction btw two teams"""
-
-    #TODO: THiS IS A PLACEHOLDER!!! Need to cahnge it later
-    def get(self, team_id_home, team_id_away):
-        """Get the winning odds for two teams."""
-        
-        return jsonify({'winning_odds_home': 0.37})
     
 
 class GetPredictionBoxscore(Resource):
@@ -109,8 +100,6 @@ class GetPredictionBoxscoreNewStats(Resource):
             TO_away
             ):
         """Get the predicted winning odds of the home team based on the boxscore stats"""
-
-        # TODO: load model and perform inference
 
         X_inference = np.array([
             AST_home, 
