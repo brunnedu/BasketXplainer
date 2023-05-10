@@ -36,12 +36,16 @@ def load_model(path_to_model_str: str = os.path.join(DATA_ROOT, 'precomputed', '
 
     return model
 
-def load_new_stat_classifier(path_to_model_str: str = os.path.join(DATA_ROOT, 'precomputed', 'classifier_new_stats.pkl')):
+def load_new_stat_classifier(path_to_model_str: str = os.path.join(DATA_ROOT, 'precomputed', 'classifier_new_stats.txt')):
     """
     Load sitred lgbm model with new stats
     """
-    with open(path_to_model_str, 'rb') as f:
-        clf = pickle.load(f)
+    # read model string from disk
+    with open(path_to_model_str, 'r') as f:
+        model_str = f.read()
+
+    # load lightgbm booster from model string
+    clf  = lgb.Booster(model_str=model_str)
 
     return clf
 
