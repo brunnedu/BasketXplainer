@@ -11,7 +11,7 @@ from sklearn.preprocessing import StandardScaler
 # global constants
 DATA_ROOT = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "..", "..", "data"))
 
-PRED_COLS = ['AST', 'BLK', 'DREB', 'FG3A', 'FG3M', 'FGA', 'FGM', 'FTA', 'FTM', 'OREB', 'PF', 'STL', 'TO']
+PRED_COLS = ['AST', 'BLK', 'DREB', 'FG3A', 'FGA', 'FTA', 'OREB', 'STL', 'TO']
 CLUSTERING_PRED = ["OR", "DR"]
 
 REGULAR_SEASON_DURATION = {
@@ -20,21 +20,6 @@ REGULAR_SEASON_DURATION = {
     2018: ('2018-10-16', '2019-04-10'),
     2017: ('2017-10-17', '2018-04-11'),
 }
-
-
-def load_model(path_to_model_str: str = os.path.join(DATA_ROOT, 'precomputed', 'lightgbm.txt')):
-    """
-    Load stored LightGBM model
-    """
-
-    # read model string from disk
-    with open(path_to_model_str, 'r') as f:
-        model_str = f.read()
-
-    # load lightgbm booster from model string
-    model = lgb.Booster(model_str=model_str)
-
-    return model
 
 def load_new_stat_classifier(path_to_model_str: str = os.path.join(DATA_ROOT, 'precomputed', 'classifier_new_stats.txt')):
     """
@@ -50,7 +35,7 @@ def load_new_stat_classifier(path_to_model_str: str = os.path.join(DATA_ROOT, 'p
     return clf
 
 
-def load_tree_explainer(path_to_tree_explainer: str = os.path.join(DATA_ROOT, 'precomputed', 'TreeExplainer.pkl')):
+def load_tree_explainer(path_to_tree_explainer: str = os.path.join(DATA_ROOT, 'precomputed', 'TreeExplainer_new_stats.pkl')):
     """
     Load stored SHAP TreeExplainer of the lightgbm model
     """
@@ -82,33 +67,6 @@ def get_team_boxscore(team_id=1610612738, is_home=True) -> pd.DataFrame:
     boxscore = games_details.groupby(['GAME_ID']).sum().mean().to_frame().T
     
     return boxscore
-
-
-def get_clustering(df_boxscores: pd.DataFrame, n_components: int = 2, n_clusters: int = 3):
-    """
-    Add clustering columns to boxscore dataframe
-    """
-    
-    df_clustering = df_boxscores.copy()
-    
-    # standardize data
-    scaler = StandardScaler()
-    scaled_data = scaler.fit_transform(df_clustering[PRED_COLS])
-    
-    # perform pca
-    pca = PCA(n_components=n_components)
-    pca_data = pca.fit_transform(scaled_data)
-    
-    # perform kmeans
-    # kmeans = KMeans(n_clusters=n_clusters, n_init=10)
-    # kmeans.fit(pca_data)
-    
-    # add clustering columns
-    df_clustering['x_coord'] = [coord[0] for coord in pca_data]
-    df_clustering['y_coord'] = [coord[1] for coord in pca_data]
-    # df_cluster['cluster'] = kmeans.labels_
-    
-    return df_clustering, scaler, pca
 
 def calculate_ratings(boxscore): 
     boxscore_ratings = boxscore.copy()

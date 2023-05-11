@@ -6,7 +6,7 @@ from flask import jsonify
 from flask_restful import Resource
 from sklearn.cluster import KMeans
 
-from .utils import DATA_ROOT, PRED_COLS, calculate_ratings, get_clustering, CLUSTERING_PRED
+from .utils import DATA_ROOT, calculate_ratings, CLUSTERING_PRED
     
 # testapi: http://127.0.0.1:8000/api/clustering_advanced_stat/10.0-10.0-10.0-10.0-10.0-10.5-1.0-1.0-1.0-1.0-1.0-1.0-1.0_10.0-10.0-10.0-10.0-10.0-10.5-1.0-1.0-1.0-1.0-1.0-1.0-1.0
 class GetClusteringBoxscoreAdvancedStat(Resource):
