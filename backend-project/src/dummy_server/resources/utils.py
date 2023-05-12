@@ -85,6 +85,28 @@ def calculate_ratings(boxscore):
     boxscore_ratings.drop("is_home", axis =1 ,inplace= True)
     return boxscore_ratings.groupby("TEAM_ID",as_index=False).mean()
 
+def calculate_custom_ratings(boxscore, boxscore_all_teams):
+
+    mean_FG_percentage = boxscore_all_teams["FGM"].mean()/boxscore_all_teams["FGA"].mean()
+    mean_3FG_percentage = boxscore_all_teams["FG3M"].mean()/boxscore_all_teams["FG3A"].mean()
+    mean_FT_percentage = boxscore_all_teams["FTM"].mean()/boxscore_all_teams["FTA"].mean()
+    mean_possession = boxscore_all_teams["possession"].mean()
+
+    boxscore_ratings = boxscore.copy()
+    for index, row in boxscore_ratings.iterrows():
+        boxscore_ratings.loc[index, "point"] = 2 * (row["FGA"] * mean_FG_percentage + 0.5 * row["FG3A"] *  mean_3FG_percentage) + (row["FTA"]* mean_FT_percentage)
+        boxscore_ratings.loc[index, "possession"] = 0.5 * (row["FGA"] + 0.475 * row["FTA"] - row["OREB"] + row["TO"])
+    
+    for index, row in boxscore_ratings.iterrows():
+        # Offensive Rating (OR) = 100 / (TmPoss + OppPoss) * Pts
+        boxscore_ratings.loc[index, "OR"] = (100 * row["point"]) / (row["possession"] + mean_possession)
+        
+        boxscore_ratings.loc[index, "DR"] = 100 * (row["BLK"] + row["DREB"] + row["STL"]) / (row["possession"] + mean_possession)
+
+    boxscore_ratings.drop("is_home", axis =1 ,inplace= True)
+    return boxscore_ratings.groupby("TEAM_ID",as_index=False).mean()
+    
+
 
 def get_season_games(season=2021):
     games = pd.read_csv(os.path.join(DATA_ROOT, 'dataset_games.csv'))
