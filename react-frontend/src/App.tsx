@@ -18,7 +18,7 @@ let DEV_MODE = false;
 
 
 const VerticalSlider = styled(Slider)({
-  height: "170px !important",
+  height: "200px !important",
   margin: "auto 0 !important",
   display: "flex",
   flexDirection: "column",

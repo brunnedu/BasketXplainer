@@ -81,7 +81,7 @@ h1{
 .slidercontainer{
   /* margin: 0 0% !important;
   width: 14%; */
-  width: 33px;
+  width: 48px;
   display: inline-block;
 }
 
@@ -89,8 +89,8 @@ h1{
   /* display: flex;
   align-items: center; */
   position: absolute;
-  left: 28px;
-  top: 162px;
+  left: 35px;
+  top: 135px;
   
 }
 
