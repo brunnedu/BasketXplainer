@@ -174,16 +174,29 @@ h1{
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
+  /* display: flex; */
   justify-content: center;
   align-items: center;
+  z-index: 100;
 }
 
 .popup-text {
+  display: block;
   width: 70%;
   background-color: white;
   padding: 20px;
   border-radius: 10px;
+  margin: auto;
+  margin-top: 20%;
+}
+
+.popup-enabletutorial {
+  display: block;
+  width: 10%;
+  background-color: white;
+  padding: 10px;
+  border-radius: 5px;
+  margin: auto;
 }
 
 .teamselector{

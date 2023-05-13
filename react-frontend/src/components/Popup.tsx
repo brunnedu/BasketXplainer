@@ -17,6 +17,7 @@ const Popup: React.FC<PopupProps> = ({ text }) => {
           <div className="popup-text" onClick={(e) => e.stopPropagation()}>
             {text}
           </div>
+          <button className="popup-enabletutorial" onClick={() => localStorage.setItem("DISABLE_TUTORIAL", "false")}>Re-enable tutorial</button>
         </div>
       )}
     </>

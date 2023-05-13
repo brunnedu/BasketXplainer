@@ -11,8 +11,11 @@ import BASE_URL from './router/apiClient'
 import { Steps, Hints } from "intro.js-react";
 import "intro.js/introjs.css";
 
-// let DEV_MODE = true;
-let DEV_MODE = false;
+// let DISABLE_TUTORIAL = true;
+// let DISABLE_TUTORIAL = false;
+
+let DISABLE_TUTORIAL = localStorage.getItem("DISABLE_TUTORIAL") === "true";
+console.log("DISABLE_TUTORIAL: " + DISABLE_TUTORIAL);
 
 
 
@@ -423,7 +426,7 @@ function App() {
         data = data.concat({TEAM_ID: 0, name: "Unknown Team"})
         setAvailableTeams(data);
         setShowTeamSelectorPopup(true);
-        if(DEV_MODE){
+        if(DISABLE_TUTORIAL){
           handleSelectionLeft({TEAM_ID: 1610612737, name: "Atlanta Hawks"})
           handleSelectionRight({TEAM_ID: 1610612738, name: 'Boston Celtics'});
           setDisplayRestOfApp(true);
@@ -569,7 +572,7 @@ function App() {
         </>}   
       </div>
       <Steps
-          enabled={ShowTeamSelectorPopup && !DEV_MODE}
+          enabled={ShowTeamSelectorPopup && !DISABLE_TUTORIAL}
           steps={[ { element: ".select_HOME", intro: "Welcome to the NBA Matchup Analyzer 👋 <br/> Start by choosing the Home Team for the analysis." }, { element: ".select_AWAY", intro: "Now choose the Away Team to see the results!" } ]}
           initialStep={0}
           onExit={() => { setShowTeamSelectorPopup(false); }}
@@ -582,10 +585,10 @@ function App() {
         </div>
       </>}
       <Steps
-          enabled={ShowRestOfAppPopup && !DEV_MODE}
+          enabled={ShowRestOfAppPopup && !DISABLE_TUTORIAL}
           steps={[ { element: ".allSliders", intro: "Nice! <br/> Here is a quick walkthrough of what all the elements do." }, { element: ".winprob", intro: "We will go through all of them one by one." } ]}
           initialStep={0}
-          onExit={() => { setShowRestOfAppPopup(false); }}
+          onExit={() => { setShowRestOfAppPopup(false); localStorage.setItem("DISABLE_TUTORIAL", "true"); }}
         /> 
       <div id='tooltip' />
     </div>
