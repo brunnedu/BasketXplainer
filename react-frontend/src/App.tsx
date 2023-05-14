@@ -21,7 +21,7 @@ console.log("DISABLE_TUTORIAL: " + DISABLE_TUTORIAL);
 
 
 const VerticalSlider = styled(Slider)({
-  height: "200px !important",
+  height: "195px !important",
   margin: "auto 0 !important",
   display: "flex",
   flexDirection: "column",
