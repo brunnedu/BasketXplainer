@@ -204,7 +204,35 @@ class GetSimilarMatchups(Resource):
 
         return jsonify(similar_games.to_dict('records'))
 
+class GetPossessions(Resource):
 
+    # get number of possessions for a matchup's boxscore data
+    def get(self, 
+            AST_home, 
+            BLK_home,
+            DREB_home,
+            FG3A_home,
+            FGA_home,
+            FTA_home, 
+            OREB_home, 
+            STL_home,
+            TO_home, 
+            AST_away, 
+            BLK_away, 
+            DREB_away,
+            FG3A_away,
+            FGA_away,
+            FTA_away,
+            OREB_away, 
+            STL_away, 
+            TO_away 
+            ):
+        # Note: this possession formula is from the book provided by Javi, and it's different from the formula for clustering
+        possessions_home = FGA_home + 0.4 * FTA_home - OREB_home + TO_home
+        possessions_away = FGA_away + 0.4 * FTA_away - OREB_away + TO_away
+        possessions = {
+            "home_possessions" : possessions_home,
+            "away_possessions" : possessions_away
+        }
+        return jsonify(possessions)
 
-
-    

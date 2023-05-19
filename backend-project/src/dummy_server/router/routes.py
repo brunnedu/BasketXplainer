@@ -15,6 +15,10 @@ def add_routes(app):
     api.add_resource(res.games_data.GetBoxscoresHome, API + "boxscores/home")
     api.add_resource(res.games_data.GetBoxscoresAway, API + "boxscores/away")
     
+    api.add_resource(
+        res.games_data.GetPossessions,
+        API + "possessions/<float:AST_home>/<float:BLK_home>/<float:DREB_home>/<float:FG3A_home>/<float:FGA_home>/<float:FTA_home>/<float:OREB_home>/<float:STL_home>/<float:TO_home>/<float:AST_away>/<float:BLK_away>/<float:DREB_away>/<float:FG3A_away>/<float:FGA_away>/<float:FTA_away>/<float:OREB_away>/<float:STL_away>/<float:TO_away>"
+    )
 
     api.add_resource(
         res.games_data.GetSimilarMatchups,
