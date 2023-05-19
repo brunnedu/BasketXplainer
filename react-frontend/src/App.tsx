@@ -1,15 +1,13 @@
-import { useEffect, useState, useRef } from 'react';
-import React from 'react';
-import './App.css';
-import axiosClient from './router/apiClient'
-import Popup from './components/Popup';
-import ParallelCoordinates from './components/ParallelCoordinates';
 import Slider from "@material-ui/core/Slider";
-import * as d3 from "d3";
 import { styled } from "@material-ui/core/styles";
-import BASE_URL from './router/apiClient'
-import { Steps, Hints } from "intro.js-react";
+import * as d3 from "d3";
+import { Steps } from "intro.js-react";
 import "intro.js/introjs.css";
+import React, { useEffect, useRef, useState } from 'react';
+import './App.css';
+import ParallelCoordinates from './components/ParallelCoordinates';
+import Popup from './components/Popup';
+import axiosClient from './router/apiClient';
 
 // let DISABLE_TUTORIAL = true;
 // let DISABLE_TUTORIAL = false;
@@ -441,7 +439,7 @@ function App() {
 
   const handleSelectionLeft = (selectedTeam: Team) => {
     setSelectedTeamLeft(selectedTeam);
-    loadData(`api/boxscore/${selectedTeam.TEAM_ID}-1`).then(data => {
+    loadData(`api/boxscore/${selectedTeam.TEAM_ID}/1`).then(data => {
       // console.log(data[0]);
       setBoxScoresLeft(data[0]);
     });
@@ -456,7 +454,7 @@ function App() {
 
   const handleSelectionRight = (selectedTeam: Team) => {
     setSelectedTeamRight(selectedTeam);
-    loadData(`api/boxscore/${selectedTeam.TEAM_ID}-0`).then(data => {
+    loadData(`api/boxscore/${selectedTeam.TEAM_ID}/0`).then(data => {
       // console.log(data[0]);
       setBoxScoresRight(data[0]);
     });
@@ -509,12 +507,12 @@ function App() {
     //convert box scores to string
     let s: string = "";
     for(let key in h){
-      s += h[key].toFixed(4) + "-";
+      s += h[key].toFixed(4) + "/";
     }
     s = s.slice(0, -1);
-    s += "_";
+    s += "/";
     for(let key in a){
-      s += a[key].toFixed(4) + "-";
+      s += a[key].toFixed(4) + "/";
     }
     s = s.slice(0, -1);
 

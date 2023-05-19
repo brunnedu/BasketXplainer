@@ -4,6 +4,7 @@ from flask_restful import Resource
 
 from .utils import load_new_stat_classifier
 
+
 class GetPredictionBoxscore(Resource):
 
     def get(
