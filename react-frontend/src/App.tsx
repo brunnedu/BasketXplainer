@@ -492,8 +492,34 @@ function App() {
   };
 
   useEffect(() => {
-    if(boxScoresLeft["AST"] && boxScoresRight["AST"])
+    if(boxScoresLeft["AST"] && boxScoresRight["AST"]){
       updateEverything();
+      setTimeout(() => {
+        //add tooltips
+        const labels = document.querySelectorAll('.highcharts-xaxis-labels span');
+        labels.forEach((label, i) => {
+          console.log(label);
+          let orig_text = label.innerHTML;
+          let tooltip = "";
+          if(orig_text == "AST") tooltip = "Assists";
+          if(orig_text == "BLK") tooltip = "Blocks";
+          if(orig_text == "DREB") tooltip = "Defensive Rebounds";
+          if(orig_text == "FG3A") tooltip = "3-Point Field Goal Attempts";
+          if(orig_text == "FG3M") tooltip = "3-Point Field Goals Made";
+          if(orig_text == "FGA") tooltip = "Field Goal Attempts";
+          if(orig_text == "FGM") tooltip = "Field Goals Made";
+          if(orig_text == "FTA") tooltip = "Free Throw Attempts";
+          if(orig_text == "FTM") tooltip = "Free Throws Made";
+          if(orig_text == "OREB") tooltip = "Offensive Rebounds";
+          if(orig_text == "PF") tooltip = "Personal Fouls";
+          if(orig_text == "STL") tooltip = "Steals";
+          if(orig_text == "TO") tooltip = "Turnovers";
+          label.setAttribute('title', tooltip);
+          console.log(label);
+        });
+      }, 800);
+    }
+      
   }, [boxScoresLeft, boxScoresRight]);
 
   //this function uses the 2 saved box scores to updates the shap values, winning probability and tactical clustering points

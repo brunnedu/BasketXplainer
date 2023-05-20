@@ -92,6 +92,9 @@ const ParallelCoordinates: React.FC<ParallelCoordinatesProps> = React.memo(({ da
     xAxis: {
       categories: columns,
       offset: 10,
+      labels: {
+        useHTML: true,
+      },
     },
     yAxis: limits2,
     series: data.map((set, i) => ({

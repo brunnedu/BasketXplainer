@@ -285,3 +285,7 @@ td{
 .highcharts-root{
   contain: strict;
 }
+
+.highcharts-axis-labels{
+  transform: translate(-10px, 0px);
+}
