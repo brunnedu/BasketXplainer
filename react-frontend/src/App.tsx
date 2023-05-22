@@ -165,7 +165,7 @@ const ShapDisplay: React.FC<ShapDisplayProps> = ({ param }) => {
 
   return (
     <>
-      <div className="box" id="shapbox">
+      <div className="box shap" id="shapbox">
         <h2>Feature importance</h2>
         <iframe id="shapframe" srcDoc={param}></iframe>
       </div>
@@ -288,7 +288,7 @@ const Scatterplot: React.FC<ScatterplotProps> = ({ points }) => {
 
   return (
     <>
-      <div className='box'>
+      <div className='box' id="tacticalClustering">
         <h2>Tactical clustering</h2>
         <svg ref={svgRef} viewBox='0 0 100 100' id='clustering'></svg>
         <div className="yaxis">Defence rating</div>
@@ -327,7 +327,7 @@ const SimilarMatchupsDisplay: React.FC<SimilarMatchupsDisplayProps> = ({ matchup
 
   return (
     <>
-      <div className="box">
+      <div className="box" id="similarMatchups">
         <h2>Similar matchups</h2>
         {/* For each matchup, display the date, the score and the 2 team logos on each side of the score  */}
         <table>
@@ -597,7 +597,7 @@ function App() {
       </div>
       <Steps
           enabled={ShowTeamSelectorPopup && !DISABLE_TUTORIAL}
-          steps={[ { element: ".select_HOME", intro: "Welcome to the NBA Matchup Analyzer 👋 <br/> Start by choosing the Home Team for the analysis." }, { element: ".select_AWAY", intro: "Now choose the Away Team to see the results!" } ]}
+          steps={[ {title: "Welcome!", element: ".select_HOME", intro: "Welcome to the NBA Matchup Analyzer 👋 <br/> Start by choosing a Home Team for the analysis." }, { element: ".select_AWAY", intro: "Now choose the Away Team to see the results!" } ]}
           initialStep={0}
           onExit={() => { setShowTeamSelectorPopup(false); }}
         />
@@ -610,7 +610,15 @@ function App() {
       </>}
       <Steps
           enabled={ShowRestOfAppPopup && !DISABLE_TUTORIAL}
-          steps={[ { element: ".allSliders", intro: "Nice! <br/> Here is a quick walkthrough of what all the elements do." }, { element: ".winprob", intro: "We will go through all of them one by one." } ]}
+          steps={[ 
+            { title: "Nice!", intro: "Here is a quick walkthrough of what all the elements do." }, 
+            { element: ".box.sliderbox", intro: "Here you can see the aggregated box scores of the home team. The sliders can be modified to see how different box scores will influence the analysis" },
+            { element: ".popup-button", intro: "You can always find more information about the individual elements by clicking the help button." },
+            { element: ".box.winprob", intro: "The winning probability of your selected teams is calculated based on the box score data." },
+            { element: "#similarMatchups", intro: "Here we display recent matchups of the teams that match the selected box scores most closely." },
+            { element: "#shapbox", intro: "Different parameters influence the winning rate in different ways." },
+            { element: "#tacticalClustering", intro: "Teams are evaluated on their defensive and offensive rating and are clustered accordingly." },
+          ]}
           initialStep={0}
           onExit={() => { setShowRestOfAppPopup(false); localStorage.setItem("DISABLE_TUTORIAL", "true"); }}
         /> 
