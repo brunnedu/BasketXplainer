@@ -100,7 +100,8 @@ const ParallelCoordinates: React.FC<ParallelCoordinatesProps> = React.memo(({ da
     series: data.map((set, i) => ({
       name: `Line ${i}`,
       data: set,
-      color: (i == 31 ? '#00FF00' : 'rgba(0, 0, 0, 0.2)'),
+      color: (i == 31 ? '#991111' : 'rgba(0, 0, 0, 0.2)'),
+      lineWidth: (i == 31 ? 4 : 1),
     })),
     credits: {
       enabled: false,

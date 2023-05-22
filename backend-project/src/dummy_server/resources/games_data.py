@@ -135,7 +135,6 @@ class GetSimilarMatchups(Resource):
             STL_away, 
             TO_away
             ):
-
         # load precomputed boxscores
         boxscores = pd.read_csv(os.path.join(DATA_ROOT, 'precomputed', 'boxscores.csv'), index_col=0)
 
@@ -170,7 +169,7 @@ class GetSimilarMatchups(Resource):
         # standardize custom boxscores
         boxscore_home = scaler.transform(boxscore_home)
         boxscore_away = scaler.transform(boxscore_away)
-        
+ 
         # retrieve most similar teams
         similar_home_id = boxscores[boxscores['is_home']].iloc[closest_point(boxscore_home, boxscores[boxscores['is_home']][PRED_COLS])]['TEAM_ID']
         similar_away_id = boxscores[~boxscores['is_home']].iloc[closest_point(boxscore_away, boxscores[~boxscores['is_home']][PRED_COLS])]['TEAM_ID']
