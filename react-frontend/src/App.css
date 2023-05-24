@@ -47,7 +47,7 @@ h1 {
   width: 50%;
   background-color: #F5EFE6;
   padding-top: 30px;
-  padding-bottom: 25px;
+  padding-bottom: 10px;
   display: inline-block;
   /* margin-left: 10%; */
   position: relative;
@@ -57,7 +57,7 @@ h1 {
   width: 70%;
   margin: auto;
   background-color: #e4c494;
-  margin-top: 25px;
+  margin-top: 15px;
   padding: 15px;
   border-radius: 10px;
   box-shadow: 3px 4px 8px -2px rgba(0,0,0,0.75);
@@ -112,6 +112,10 @@ h1{
   height: 100%;
   border: none;
   overflow: hidden;
+}
+
+#similarMatchups{
+  margin-top: 5px;
 }
 
 #shapbox{
@@ -205,7 +209,7 @@ h1{
 
 .sliderbox{
   position: relative;
-  height: 363px;
+  height: 320px;
 }
 
 .sliderbox > div{
@@ -288,4 +292,23 @@ td{
 
 .highcharts-axis-labels{
   transform: translate(-10px, 0px);
+}
+
+.td_text_container{
+  position: relative;
+  display: inline-block;
+  width: 231px;
+  height: 50px;
+}
+
+.td_text{
+  position: absolute;
+  top: 17px;
+  right: 6px;
+}
+
+.td_text_right{
+  position: absolute;
+  top: 17px;
+  left: 6px;
 }

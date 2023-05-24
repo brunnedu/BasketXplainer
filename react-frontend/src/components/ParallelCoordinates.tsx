@@ -73,6 +73,25 @@ const ParallelCoordinates: React.FC<ParallelCoordinatesProps> = React.memo(({ da
     });
   }
 
+
+  // to make the visualization easier to see, we only show the 5 rows that are closest to the custom row (square of the distance is used as a metric)
+  var customrow = data[data.length - 1];
+  var distances:Array<number> = [];
+  for (i = 0; i < data.length - 1; i++) {
+    var currentrow = data[i];
+    var distance = 0;
+    for (j = 0; j < currentrow.length; j++) {
+      distance += (currentrow[j] - customrow[j]) * (currentrow[j] - customrow[j]);
+    }
+    distances.push(distance);
+  }
+  var indices = distances.map((x, i) => i).sort((a, b) => distances[a] - distances[b]);
+  var newdata = [];
+  for (i = 0; i < 5; i++) {
+    newdata.push(data[indices[i]]);
+  }
+  newdata.push(customrow);
+  data = newdata;
   
   
   const getOptions = () => ({
@@ -100,8 +119,8 @@ const ParallelCoordinates: React.FC<ParallelCoordinatesProps> = React.memo(({ da
     series: data.map((set, i) => ({
       name: `Line ${i}`,
       data: set,
-      color: (i == 31 ? '#991111' : 'rgba(0, 0, 0, 0.2)'),
-      lineWidth: (i == 31 ? 4 : 1),
+      color: (i == (data.length - 1) ? '#991111' : 'rgba(0, 0, 0, 0.2)'),
+      lineWidth: (i == (data.length - 1) ? 4 : 1),
     })),
     credits: {
       enabled: false,

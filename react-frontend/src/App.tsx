@@ -289,7 +289,7 @@ const Scatterplot: React.FC<ScatterplotProps> = ({ points }) => {
   return (
     <>
       <div className='box' id="tacticalClustering">
-        <h2>Tactical clustering</h2>
+        <h2>League Overview</h2>
         <svg ref={svgRef} viewBox='0 0 100 100' id='clustering'></svg>
         <div className="yaxis">Defence rating</div>
         <div className="xaxis">Offence rating</div>
@@ -335,9 +335,9 @@ const SimilarMatchupsDisplay: React.FC<SimilarMatchupsDisplayProps> = ({ matchup
             {matchups.map((matchup) => (
               <tr className="matchup" key={matchup["Game Date"] + " " + matchup["Score"]}>
                 <td className='date_td'>{matchup["Game Date"]}</td>
-                <td className='home_td'>{matchup["Home Team"]}<img className="small_team_logo" src={BASE_URL + "api/logo/" + matchup["TEAM_ID_home"]} alt="team logo" /></td>
+                <td className='home_td'><div className="td_text_container"><div className="td_text">{matchup["Home Team"]}</div></div><img className="small_team_logo" src={BASE_URL + "api/logo/" + matchup["TEAM_ID_home"]} alt="team logo" /></td>
                 <td className='matchup_td'>{matchup["Score"]}</td>
-                <td className='away_td'><img className="small_team_logo" src={BASE_URL + "api/logo/" + matchup["TEAM_ID_away"]} alt="team logo" />{matchup["Away Team"]}</td>
+                <td className='away_td'><img className="small_team_logo" src={BASE_URL + "api/logo/" + matchup["TEAM_ID_away"]} alt="team logo" /><div className="td_text_container"><div className="td_text_right">{matchup["Away Team"]}</div></div></td>
               </tr>
             ))}
           </tbody>
