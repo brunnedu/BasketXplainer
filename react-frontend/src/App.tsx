@@ -19,7 +19,7 @@ console.log("DISABLE_TUTORIAL: " + DISABLE_TUTORIAL);
 
 
 const VerticalSlider = styled(Slider)({
-  height: "195px !important",
+  height: "182px !important",
   margin: "auto 0 !important",
   display: "flex",
   flexDirection: "column",
@@ -579,7 +579,7 @@ function App() {
         <TeamSelector title='HOME' availableTeams={availableTeams} selectedTeam={selectedTeamLeft} setSelectedTeam={handleSelectionLeft}/>
         {DisplayRestOfApp && <>
           <div className="box sliderbox">
-            <h2>Aggregated box score data</h2>
+            <h2>Box Scores</h2>
             <ParallelCoordinates data_orig={parallelCoordinatesDataHome} limits={boxScoreBoundaries} custom={boxScoresLeft} scrolling={scrolling}></ParallelCoordinates>
             <BoxScoreSlider boxScores={boxScoresLeft} onSliderChange={handleSliderChangeLeft} onMouseUp={onSliderMouseUp} boxScoreBoundaries={boxScoreBoundaries} />
           </div>
@@ -592,7 +592,7 @@ function App() {
         <Popup text="This is the text that will be displayed in the popup" />
         {DisplayRestOfApp && <>
           <div className="box sliderbox">
-            <h2>Aggregated box score data</h2>
+            <h2>Box Scores</h2>
             <ParallelCoordinates data_orig={parallelCoordinatesDataAway} limits={boxScoreBoundaries} custom={boxScoresRight} scrolling={scrolling}></ParallelCoordinates>
             <BoxScoreSlider boxScores={boxScoresRight} onSliderChange={handleSliderChangeRight} onMouseUp={onSliderMouseUp} boxScoreBoundaries={boxScoreBoundaries}/>
           </div>
@@ -601,9 +601,14 @@ function App() {
       </div>
       <Steps
           enabled={ShowTeamSelectorPopup && !DISABLE_TUTORIAL}
-          steps={[ {title: "Welcome!", element: ".select_HOME", intro: "Welcome to the NBA Matchup Analyzer 👋 <br/> Start by choosing a Home Team for the analysis." }, { element: ".select_AWAY", intro: "Now choose the Away Team to see the results!" } ]}
+          steps={[ 
+            {title: "Welcome!", element: ".select_HOME", intro: "Welcome to the NBA Matchup Analyzer 👋 <br/> Start by choosing a Home Team for the analysis." }, 
+            { element: ".select_AWAY", intro: "Now choose the Away Team to see the results!" } 
+          ]}
           initialStep={0}
           onExit={() => { setShowTeamSelectorPopup(false); }}
+          //add an exit button to the last step
+          options={{ doneLabel: 'Got it' }}
         />
       {DisplayRestOfApp && <>
         <div className="center container">
@@ -613,18 +618,20 @@ function App() {
         </div>
       </>}
       <Steps
-          enabled={ShowRestOfAppPopup && !DISABLE_TUTORIAL}
+          enabled={ShowRestOfAppPopup && !DISABLE_TUTORIAL && !ShowTeamSelectorPopup}
           steps={[ 
             { title: "Nice!", intro: "Here is a quick walkthrough of what all the elements do." }, 
-            { element: ".box.sliderbox", intro: "Here you can see the aggregated box scores of the home team. The sliders can be modified to see how different box scores will influence the analysis" },
             { element: ".popup-button", intro: "You can always find more information about the individual elements by clicking the help button." },
+            { element: ".box.sliderbox", intro: "Here you can see the aggregated box scores of the selected home team and the 5 closest teams. The sliders can be modified to see how different box scores will influence the analysis. If you aren't sure what the labels mean, hover the mouse over them." },
             { element: ".box.winprob", intro: "The winning probability of your selected teams is calculated based on the box score data." },
-            { element: "#similarMatchups", intro: "Here we display recent matchups of the teams that match the selected box scores most closely." },
-            { element: "#shapbox", intro: "Different parameters influence the winning rate in different ways." },
-            { element: "#tacticalClustering", intro: "Teams are evaluated on their defensive and offensive performance and are clustered accordingly." },
+            { element: "#similarMatchups", intro: "Here we display recent matchups of the teams that match the selected box scores most closely. You can hover on the team logos to see the stats of the match." },
+            { element: "#shapbox", intro: "Here you can see how our model got to its prediction. Different parameters influence the winning rate in different ways." },
+            { element: "#tacticalClustering", intro: "Teams are evaluated on their defensive and offensive performance and are plotted accordingly. You can hover the mouse on the teams to see their stats." },
+            { element: ".box.sliderbox", intro: "When you modify one of the sliders, the other elements are updated in real time. Try it out!" },
           ]}
           initialStep={0}
           onExit={() => { setShowRestOfAppPopup(false); localStorage.setItem("DISABLE_TUTORIAL", "true"); }}
+          options={{ doneLabel: 'Got it' }}
         /> 
       <div id='tooltip' />
     </div>

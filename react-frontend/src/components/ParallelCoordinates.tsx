@@ -99,14 +99,14 @@ const ParallelCoordinates: React.FC<ParallelCoordinatesProps> = React.memo(({ da
       type: 'line',
       backgroundColor: '#e4c494',
       width: 450,
-      height: 300,
+      height: 250,
       parallelCoordinates: true,
       parallelAxes: {
         lineWidth: 2,
       },
     },
     title: {
-      text: 'Parallel Coordinates Chart',
+      text: '',
     },
     xAxis: {
       categories: columns,

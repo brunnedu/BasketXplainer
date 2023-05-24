@@ -90,7 +90,7 @@ h1{
   align-items: center; */
   position: absolute;
   left: 35px;
-  top: 135px;
+  top: 103px;
   
 }
 
@@ -209,7 +209,7 @@ h1{
 
 .sliderbox{
   position: relative;
-  height: 320px;
+  height: 276px;
 }
 
 .sliderbox > div{
@@ -311,4 +311,8 @@ td{
   position: absolute;
   top: 17px;
   left: 6px;
+}
+
+.highcharts-exporting-group{
+  display: none;
 }
