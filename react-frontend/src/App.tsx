@@ -309,14 +309,6 @@ const Scatterplot: React.FC<ScatterplotProps> = ({ points }) => {
 // args are an array of these objects:
 // AST_away : 24 AST_home : 28 Away Team : "Boston Celtics" FG3_PCT_away : 0.268 FG3_PCT_home : 0.351 FG_PCT_away : 0.44 FG_PCT_home : 0.506 FT_PCT_away : 0.824 FT_PCT_home : 0.833 GAME_DATE_EST : "2021-11-17" GAME_ID : 22100215 GAME_STATUS_TEXT : "Final" Game Date : "17. November 2021" HOME_TEAM_ID : 1610612737 HOME_TEAM_WINS : 1 Home Team : "Atlanta Hawks" PTS_away : 99 PTS_home : 110 REB_away : 42 REB_home : 40 SEASON : 2021 Score : "110-99" TEAM_ID_away : 1610612738 TEAM_ID_home : 1610612737 VISITOR_TEAM_ID : 1610612738 Winning Team : "Home (Atlanta Hawks)" date : "Wed, 17 Nov 2021 00:00:00 GMT"
 
-// interface SimilarMatchupsProps {
-//   away_team: string;
-//   game_date: string;
-//   home_team: string;
-//   score: string;
-//   winning_team: string;
-// }
-
 interface SimilarMatchupsDisplayProps {
   matchups: any[];
 }
@@ -324,6 +316,18 @@ interface SimilarMatchupsDisplayProps {
 const SimilarMatchupsDisplay: React.FC<SimilarMatchupsDisplayProps> = ({ matchups }) => {
   const BASE_URL = process.env.NODE_ENV==="production"? `http://be.${window.location.hostname}/api/v1`:"http://localhost:8000/"
   // console.log(matchups)
+
+  const getTooltip = (matchup: any, home: boolean) => {
+    let tooltip = "";
+    let to_match = home ? "home" : "away";
+    for (let key in matchup) {
+      if (key.includes(to_match) && !key.includes("TEAM")) {
+        tooltip += `${key.split("_")[0]}: ${matchup[key]}\n`;
+      }
+    }
+
+    return tooltip;
+  };
 
   return (
     <>
@@ -335,9 +339,9 @@ const SimilarMatchupsDisplay: React.FC<SimilarMatchupsDisplayProps> = ({ matchup
             {matchups.map((matchup) => (
               <tr className="matchup" key={matchup["Game Date"] + " " + matchup["Score"]}>
                 <td className='date_td'>{matchup["Game Date"]}</td>
-                <td className='home_td'><div className="td_text_container"><div className="td_text">{matchup["Home Team"]}</div></div><img className="small_team_logo" src={BASE_URL + "api/logo/" + matchup["TEAM_ID_home"]} alt="team logo" /></td>
+                <td className='home_td' title={getTooltip(matchup,true)}><div className="td_text_container"><div className="td_text">{matchup["Home Team"]}</div></div><img className="small_team_logo" src={BASE_URL + "api/logo/" + matchup["TEAM_ID_home"]} alt="team logo"/></td>
                 <td className='matchup_td'>{matchup["Score"]}</td>
-                <td className='away_td'><img className="small_team_logo" src={BASE_URL + "api/logo/" + matchup["TEAM_ID_away"]} alt="team logo" /><div className="td_text_container"><div className="td_text_right">{matchup["Away Team"]}</div></div></td>
+                <td className='away_td' title={getTooltip(matchup,false)}><img className="small_team_logo" src={BASE_URL + "api/logo/" + matchup["TEAM_ID_away"]} alt="team logo" /><div className="td_text_container"><div className="td_text_right">{matchup["Away Team"]}</div></div></td>
               </tr>
             ))}
           </tbody>
@@ -498,7 +502,7 @@ function App() {
         //add tooltips
         const labels = document.querySelectorAll('.highcharts-xaxis-labels span');
         labels.forEach((label, i) => {
-          console.log(label);
+          // console.log(label);
           let orig_text = label.innerHTML;
           let tooltip = "";
           if(orig_text == "AST") tooltip = "Assists";
@@ -515,7 +519,7 @@ function App() {
           if(orig_text == "STL") tooltip = "Steals";
           if(orig_text == "TO") tooltip = "Turnovers";
           label.setAttribute('title', tooltip);
-          console.log(label);
+          // console.log(label);
         });
       }, 800);
     }
@@ -559,7 +563,7 @@ function App() {
       setPoints(data);
     });
     loadData(`api/similar_games/${s}`).then(data => {
-      // console.log(data);
+      console.log(data);
       setSimilarMatchups(data);
     });
   }
