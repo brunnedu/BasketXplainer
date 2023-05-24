@@ -291,8 +291,8 @@ const Scatterplot: React.FC<ScatterplotProps> = ({ points }) => {
       <div className='box' id="tacticalClustering">
         <h2>League Overview</h2>
         <svg ref={svgRef} viewBox='0 0 100 100' id='clustering'></svg>
-        <div className="yaxis">Defence rating</div>
-        <div className="xaxis">Offence rating</div>
+        <div className="yaxis">Defensive performance</div>
+        <div className="xaxis">Offensive performance</div>
       </div>
     </>
   );
@@ -617,7 +617,7 @@ function App() {
             { element: ".box.winprob", intro: "The winning probability of your selected teams is calculated based on the box score data." },
             { element: "#similarMatchups", intro: "Here we display recent matchups of the teams that match the selected box scores most closely." },
             { element: "#shapbox", intro: "Different parameters influence the winning rate in different ways." },
-            { element: "#tacticalClustering", intro: "Teams are evaluated on their defensive and offensive rating and are clustered accordingly." },
+            { element: "#tacticalClustering", intro: "Teams are evaluated on their defensive and offensive performance and are clustered accordingly." },
           ]}
           initialStep={0}
           onExit={() => { setShowRestOfAppPopup(false); localStorage.setItem("DISABLE_TUTORIAL", "true"); }}
