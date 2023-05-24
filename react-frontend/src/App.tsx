@@ -99,12 +99,13 @@ interface Props {
 }
 
 const DropdownMenu: React.FC<Props> = ({ ids, onSelection, selectedTeam, title }) => {
-
+  // console.log("DropdownMenu");
+  // console.log(selectedTeam);
   const handleSelection = (event: React.ChangeEvent<HTMLSelectElement>) => {
     // console.log("handleSelection");
     let teams:Team[] = ids;
     let target: string = event.target.value;
-    let team:Team = {TEAM_ID: 0, name: "Unknown Team"};
+    let team:Team = ids[0];
     // find the team with the matching id
     for (let i = 0; i < teams.length; i++) {
       if (teams[i].name == target) {
@@ -114,10 +115,15 @@ const DropdownMenu: React.FC<Props> = ({ ids, onSelection, selectedTeam, title }
     onSelection(team);
   };
 
+  let selectedValue = selectedTeam?.name ?? '';
+  // console.log(selectedValue);
+  let ids2 = ids.slice();
+  ids2.push({TEAM_ID: ids[0].TEAM_ID, name: "Custom Team"});
+
   return (
-    <select value={selectedTeam?.name ?? ''} onChange={handleSelection} className={"select_" + title}>
-      {ids.map((team) => (
-        <option key={team.TEAM_ID + "_" + title} value={team.name}>
+    <select value={selectedValue} onChange={handleSelection} className={"select_" + title}>
+      {ids2.map((team) => (
+        <option key={team.TEAM_ID + "_" + team.name + "_" + title} value={team.name}>
           {team.name} 
           
         </option>
@@ -213,14 +219,36 @@ interface ScatterplotProps {
 let addedPoints: boolean = false;
 const Scatterplot: React.FC<ScatterplotProps> = ({ points }) => {
   const svgRef = useRef<SVGSVGElement>(null);
-  const xScale = d3.scaleLinear().domain([100, 120]).range([10, 90]);
-  const yScale = d3.scaleLinear().domain([50, 40]).range([10, 90]);
 
   useEffect(() => {
     if (points.length === 0) {
       return;
     }
     const svg = d3.select(svgRef.current);
+
+    // const xScale = d3.scaleLinear().domain([100, 120]).range([10, 90]);
+    // const yScale = d3.scaleLinear().domain([50, 40]).range([10, 90]);
+    let min_x = 1000;
+    let max_x = -1000;
+    let min_y = 1000;
+    let max_y = -1000;
+    for (let i = 0; i < points.length; i++) {
+      if (points[i].OR < min_x) {
+        min_x = points[i].OR;
+      }
+      if (points[i].OR > max_x) {
+        max_x = points[i].OR;
+      }
+      if (points[i].DR < min_y) {
+        min_y = points[i].DR;
+      }
+      if (points[i].DR > max_y) {
+        max_y = points[i].DR;
+      }
+    }
+    const xScale = d3.scaleLinear().domain([min_x, max_x]).range([5, 80]);
+    const yScale = d3.scaleLinear().domain([max_y, min_y]).range([5, 80]);
+
 
     if (!addedPoints) {
       addedPoints = true;
@@ -250,8 +278,8 @@ const Scatterplot: React.FC<ScatterplotProps> = ({ points }) => {
         .append('image')
         .attr('x', (d) => xScale(d.OR))
         .attr('y', (d) => yScale(d.DR))
-        .attr('width', 8)
-        .attr('height', 8)
+        .attr('width', 12)
+        .attr('height', 12)
         .attr('href', (d) => `http://localhost:8000/api/logo/${d.TEAM_ID == 0 ? 5 : (d.TEAM_ID == 1 ? 4 : d.TEAM_ID)}`)
         .on('mouseover', function (event, d) {
           // Show hover details on mouseover
@@ -316,13 +344,20 @@ interface SimilarMatchupsDisplayProps {
 const SimilarMatchupsDisplay: React.FC<SimilarMatchupsDisplayProps> = ({ matchups }) => {
   const BASE_URL = process.env.NODE_ENV==="production"? `http://be.${window.location.hostname}/api/v1`:"http://localhost:8000/"
   // console.log(matchups)
+  
 
   const getTooltip = (matchup: any, home: boolean) => {
     let tooltip = "";
     let to_match = home ? "home" : "away";
     for (let key in matchup) {
-      if (key.includes(to_match) && !key.includes("TEAM")) {
-        tooltip += `${key.split("_")[0]}: ${matchup[key]}\n`;
+      if (key.includes(to_match) && !key.includes("TEAM") && !key.includes("PTS")) {
+        let key2 = key.split("_")[0];
+        if (key2 === "AST") key2 = "Assists";
+        if (key2 === "FG3") key2 = "3 Point Field Goals";
+        if (key2 === "FG") key2 = "Field Goals";
+        if (key2 === "FT") key2 = "Free Throws";
+        if (key2 === "REB") key2 = "Rebounds";
+        tooltip += `${key2}: ${matchup[key]}\n`;
       }
     }
 
@@ -425,7 +460,7 @@ function App() {
       });
       loadData(`api/teams`).then(data => {
         // console.log(data);
-        data = data.concat({TEAM_ID: 0, name: "Unknown Team"})
+        // data = data.concat({TEAM_ID: 0, name: "Unknown Team"})
         setAvailableTeams(data);
         setShowTeamSelectorPopup(true);
         if(DISABLE_TUTORIAL){
@@ -622,12 +657,12 @@ function App() {
           steps={[ 
             { title: "Nice!", intro: "Here is a quick walkthrough of what all the elements do." }, 
             { element: ".popup-button", intro: "You can always find more information about the individual elements by clicking the help button." },
-            { element: ".box.sliderbox", intro: "Here you can see the aggregated box scores of the selected home team and the 5 closest teams. The sliders can be modified to see how different box scores will influence the analysis. If you aren't sure what the labels mean, hover the mouse over them." },
+            { element: ".box.sliderbox", intro: "Here you can see the aggregated box scores of the selected home team and the 5 teams with the most similar stats. The sliders can be modified to see how different box scores will influence the analysis. If you aren't sure what the labels mean, hover the mouse over them." },
             { element: ".box.winprob", intro: "The winning probability of your selected teams is calculated based on the box score data." },
-            { element: "#similarMatchups", intro: "Here we display recent matchups of the teams that match the selected box scores most closely. You can hover on the team logos to see the stats of the match." },
-            { element: "#shapbox", intro: "Here you can see how our model got to its prediction. Different parameters influence the winning rate in different ways." },
+            { element: "#similarMatchups", intro: "These are the recent matchups of the teams that match the selected box scores most closely. You can hover on the team logos to see the stats of the match." },
+            { element: "#shapbox", intro: "This is how our model got to its prediction. Different parameters influence the winning rate in different ways." },
             { element: "#tacticalClustering", intro: "Teams are evaluated on their defensive and offensive performance and are plotted accordingly. You can hover the mouse on the teams to see their stats." },
-            { element: ".box.sliderbox", intro: "When you modify one of the sliders, the other elements are updated in real time. Try it out!" },
+            { element: ".box.sliderbox", intro: "Thank you for following the tutorial. When you modify one of the sliders, the other elements are updated in real time. Try it out!" },
           ]}
           initialStep={0}
           onExit={() => { setShowRestOfAppPopup(false); localStorage.setItem("DISABLE_TUTORIAL", "true"); }}
