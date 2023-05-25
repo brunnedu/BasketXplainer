@@ -288,6 +288,9 @@ const Scatterplot: React.FC<ScatterplotProps> = ({ points }) => {
             .html(`${process_tooltip(d)}`)
             .style('left', `${event.pageX + 10}px`)
             .style('top', `${event.pageY + 10}px`);
+          
+          // Bring hovered logo to front
+          d3.select(this).raise();
         })
         .on('mousemove', function (event) {
           // Move hover details on mousemove
