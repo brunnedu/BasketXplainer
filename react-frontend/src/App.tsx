@@ -16,6 +16,56 @@ let DISABLE_TUTORIAL = localStorage.getItem("DISABLE_TUTORIAL") === "true";
 console.log("DISABLE_TUTORIAL: " + DISABLE_TUTORIAL);
 
 
+// Maps team ids to the team name
+const teamid2name = new Map([
+  [0, 'Custom Home Team'],
+  [1, 'Custom Away Team'],
+  [1610612737, 'Atlanta Hawks'],
+  [1610612738, 'Boston Celtics'],
+  [1610612740, 'New Orleans Pelicans'],
+  [1610612741, 'Chicago Bulls'],
+  [1610612742, 'Dallas Mavericks'],
+  [1610612743, 'Denver Nuggets'],
+  [1610612745, 'Houston Rockets'],
+  [1610612746, 'Los Angeles Clippers'],
+  [1610612747, 'Los Angeles Lakers'],
+  [1610612748, 'Miami Heat'],
+  [1610612749, 'Milwaukee Bucks'],
+  [1610612750, 'Minnesota Timberwolves'],
+  [1610612751, 'Brooklyn Nets'],
+  [1610612752, 'New York Knicks'],
+  [1610612753, 'Orlando Magic'],
+  [1610612754, 'Indiana Pacers'],
+  [1610612755, 'Philadelphia 76ers'],
+  [1610612756, 'Phoenix Suns'],
+  [1610612757, 'Portland Trail Blazers'],
+  [1610612758, 'Sacramento Kings'],
+  [1610612759, 'San Antonio Spurs'],
+  [1610612760, 'Oklahoma City Thunder'],
+  [1610612761, 'Toronto Raptors'],
+  [1610612762, 'Utah Jazz'],
+  [1610612763, 'Memphis Grizzlies'],
+  [1610612764, 'Washington Wizards'],
+  [1610612765, 'Detroit Pistons'],
+  [1610612766, 'Charlotte Hornets'],
+  [1610612739, 'Cleveland Cavaliers'],
+  [1610612744, 'Golden State Warriors']
+]);
+
+// Maps boxscore abreviations to their full name
+const abbreviation2boxscore = new Map([
+  ['AST', 'Assists'],
+  ['BLK', 'Blocks'],
+  ['DREB', 'Defensive Rebounds'],
+  ['FG3A', '3 Point Field Goal Attempts'],
+  ['FGA', 'Field Goal Attempts'],
+  ['FTA', 'Free Throw Attempts'],
+  ['OREB', 'Offensive Rebounds'],
+  ['STL', 'Steals'],
+  ['TO', 'Turnovers']
+]);
+
+
 
 
 const VerticalSlider = styled(Slider)({
@@ -253,20 +303,38 @@ const Scatterplot: React.FC<ScatterplotProps> = ({ points }) => {
     if (!addedPoints) {
       addedPoints = true;
 
+      // function that takes a team object and processes it into a formatted tooltip
       const process_tooltip = (d: any) => {
-        //Round every float to 2 decimals
-        for (let key in d) {
-          if (typeof d[key] === 'number') {
-            d[key] = Math.round(d[key] * 100) / 100;
+        
+        // boxscore stats to include in tooltip
+        const propertiesInlcuded = ['AST', 'BLK', 'DREB', 'FG3A', 'FGA', 'FTA', 'OREB', 'STL', 'TO'];
+
+        // Create an array to store the tooltip content
+        const tooltipContent = [];
+
+        // Use name of team as title of tooltip
+        tooltipContent.push(`<span class="tooltip-title">${teamid2name.get(d.TEAM_ID)}</span>`);
+
+        // Iterate over the object properties (excluding the title)
+        for (const key of propertiesInlcuded) {
+          if (Object.hasOwnProperty.call(d, key) && key) {
+            const property = key;
+            let value = d[key];
+
+            // Round numbers
+            if (typeof value === 'number') {
+              value = Math.round(value * 100) / 100;
+            }
+            
+            // Add the formatted property-value pair to the tooltip content array
+            tooltipContent.push(`${abbreviation2boxscore.get(property)}: ${value}`);
           }
         }
 
-        delete d.TEAM_ID;
-        delete d.OR;
-        delete d.DR;
-        delete d.cluster;
+        // Join the tooltip content array elements with line breaks
+        const formattedTooltip = tooltipContent.join('<br>');
 
-        return `${JSON.stringify(d).replaceAll('{', '').replaceAll('}', '').replaceAll(',', '<br>').replaceAll('"', '')}`;
+        return formattedTooltip
       };
 
 
@@ -288,6 +356,9 @@ const Scatterplot: React.FC<ScatterplotProps> = ({ points }) => {
             .html(`${process_tooltip(d)}`)
             .style('left', `${event.pageX + 10}px`)
             .style('top', `${event.pageY + 10}px`);
+          
+          // Bring hovered logo to front
+          d3.select(this).raise();
         })
         .on('mousemove', function (event) {
           // Move hover details on mousemove
@@ -353,9 +424,9 @@ const SimilarMatchupsDisplay: React.FC<SimilarMatchupsDisplayProps> = ({ matchup
       if (key.includes(to_match) && !key.includes("TEAM") && !key.includes("PTS")) {
         let key2 = key.split("_")[0];
         if (key2 === "AST") key2 = "Assists";
-        if (key2 === "FG3") key2 = "3 Point Field Goals";
-        if (key2 === "FG") key2 = "Field Goals";
-        if (key2 === "FT") key2 = "Free Throws";
+        if (key2 === "FG3") key2 = "3 Point Field Goal Percentage";
+        if (key2 === "FG") key2 = "Field Goal Percentage";
+        if (key2 === "FT") key2 = "Free Throw Percentage";
         if (key2 === "REB") key2 = "Rebounds";
         tooltip += `${key2}: ${matchup[key]}\n`;
       }
