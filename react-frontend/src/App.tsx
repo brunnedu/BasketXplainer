@@ -350,15 +350,14 @@ const Scatterplot: React.FC<ScatterplotProps> = ({ points }) => {
         .attr('height', 12)
         .attr('href', (d) => `http://localhost:8000/api/logo/${d.TEAM_ID == 0 ? 5 : (d.TEAM_ID == 1 ? 4 : d.TEAM_ID)}`)
         .on('mouseover', function (event, d) {
-          // Show hover details on mouseover
+          // Show hover details on mouseover and bring logo to front
           d3.select('#tooltip')
             .style('opacity', 1)
             .html(`${process_tooltip(d)}`)
             .style('left', `${event.pageX + 10}px`)
-            .style('top', `${event.pageY + 10}px`);
+            .style('top', `${event.pageY + 10}px`)
+            .raise();
           
-          // Bring hovered logo to front
-          d3.select(this).raise();
         })
         .on('mousemove', function (event) {
           // Move hover details on mousemove
