@@ -119,10 +119,13 @@ const ParallelCoordinates: React.FC<ParallelCoordinatesProps> = React.memo(({ da
     series: data.map((set, i) => ({
       name: `Line ${i}`,
       data: set,
-      color: (i == (data.length - 1) ? '#991111' : 'rgba(0, 0, 0, 0.2)'),
+      color: (i == (data.length - 1) ? '#991111' : 'rgba(0, 0, 0, 0.4)'),
       lineWidth: (i == (data.length - 1) ? 4 : 1),
     })),
     credits: {
+      enabled: false,
+    },
+    tooltip: {
       enabled: false,
     },
   });
