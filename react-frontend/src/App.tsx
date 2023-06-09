@@ -357,6 +357,10 @@ const Scatterplot: React.FC<ScatterplotProps> = ({ points }) => {
             .style('left', `${event.pageX + 10}px`)
             .style('top', `${event.pageY + 10}px`)
             .raise();
+
+          // Bring hovered logo to front
+          //TODO
+
           
         })
         .on('mousemove', function (event) {
@@ -504,6 +508,7 @@ function App() {
   const [parallelCoordinatesDataHome, setParallelCoordinatesDataHome] = useState<string>("");
   const [parallelCoordinatesDataAway, setParallelCoordinatesDataAway] = useState<string>("");
   const [SimilarMatchups, setSimilarMatchups] = useState<any>([]);
+  const [possessions, setPossessions] = useState<any>([]);
 
   const [DisplayRestOfApp, setDisplayRestOfApp] = useState<boolean>(false);
 
@@ -671,6 +676,13 @@ function App() {
       console.log(data);
       setSimilarMatchups(data);
     });
+    loadData(`api/possessions/${s}`).then(data => {
+      console.log(data);
+      //round to 2 decimal places
+      data.home_possessions = Math.round(data.home_possessions * 100) / 100;
+      data.away_possessions = Math.round(data.away_possessions * 100) / 100;
+      setPossessions(data);
+    });
   }
 
 
@@ -687,6 +699,7 @@ function App() {
             <h2>Box Scores</h2>
             <ParallelCoordinates data_orig={parallelCoordinatesDataHome} limits={boxScoreBoundaries} custom={boxScoresLeft} scrolling={scrolling}></ParallelCoordinates>
             <BoxScoreSlider boxScores={boxScoresLeft} onSliderChange={handleSliderChangeLeft} onMouseUp={onSliderMouseUp} boxScoreBoundaries={boxScoreBoundaries} />
+            <div className="possessions_display">Possessions: {possessions.home_possessions}</div>
           </div>
           <WinChanceDisplay probability={probabilityLeft} />
         </>}
@@ -700,6 +713,7 @@ function App() {
             <h2>Box Scores</h2>
             <ParallelCoordinates data_orig={parallelCoordinatesDataAway} limits={boxScoreBoundaries} custom={boxScoresRight} scrolling={scrolling}></ParallelCoordinates>
             <BoxScoreSlider boxScores={boxScoresRight} onSliderChange={handleSliderChangeRight} onMouseUp={onSliderMouseUp} boxScoreBoundaries={boxScoreBoundaries}/>
+            <div className="possessions_display">Possessions: {possessions.away_possessions}</div>
           </div>
           <WinChanceDisplay probability={1-probabilityLeft}/>   
         </>}   

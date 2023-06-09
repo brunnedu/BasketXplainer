@@ -215,7 +215,7 @@ h1{
 
 .sliderbox{
   position: relative;
-  height: 276px;
+  height: 295px;
 }
 
 .sliderbox > div{
@@ -321,4 +321,10 @@ td{
 
 .highcharts-exporting-group{
   display: none;
+}
+
+.possessions_display{
+  bottom: 0px;
+  font-weight: bold;
+  font-size: 22px;
 }
