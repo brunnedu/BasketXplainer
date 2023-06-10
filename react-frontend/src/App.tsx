@@ -341,7 +341,8 @@ const Scatterplot: React.FC<ScatterplotProps> = ({ points }) => {
       // Add points to the scatterplot
       svg
         .selectAll('image')
-        .data(points)
+        //@ts-ignore
+        .data(points, (d) => d.TEAM_ID)
         .enter()
         .append('image')
         .attr('x', (d) => xScale(d.OR))
@@ -359,7 +360,7 @@ const Scatterplot: React.FC<ScatterplotProps> = ({ points }) => {
             .raise();
 
           // Bring hovered logo to front
-          //TODO
+          d3.select(this).raise();
 
           
         })
@@ -380,7 +381,9 @@ const Scatterplot: React.FC<ScatterplotProps> = ({ points }) => {
       // Update point locations
       svg
         .selectAll('image')
-        .data(points)
+        //@ts-ignore
+        .data(points, (d) => d.TEAM_ID) // give each point a unique ID based on TEAM_ID
+        .order() // sort the SVG elements based on their ID
         .transition()
         .duration(1000)
         .attr('x', (d) => xScale(d.OR))
