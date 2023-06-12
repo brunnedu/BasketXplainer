@@ -8,6 +8,10 @@ import './App.css';
 import ParallelCoordinates from './components/ParallelCoordinates';
 import Popup from './components/Popup';
 import axiosClient from './router/apiClient';
+//@ts-ignore
+import ColorThief from 'colorthief';
+//@ts-ignore
+import chroma from 'chroma-js';
 
 // let DISABLE_TUTORIAL = true;
 // let DISABLE_TUTORIAL = false;
@@ -182,20 +186,55 @@ const DropdownMenu: React.FC<Props> = ({ ids, onSelection, selectedTeam, title }
   );
 };
 
+
+
+
 interface TeamSelectorProps {
   title: string;
   availableTeams: Team[];
   selectedTeam: Team;
   setSelectedTeam: (selectedId: Team) => void;
+  setBgColor: (color: string) => void;
 }
 
-const TeamSelector: React.FC<TeamSelectorProps> = ({ title, availableTeams, selectedTeam, setSelectedTeam }) => {
+const TeamSelector: React.FC<TeamSelectorProps> = ({ title, availableTeams, selectedTeam, setSelectedTeam, setBgColor }) => {
   const BASE_URL = process.env.NODE_ENV==="production"? `http://be.${window.location.hostname}/api/v1`:"http://localhost:8000/"
+  const colorThief = new ColorThief();
+
+  useEffect(() => {
+    const imgPath = BASE_URL + "api/logo/" + selectedTeam.TEAM_ID;
+
+    const img = new Image();
+    img.crossOrigin = 'Anonymous';
+
+    img.onload = () => {
+      try{
+        const color = colorThief.getColor(img);
+        let brightness_boost = 50;
+        let colormin = Math.min(color[0], color[1], color[2]);
+        let fix_color = (c:number) => {
+          c+=brightness_boost;
+          if (colormin < 150) {
+            //increase all 3 values so that the darkest value is 150
+            c += 150 - colormin;
+            if(c>255) c=255;
+          }
+          return c;
+        }
+        let rgb = `rgb(${fix_color(color[0])}, ${fix_color(color[1])}, ${fix_color(color[2])})`;
+        setBgColor(rgb);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
+    img.src = imgPath;
+
+  }, [selectedTeam]);
 
   return (
     <>
       <div className="box teamselector">
-        {/* {selectedTeam.TEAM_ID !== 0 && <img className="team_logo" src={BASE_URL + "api/logo/" + selectedTeam.TEAM_ID} alt="team logo" />} */}
         <img className="team_logo" src={BASE_URL + "api/logo/" + selectedTeam.TEAM_ID} alt="team logo" />
         <DropdownMenu ids={availableTeams} onSelection={setSelectedTeam} selectedTeam={selectedTeam} title={title} />
       </div>
@@ -515,6 +554,9 @@ function App() {
 
   const [DisplayRestOfApp, setDisplayRestOfApp] = useState<boolean>(false);
 
+  const [bgColorLeft, setBgColorLeft] = useState<string>("");
+  const [bgColorRight, setBgColorRight] = useState<string>("");
+
   //User tutorial stuff
   const [ShowTeamSelectorPopup, setShowTeamSelectorPopup] = useState<boolean>(false);
   const [ShowRestOfAppPopup, setShowRestOfAppPopup] = useState<boolean>(false);
@@ -693,10 +735,21 @@ function App() {
 
   return (
     <div className="App">
+      {/* make all .box elements have the correct bgcolor */}
+      <style>
+        {`
+          .left .box {
+            background-color: ${bgColorLeft};
+          }
+          .right .box {
+            background-color: ${bgColorRight};
+          }
+        `}
+      </style>
       {/* <header className="App-header"> Winning odds predictions</header> */}
       <div className="left container">
         <h1 className='side_title'>HOME</h1>
-        <TeamSelector title='HOME' availableTeams={availableTeams} selectedTeam={selectedTeamLeft} setSelectedTeam={handleSelectionLeft}/>
+        <TeamSelector title='HOME' availableTeams={availableTeams} selectedTeam={selectedTeamLeft} setSelectedTeam={handleSelectionLeft} setBgColor={setBgColorLeft} />
         {DisplayRestOfApp && <>
           <div className="box sliderbox">
             <h2>Box Scores</h2>
@@ -709,7 +762,7 @@ function App() {
       </div>
       <div className="right container">
         <h1 className='side_title'>AWAY</h1>
-        <TeamSelector title='AWAY' availableTeams={availableTeams} selectedTeam={selectedTeamRight} setSelectedTeam={handleSelectionRight}/>
+        <TeamSelector title='AWAY' availableTeams={availableTeams} selectedTeam={selectedTeamRight} setSelectedTeam={handleSelectionRight} setBgColor={setBgColorRight}/>
         <Popup text="This is the text that will be displayed in the popup" />
         {DisplayRestOfApp && <>
           <div className="box sliderbox">
