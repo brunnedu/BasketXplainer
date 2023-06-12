@@ -40,5 +40,9 @@ def add_routes(app):
         API + "clustering_advanced_stat/<float:AST_home>/<float:BLK_home>/<float:DREB_home>/<float:FG3A_home>/<float:FGA_home>/<float:FTA_home>/<float:OREB_home>/<float:STL_home>/<float:TO_home>/<float:AST_away>/<float:BLK_away>/<float:DREB_away>/<float:FG3A_away>/<float:FGA_away>/<float:FTA_away>/<float:OREB_away>/<float:STL_away>/<float:TO_away>"
     )
 
+    api.add_resource(
+        res.clustering.CalculateWiningOverview, 
+        API + "overview/<float:AST_home>/<float:BLK_home>/<float:DREB_home>/<float:FG3A_home>/<float:FGA_home>/<float:FTA_home>/<float:OREB_home>/<float:STL_home>/<float:TO_home>/<float:AST_away>/<float:BLK_away>/<float:DREB_away>/<float:FG3A_away>/<float:FGA_away>/<float:FTA_away>/<float:OREB_away>/<float:STL_away>/<float:TO_away>")
+
 
     return api
