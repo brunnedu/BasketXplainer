@@ -776,7 +776,7 @@ function App() {
       <div className="right container">
         <h1 className='side_title'>AWAY</h1>
         <TeamSelector title='AWAY' availableTeams={availableTeams} selectedTeam={selectedTeamRight} setSelectedTeam={handleSelectionRight} setBgColor={setBgColorRight}/>
-        <Popup text="This is the text that will be displayed in the popup" />
+        <Popup text=""/>
         {DisplayRestOfApp && <>
           <div className="box sliderbox">
             <h2>Box Scores</h2>
