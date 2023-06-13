@@ -276,7 +276,7 @@ const ShapDisplay: React.FC<ShapDisplayProps> = ({ param }) => {
   return (
     <>
       <div className="box shap" id="shapbox">
-        <h2>Feature importance</h2>
+        <h2>Feature Importance</h2>
         <iframe id="shapframe" srcDoc={param}></iframe>
       </div>
     </>
@@ -298,7 +298,7 @@ const WinChanceDisplay: React.FC<WinChanceDisplayProps> = ({ probability }) => {
   return (
     <>
       <div className="box winprob">
-        <h2>Winning probability</h2>
+        <h2>Winning Probability</h2>
         <p>{Math.round(probability*100)}%</p>
       </div>
     </>
@@ -450,8 +450,8 @@ const Scatterplot: React.FC<ScatterplotProps> = ({ points }) => {
       <div className='box' id="tacticalClustering">
         <h2>League Overview</h2>
         <svg ref={svgRef} viewBox='0 0 100 100' id='clustering'></svg>
-        <div className="yaxis">Defensive performance</div>
-        <div className="xaxis">Offensive performance</div>
+        <div className="yaxis">Defensive Performance</div>
+        <div className="xaxis">Offensive Performance</div>
       </div>
     </>
   );
@@ -498,7 +498,7 @@ const SimilarMatchupsDisplay: React.FC<SimilarMatchupsDisplayProps> = ({ matchup
   return (
     <>
       <div className="box" id="similarMatchups">
-        <h2>Similar matchups</h2>
+        <h2>Similar Matchups</h2>
         {/* For each matchup, display the date, the score and the 2 team logos on each side of the score  */}
         <table>
           <tbody>
