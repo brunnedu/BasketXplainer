@@ -215,24 +215,22 @@ const TeamSelector: React.FC<TeamSelectorProps> = ({ title, availableTeams, sele
         const chromaColor = chroma.rgb(color[0], color[1], color[2]);
 
         // Desaturate the color by 50%
-        const desaturatedColor = chromaColor.desaturate(0.5);
+        const desaturatedColor = chromaColor.desaturate(1);
 
-        // Brighten the desaturated color
-        const brightenedColor = desaturatedColor.brighten(0.2); // Adjust the brightness boost factor as needed
-
-        let brightness_boost = 50;
+        let min_allowed = 150;
         let colormin = Math.min(color[0], color[1], color[2]);
 
-        let fix_color = (c: number) => {
-          c += brightness_boost;
-          if (colormin < 150) {
-            c += 150 - colormin;
-            if (c > 255) c = 255;
+        let fix_color = (c:number) => {
+          // c+=brightness_boost;
+          if (colormin < min_allowed) {
+            //increase all 3 values so that the darkest value is min_allowed
+            c += min_allowed - colormin;
+            if(c>255) c=255;
           }
           return c;
-        };
+        }
 
-      const mutedRGB = brightenedColor.rgb();
+      const mutedRGB = desaturatedColor.rgb();
 
       let rgb = `rgb(${fix_color(mutedRGB[0])}, ${fix_color(
         mutedRGB[1]
