@@ -209,19 +209,32 @@ const TeamSelector: React.FC<TeamSelectorProps> = ({ title, availableTeams, sele
 
     img.onload = () => {
       try{
-        const color = colorThief.getColor(img);
-        let brightness_boost = 50;
+        let color = colorThief.getColor(img);
+
+        // Convert the color to chroma color format
+        const chromaColor = chroma.rgb(color[0], color[1], color[2]);
+
+        // Desaturate the color by 50%
+        const desaturatedColor = chromaColor.desaturate(1);
+
+        let min_allowed = 150;
         let colormin = Math.min(color[0], color[1], color[2]);
+
         let fix_color = (c:number) => {
-          c+=brightness_boost;
-          if (colormin < 150) {
-            //increase all 3 values so that the darkest value is 150
-            c += 150 - colormin;
+          // c+=brightness_boost;
+          if (colormin < min_allowed) {
+            //increase all 3 values so that the darkest value is min_allowed
+            c += min_allowed - colormin;
             if(c>255) c=255;
           }
           return c;
         }
-        let rgb = `rgb(${fix_color(color[0])}, ${fix_color(color[1])}, ${fix_color(color[2])})`;
+
+      const mutedRGB = desaturatedColor.rgb();
+
+      let rgb = `rgb(${fix_color(mutedRGB[0])}, ${fix_color(
+        mutedRGB[1]
+      )}, ${fix_color(mutedRGB[2])})`;
         setBgColor(rgb);
       } catch (e) {
         console.log(e);
@@ -261,7 +274,7 @@ const ShapDisplay: React.FC<ShapDisplayProps> = ({ param }) => {
   return (
     <>
       <div className="box shap" id="shapbox">
-        <h2>Feature importance</h2>
+        <h2>Feature Importance</h2>
         <iframe id="shapframe" srcDoc={param}></iframe>
       </div>
     </>
@@ -283,7 +296,7 @@ const WinChanceDisplay: React.FC<WinChanceDisplayProps> = ({ probability }) => {
   return (
     <>
       <div className="box winprob">
-        <h2>Winning probability</h2>
+        <h2>Winning Probability</h2>
         <p>{Math.round(probability*100)}%</p>
       </div>
     </>
@@ -435,8 +448,8 @@ const Scatterplot: React.FC<ScatterplotProps> = ({ points }) => {
       <div className='box' id="tacticalClustering">
         <h2>League Overview</h2>
         <svg ref={svgRef} viewBox='0 0 100 100' id='clustering'></svg>
-        <div className="yaxis">Defensive performance</div>
-        <div className="xaxis">Offensive performance</div>
+        <div className="yaxis">Defensive Performance</div>
+        <div className="xaxis">Offensive Performance</div>
       </div>
     </>
   );
@@ -483,7 +496,7 @@ const SimilarMatchupsDisplay: React.FC<SimilarMatchupsDisplayProps> = ({ matchup
   return (
     <>
       <div className="box" id="similarMatchups">
-        <h2>Similar matchups</h2>
+        <h2>Similar Matchups</h2>
         {/* For each matchup, display the date, the score and the 2 team logos on each side of the score  */}
         <table>
           <tbody>

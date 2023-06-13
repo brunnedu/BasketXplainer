@@ -50,12 +50,15 @@ class GetSHAPForcePlotBoxscore(Resource):
             'TO_away': [TO_away]
         })
 
+        # format displayed feature names nicely
+        feature_names = [f"{col.split('_')[0]} {col.split('_')[-1].capitalize()}" for col in X_inference.columns]
+
 
         explainer = load_tree_explainer()
 
         shap_values = explainer.shap_values(X_inference)
 
-        force_plot = shap.force_plot(explainer.expected_value, shap_values[0], text_rotation=0, matplotlib=False, feature_names=X_inference.columns)
+        force_plot = shap.force_plot(explainer.expected_value, shap_values[0], text_rotation=0, matplotlib=False, feature_names=feature_names, plot_cmap=["#cf4242", "#42a2cf"])
 
         shap_html = f"<head>{shap.getjs()}</head><body>{force_plot.html()}</body>"
 
