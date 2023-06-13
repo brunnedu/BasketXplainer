@@ -96,53 +96,54 @@ class CalculateWiningOverview(Resource):
 
             df_boxscores = pd.read_csv(os.path.join(DATA_ROOT, 'precomputed', 'boxscores.csv'), index_col=0)
 
+            df_custom = pd.DataFrame({
+                'AST': [AST_home, AST_away],
+                'BLK': [BLK_home, BLK_away],
+                'DREB': [DREB_home, DREB_away],
+                'FG3A': [FG3A_home, FG3A_away],
+                'FG3M': [-1, -1],
+                'FGA': [FGA_home, FGA_away],
+                'FGM': [-1, -1],
+                'FTA': [FTA_home, FTA_away],
+                'FTM': [-1, -1],
+                'OREB': [OREB_home, OREB_away],
+                'PF': [-1, -1],
+                'STL': [STL_home, STL_away],
+                'TO': [TO_home, TO_away],
+                'is_home': [True, False],
+                'TEAM_ID': [1, 0],
+            })
+
+            df_boxscores = pd.concat([df_boxscores, df_custom], axis=0)
+
             model = load_new_stat_classifier()
 
-            for index, row in df_boxscores.iterrows():
-                home_inference = np.array([
-                    AST_home, 
-                    BLK_home,
-                    DREB_home,
-                    FG3A_home,
-                    FGA_home,
-                    FTA_home, 
-                    OREB_home, 
-                    STL_home,
-                    TO_home, 
-                    row["AST"], 
-                    row["BLK"], 
-                    row["DREB"],
-                    row["FG3A"],
-                    row["FGA"],
-                    row["FTA"],
-                    row["OREB"], 
-                    row["STL"], 
-                    row["TO"]
-                ]).reshape(1, -1)
+            for index_outer, row_outer in df_boxscores.iterrows():
+                team_pred = {}
+                for index_inner, row_inner in df_boxscores.iterrows():
+                    home_inference = np.array([
+                        row_outer["AST"], 
+                        row_outer["BLK"], 
+                        row_outer["DREB"],
+                        row_outer["FG3A"],
+                        row_outer["FGA"],
+                        row_outer["FTA"],
+                        row_outer["OREB"], 
+                        row_outer["STL"], 
+                        row_outer["TO"],
+                        row_inner["AST"], 
+                        row_inner["BLK"], 
+                        row_inner["DREB"],
+                        row_inner["FG3A"],
+                        row_inner["FGA"],
+                        row_inner["FTA"],
+                        row_inner["OREB"], 
+                        row_inner["STL"], 
+                        row_inner["TO"]
+                    ]).reshape(1, -1)
 
-                away_inference = np.array([
-                    AST_away, 
-                    BLK_away,
-                    DREB_away,
-                    FG3A_away,
-                    FGA_away,
-                    FTA_away, 
-                    OREB_away, 
-                    STL_away,
-                    TO_away, 
-                    row["AST"], 
-                    row["BLK"], 
-                    row["DREB"],
-                    row["FG3A"],
-                    row["FGA"],
-                    row["FTA"],
-                    row["OREB"], 
-                    row["STL"], 
-                    row["TO"]
-                ]).reshape(1, -1)
-
-                home_proba = model.predict(home_inference)[0]
-                away_proba = model.predict(away_inference)[0]
-                predictions[row["TEAM_ID"]] = {'winning_odds_home': home_proba, "winning_odds_away": away_proba}
-
+                    proba = model.predict(home_inference)[0]
+                    team_pred[row_inner["TEAM_ID"]] = proba
+                predictions[row_outer["TEAM_ID"]] = team_pred
+                
             return jsonify(predictions)
