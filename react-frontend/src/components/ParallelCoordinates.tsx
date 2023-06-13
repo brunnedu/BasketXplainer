@@ -1,9 +1,9 @@
-import React, { Component  } from "react";
+import React from "react";
 
 import Highcharts from 'highcharts';
+import HighchartsAccessibility from 'highcharts/modules/accessibility';
 import HighchartsReact from 'highcharts-react-official';
 import HighchartsExporting from 'highcharts/modules/exporting';
-import HighchartsAccessibility from 'highcharts/modules/accessibility';
 import HighchartsParallelCoordinates from 'highcharts/modules/parallel-coordinates';
 HighchartsExporting(Highcharts);
 HighchartsAccessibility(Highcharts);
@@ -119,7 +119,7 @@ const ParallelCoordinates: React.FC<ParallelCoordinatesProps> = React.memo(({ da
     series: data.map((set, i) => ({
       name: `Line ${i}`,
       data: set,
-      color: (i == (data.length - 1) ? '#991111' : 'rgba(0, 0, 0, 0.4)'),
+      color: (i == (data.length - 1) ? '#3f51b5' : 'rgba(0, 0, 0, 0.4)'),
       lineWidth: (i == (data.length - 1) ? 4 : 1),
     })),
     credits: {
