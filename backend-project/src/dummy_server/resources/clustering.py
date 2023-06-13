@@ -1,12 +1,12 @@
 import os
 
 import pandas as pd
-import sklearn
+import numpy as np
 from flask import jsonify
 from flask_restful import Resource
 from sklearn.cluster import KMeans
 
-from .utils import DATA_ROOT, calculate_ratings, calculate_custom_ratings, CLUSTERING_PRED
+from .utils import DATA_ROOT, calculate_ratings, calculate_custom_ratings, CLUSTERING_PRED, load_new_stat_classifier, PRED_COLS
     
 # testapi: http://127.0.0.1:8000/api/clustering_advanced_stat/10.0-10.0-10.0-10.0-10.0-10.5-1.0-1.0-1.0-1.0-1.0-1.0-1.0_10.0-10.0-10.0-10.0-10.0-10.5-1.0-1.0-1.0-1.0-1.0-1.0-1.0
 class GetClusteringBoxscoreAdvancedStat(Resource):
@@ -70,3 +70,79 @@ class GetClusteringBoxscoreAdvancedStat(Resource):
         df_clustering['cluster'] = kmeans.labels_
 
         return jsonify(df_clustering.to_dict("records"))
+    
+class CalculateWiningOverview(Resource):
+        def get(self, 
+            AST_home,
+            BLK_home,
+            DREB_home,
+            FG3A_home,
+            FGA_home,
+            FTA_home,
+            OREB_home,
+            STL_home,
+            TO_home,
+            AST_away,
+            BLK_away,
+            DREB_away,
+            FG3A_away,
+            FGA_away,
+            FTA_away,
+            OREB_away,
+            STL_away,
+            TO_away):
+
+            predictions = {}
+
+            df_boxscores = pd.read_csv(os.path.join(DATA_ROOT, 'precomputed', 'boxscores.csv'), index_col=0)
+
+            model = load_new_stat_classifier()
+
+            for index, row in df_boxscores.iterrows():
+                home_inference = np.array([
+                    AST_home, 
+                    BLK_home,
+                    DREB_home,
+                    FG3A_home,
+                    FGA_home,
+                    FTA_home, 
+                    OREB_home, 
+                    STL_home,
+                    TO_home, 
+                    row["AST"], 
+                    row["BLK"], 
+                    row["DREB"],
+                    row["FG3A"],
+                    row["FGA"],
+                    row["FTA"],
+                    row["OREB"], 
+                    row["STL"], 
+                    row["TO"]
+                ]).reshape(1, -1)
+
+                away_inference = np.array([
+                    AST_away, 
+                    BLK_away,
+                    DREB_away,
+                    FG3A_away,
+                    FGA_away,
+                    FTA_away, 
+                    OREB_away, 
+                    STL_away,
+                    TO_away, 
+                    row["AST"], 
+                    row["BLK"], 
+                    row["DREB"],
+                    row["FG3A"],
+                    row["FGA"],
+                    row["FTA"],
+                    row["OREB"], 
+                    row["STL"], 
+                    row["TO"]
+                ]).reshape(1, -1)
+
+                home_proba = model.predict(home_inference)[0]
+                away_proba = model.predict(away_inference)[0]
+                predictions[row["TEAM_ID"]] = {'winning_odds_home': home_proba, "winning_odds_away": away_proba}
+
+            return jsonify(predictions)

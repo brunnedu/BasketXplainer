@@ -1,9 +1,9 @@
-import React, { Component  } from "react";
+import React from "react";
 
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import HighchartsExporting from 'highcharts/modules/exporting';
 import HighchartsAccessibility from 'highcharts/modules/accessibility';
+import HighchartsExporting from 'highcharts/modules/exporting';
 import HighchartsParallelCoordinates from 'highcharts/modules/parallel-coordinates';
 HighchartsExporting(Highcharts);
 HighchartsAccessibility(Highcharts);
@@ -97,7 +97,7 @@ const ParallelCoordinates: React.FC<ParallelCoordinatesProps> = React.memo(({ da
   const getOptions = () => ({
     chart: {
       type: 'line',
-      backgroundColor: 'transparent',
+      backgroundColor: 'rgba(0, 0, 0, 0)',
       width: 450,
       height: 250,
       parallelCoordinates: true,
