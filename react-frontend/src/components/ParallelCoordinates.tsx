@@ -97,7 +97,7 @@ const ParallelCoordinates: React.FC<ParallelCoordinatesProps> = React.memo(({ da
   const getOptions = () => ({
     chart: {
       type: 'line',
-      backgroundColor: '#e4c494',
+      backgroundColor: 'transparent',
       width: 450,
       height: 250,
       parallelCoordinates: true,
