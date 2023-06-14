@@ -84,7 +84,7 @@ Define all the tasks you want your dashboard solve.
 Specify here the structure of you code and comment what the most important files contain
 
 ``` bash
-├── README.md  
+├── README.md  # project readme
 ├── backend-project
 │   ├── README.md
 │   ├── setup.py   # main app
@@ -92,37 +92,43 @@ Specify here the structure of you code and comment what the most important files
 │   ├── src
 │   │   ├── dummy_server
 │   │   │     ├── router
-│   │   │     │    ├── routes.py
+│   │   │     │    ├── routes.py  # api endpoint routes
 │   │   │     │    ├── app.py
 │   │   │     │    └── __init__.py
 │   │   │     └── resources
-│   │   │         ├── scatter_data.py
+│   │   │         ├── clustering.py  # league overview endpoint
+│   │   │         ├── explainability.py  # feature importance endpoint
+│   │   │         ├── games_data.py  # box score endpoints
+│   │   │         ├── prediction.py  # prediction endpoint
+│   │   │         ├── utils.py  # utility functions
 │   │   │         └── __init__.py
 │   │   └── __init__.py 
 │   ├── data
-│   │   ├── dataset_blobs.csv
-│   │   ├── dataset_circles.csv
-│   │   ├── dataset_moons.csv
-│   │   └── generate_data.py    # script to create data
+│   │   ├── precomputed  # precomputed models & box scores
+│   │   ├── team_logos  # NBA team logos
+│   │   ├── dataset_games.csv  # NBA Kaggle datasets
+│   │   ├── dataset_games_details.csv
+│   │   ├── dataset_players.csv
+│   │   ├── dataset_ranking.csv
+│   │   └── generate_teams.csv
 │   └── MANIFEST.in
+├── dev_notebooks  # development notebooks (including model training)
 ├── react-frontend
 │   ├── README.md
+│   ├── Dockerfile
 │   ├── package-lock.json
 │   ├── package.json
 │   ├── src
 │   │   ├── App.css
 │   │   ├── App.test.tsx
-│   │   ├── App.tsx
-│   │   ├── Visualization.tsx
+│   │   ├── App.tsx  # main frontend code
 │   │   ├── router
 │   │   │   ├── resources
 │   │   │   │   └── data.ts
 │   │   │   └── apiClient.ts
 │   │   ├── components
 │   │   │   ├── utils.ts
-│   │   │   ├── ScatterPlot.tsx
-│   │   │   ├── DataChoice.tsx
-│   │   │   └── ScatterPlot.css
+│   │   │   ├── ParallelCoordinates.tsx  # parallel coordinates component
 │   │   ├── index.css
 │   │   ├── index.tsx
 │   │   ├── logo.svg
@@ -140,7 +146,9 @@ Specify here the structure of you code and comment what the most important files
 │        ├── logo192.png
 │        ├── index.html
 │        └── favicon.ico
-└── Dockerfile
+├── environment.yml  # package dependencies
+└── report.pdf  # project report
+
 ```
 
 ## Versioning
