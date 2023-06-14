@@ -114,27 +114,23 @@ Specify here the structure of you code and comment what the most important files
 ```
 
 ## Requirements
-Write here all intructions to build the environment and run your code.\
-**NOTE:** If we cannot run your code following these requirements we will not be able to evaluate it.
+In this project we are using LightGBM for the ML pipeline. This package can be a bit tricky to install depending on the OS. If the usual installation steps as described below fail, more information for troubleshooting can be found [here](https://lightgbm.readthedocs.io/en/latest/Installation-Guide.html).
 
 ## How to Run
-Write here **DETAILED** intructions on how to run your code.\
-**NOTE:** If we cannot run your code following these instructions we will not be able to evaluate it.
 
-As an example here are the instructions to run the Dummy Project:
-To run the dummy project you have to:
+To run this project you have to:
 - clone the repository;
 - open a new terminal instance;
 - move to the folder where the project has been downloaded using the command ```cd```;
-- open the folder called "dummy-fullstack-main";
+- open the folder called "b5-winning-in-basketball";
+- create a virtual environment from the environment.yml file using the command ```conda env create --file environment.yml```;
+- activate the virtual environment run the command ```conda activate b5-winning-in-basketball```;
 To run the backend
 - open the backend folder called "backend-project";
-- create a virtual environment using the command ```conda create -n nameOfTheEnvironment```;
-- activate the virtual environment run the command ```conda activate nameOfTheEnvironment```;
-- install the requirements from the txt file using the command ```pip3 install -r requirements.txt```;
-- start the backend with the command ```python3 setup.py run```;
+- install the requirements using the command ```pip install .```. If you plan on editing the requirements, you may want to use the command ```pip install -e .```;
+- start the backend with the command ```start-server```;
 To run the frontend
-- open a new terminal instance and once again go to the folder called "dummy-fullstack-main"
+- open a new terminal instance and once again go to the folder called "b5-winning-in-basketball"
 - open the frontend folder called "react-frontend";
 - start the front end by using the following two commands ```npm install```, ```npm start```;
 If all the steps have been successfully executed a new browser window will open automatically.
