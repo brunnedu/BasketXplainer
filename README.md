@@ -8,8 +8,17 @@
 3. Liule Yang
 4. Timothé Laborie
 
+## Contribution Statement
+
+Every team member contributed approximately equally to the project. Below we list the contributions of each member in descending order of importance:
+
+- Dustin Brunner: Backend, Research, Report, Frontend
+- Jonathan Koch: Wireframe, Design, Backend, Tutorial, Report
+- Liule Yang: Backend, Research, Report
+- Timothé Laborie: Main contributor to frontend (Implementation and Styling)
+
 ## Project Description 
-The goal of our project is to create an interactive dashboard that allows basketball coaches/analysts to determine the most important factors for predicting the winning odds of a given matchup. Additionally we want to provide a clustering of teams based on their strategy.
+The goal of our project is to create an interactive dashboard that allows basketball coaches/analysts to determine the most important factors for predicting the winning odds of a given matchup.
 
 ### Users
 - Basketball Data Analysts (specifically Fran Camba Rodriguez of the Obradoiro CAB team) 
@@ -23,31 +32,30 @@ Document here where to find the data and how to download it.
 ### Tasks
 Define all the tasks you want your dashboard solve.
 - Determine feature importance for predicting winning odds
-- Clustering teams by winning strategy
 - Modifying boxscore data for interventional predictions (what-if analysis)
+- Positioning teams in comparison to other teams according to defensive and offensive performance
 
 ### Dashboard Structure
 
 #### Components
-- Tutorial
+- Introductory Tutorial
   - Overlay when first launching the app
   - Help button in the corner
 - Team Selector
   - Team logos
   - Scrollable dropdown (search)
-  - Prevent user from selecting same team twice
-- Boxscore Display/Manipulation
+- Interactive Box Score Statistics
   - Parallel Coordinates Plot (adjustable ordering)
-  - Spider Graph
-  - Give user ability to modify boxscore data in the visualization (use some realistic constraints)
-- Explainability Plot
-  - Either combined or split plot (home and away features)
+  - Adjust Box Scores by sliding directly in plot (direct manipulation)
+  - Provide some realistic constraints for the box score values
 - Winning Odds Prediction
   - If not dynamically updated, indicate the change in winning odds after recalculating
-- Strategy Clustering
-  - Improve Strategy Clustering by using `games_details` data (aggregated by team)
+- Explainability Plot
+  - SHAP force plot to better comprehend prediction of model
+  - Indicate which features contribute to increasing / decreasing the winning odds of the home team
+- League Overview
+  - Plot the different teams in the league based on offensive and defensive capabilities
   - On-Hover details
-  - Color scale of league ranking
 
 - - -
 ## Folder Structure
