@@ -1,8 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Neucha&display=swap');
 
 .App {
-  width: 100vw;
-  max-width: 1300px;
+  width: 1300px;
   height: 100vh;
   /* display: flex; */
   flex-direction: column;
@@ -188,17 +187,19 @@ h1{
   justify-content: center;
   align-items: center;
   z-index: 100;
+  overflow-y: scroll;
 }
 
 .popup-text {
   display: block;
-  width: 70%;
+  width: 1000px;
   background-color: white;
   padding: 20px;
   border-radius: 10px;
   margin: auto;
-  margin-top: 20%;
+  margin-top: 3%;
 }
+
 
 .popup-enabletutorial {
   display: block;
