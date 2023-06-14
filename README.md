@@ -8,110 +8,14 @@
 3. Liule Yang
 4. Timothé Laborie
 
-## Project Description 
-The goal of our project is to create an interactive dashboard that allows basketball coaches/analysts to determine the most important factors for predicting the winning odds of a given matchup. Additionally we want to provide a clustering of teams based on their strategy.
+## Contribution Statement
 
-### Users
-- Basketball Data Analysts (specifically Fran Camba Rodriguez of the Obradoiro CAB team) 
-- Basketball Coaches
+Every team member contributed approximately equally to the project. Below we list the contributions of each member in descending order of importance:
 
-### Datasets
-Add here all used datasets.\
-Document here where to find the data and how to download it.
-- [NBA Kaggle Dataset](https://www.kaggle.com/datasets/nathanlauga/nba-games) 
-
-### Tasks
-Define all the tasks you want your dashboard solve.
-- Determine feature importance for predicting winning odds
-- Clustering teams by winning strategy
-- Modifying boxscore data for interventional predictions (what-if analysis)
-
-### Dashboard Structure
-
-#### Components
-- Tutorial
-  - Overlay when first launching the app
-  - Help button in the corner
-- Team Selector
-  - Team logos
-  - Scrollable dropdown (search)
-  - Prevent user from selecting same team twice
-- Boxscore Display/Manipulation
-  - Parallel Coordinates Plot (adjustable ordering)
-  - Spider Graph
-  - Give user ability to modify boxscore data in the visualization (use some realistic constraints)
-- Explainability Plot
-  - Either combined or split plot (home and away features)
-- Winning Odds Prediction
-  - If not dynamically updated, indicate the change in winning odds after recalculating
-- Strategy Clustering
-  - Improve Strategy Clustering by using `games_details` data (aggregated by team)
-  - On-Hover details
-  - Color scale of league ranking
-
-- - -
-## Folder Structure
-Specify here the structure of you code and comment what the most important files contain
-
-``` bash
-├── README.md  
-├── backend-project
-│   ├── README.md
-│   ├── setup.py   # main app
-│   ├── pyproject.toml
-│   ├── src
-│   │   ├── dummy_server
-│   │   │     ├── router
-│   │   │     │    ├── routes.py
-│   │   │     │    ├── app.py
-│   │   │     │    └── __init__.py
-│   │   │     └── resources
-│   │   │         ├── scatter_data.py
-│   │   │         └── __init__.py
-│   │   └── __init__.py 
-│   ├── data
-│   │   ├── dataset_blobs.csv
-│   │   ├── dataset_circles.csv
-│   │   ├── dataset_moons.csv
-│   │   └── generate_data.py    # script to create data
-│   └── MANIFEST.in
-├── react-frontend
-│   ├── README.md
-│   ├── package-lock.json
-│   ├── package.json
-│   ├── src
-│   │   ├── App.css
-│   │   ├── App.test.tsx
-│   │   ├── App.tsx
-│   │   ├── Visualization.tsx
-│   │   ├── router
-│   │   │   ├── resources
-│   │   │   │   └── data.ts
-│   │   │   └── apiClient.ts
-│   │   ├── components
-│   │   │   ├── utils.ts
-│   │   │   ├── ScatterPlot.tsx
-│   │   │   ├── DataChoice.tsx
-│   │   │   └── ScatterPlot.css
-│   │   ├── index.css
-│   │   ├── index.tsx
-│   │   ├── logo.svg
-│   │   ├── react-app-env.d.ts
-│   │   ├── reportWebVitals.ts
-│   │   ├── setupTests.ts
-│   │   └── types
-│   │       ├── margin.ts
-│   │       └── data.ts
-│   ├── tsconfig.json
-│   └── public
-│        ├── robot.txt
-│        ├── manifest.json
-│        ├── logo512.png
-│        ├── logo192.png
-│        ├── index.html
-│        └── favicon.ico
-└── Dockerfile
-```
+- Dustin Brunner: Backend, Research, Report, Frontend
+- Jonathan Koch: Wireframe, Design, Backend, Tutorial, Report
+- Liule Yang: Backend, Research, Report
+- Timothé Laborie: Main contributor to frontend (Implementation and Styling)
 
 ## Requirements
 In this project we are using LightGBM for the ML pipeline. This package can be a bit tricky to install depending on the OS. If the usual installation steps as described below fail, more information for troubleshooting can be found [here](https://lightgbm.readthedocs.io/en/latest/Installation-Guide.html).
@@ -135,48 +39,117 @@ To run the frontend
 - start the front end by using the following two commands ```npm install```, ```npm start```;
 If all the steps have been successfully executed a new browser window will open automatically.
 
-## Milestones
-Document here the major milestones of your code and future planned steps.\
-- [x] Milestone 1
-  - [x] Completed Sub-task: [Video of our project proposal](https://polybox.ethz.ch/index.php/s/xL8F1FTcjtHjGXG)
+## Project Description 
+The goal of our project is to create an interactive dashboard that allows basketball coaches/analysts to determine the most important factors for predicting the winning odds of a given matchup.
 
-- [x] Milestone 2
-  - [x] Completed Sub-task: Add some endpoints
-  - [x] Completed Sub-task: Create a [Mockup](https://www.figma.com/proto/f18XbpkllZJ8DrXw9BkxT4/AIX-Mockup?node-id=11-177&scaling=scale-down&page-id=0%3A1&starting-point-node-id=4%3A2)
+### Users
+- Basketball Data Analysts (specifically Fran Camba Rodriguez of the Obradoiro CAB team) 
+- Basketball Coaches
 
-- [ ] Milestone 3
-  - [ ] Sub-task: Static dashboard
+### Datasets
+Add here all used datasets.\
+Document here where to find the data and how to download it.
+- [NBA Kaggle Dataset](https://www.kaggle.com/datasets/nathanlauga/nba-games) 
 
-- [ ] Milestone 4
+### Tasks
+Define all the tasks you want your dashboard solve.
+- Determine feature importance for predicting winning odds
+- Modifying boxscore data for interventional predictions (what-if analysis)
+- Positioning teams in comparison to other teams according to defensive and offensive performance
 
-- [ ] Milestone 5
+### Dashboard Structure
 
-- [ ] Final Submission
+#### Components
+- Introductory Tutorial
+  - Overlay when first launching the app
+  - Help button in the corner
+- Team Selector
+  - Team logos
+  - Scrollable dropdown (search)
+- Interactive Box Score Statistics
+  - Parallel Coordinates Plot (adjustable ordering)
+  - Adjust Box Scores by sliding directly in plot (direct manipulation)
+  - Provide some realistic constraints for the box score values
+- Winning Odds Prediction
+  - If not dynamically updated, indicate the change in winning odds after recalculating
+- Explainability Plot
+  - SHAP force plot to better comprehend prediction of model
+  - Indicate which features contribute to increasing / decreasing the winning odds of the home team
+- League Overview
+  - Plot the different teams in the league based on offensive and defensive capabilities
+  - On-Hover details
 
+- - -
+## Folder Structure
+Specify here the structure of you code and comment what the most important files contain
 
-Create a list subtask.\
-Open an issue for each subtask. Once you create a subtask, link the corresponding issue.\
-Create a merge request (with corresponding branch) from each issue.\
-Finally accept the merge request once issue is resolved. Once you complete a task, link the corresponding merge commit.\
-Take a look at [Issues and Branches](https://www.youtube.com/watch?v=DSuSBuVYpys) for more details. 
+``` bash
+├── README.md  # project readme
+├── backend-project
+│   ├── README.md
+│   ├── setup.py   # main app
+│   ├── pyproject.toml
+│   ├── src
+│   │   ├── dummy_server
+│   │   │     ├── router
+│   │   │     │    ├── routes.py  # api endpoint routes
+│   │   │     │    ├── app.py
+│   │   │     │    └── __init__.py
+│   │   │     └── resources
+│   │   │         ├── clustering.py  # league overview endpoint
+│   │   │         ├── explainability.py  # feature importance endpoint
+│   │   │         ├── games_data.py  # box score endpoints
+│   │   │         ├── prediction.py  # prediction endpoint
+│   │   │         ├── utils.py  # utility functions
+│   │   │         └── __init__.py
+│   │   └── __init__.py 
+│   ├── data
+│   │   ├── precomputed  # precomputed models & box scores
+│   │   ├── team_logos  # NBA team logos
+│   │   ├── dataset_games.csv  # NBA Kaggle datasets
+│   │   ├── dataset_games_details.csv
+│   │   ├── dataset_players.csv
+│   │   ├── dataset_ranking.csv
+│   │   └── generate_teams.csv
+│   └── MANIFEST.in
+├── dev_notebooks  # development notebooks (including model training)
+├── react-frontend
+│   ├── README.md
+│   ├── Dockerfile
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── src
+│   │   ├── App.css
+│   │   ├── App.test.tsx
+│   │   ├── App.tsx  # main frontend code
+│   │   ├── router
+│   │   │   ├── resources
+│   │   │   │   └── data.ts
+│   │   │   └── apiClient.ts
+│   │   ├── components
+│   │   │   ├── utils.ts
+│   │   │   ├── ParallelCoordinates.tsx  # parallel coordinates component
+│   │   ├── index.css
+│   │   ├── index.tsx
+│   │   ├── logo.svg
+│   │   ├── react-app-env.d.ts
+│   │   ├── reportWebVitals.ts
+│   │   ├── setupTests.ts
+│   │   └── types
+│   │       ├── margin.ts
+│   │       └── data.ts
+│   ├── tsconfig.json
+│   └── public
+│        ├── robot.txt
+│        ├── manifest.json
+│        ├── logo512.png
+│        ├── logo192.png
+│        ├── index.html
+│        └── favicon.ico
+├── environment.yml  # package dependencies
+└── report.pdf  # project report
 
-This will help you have a clearer overview of what you are currently doing, track your progress and organise your work among yourselves. Moreover it gives us more insights on your progress.  
-
-## Weekly Summary 
-Write here a short summary with weekly progress, including challenges and open questions.\
-We will use this to understand what your struggles and where did the weekly effort go to.
-
-#### Week 4 (13.03.23)
-Because of our limited domain knowledge, the idea we suggested in our video pitch was quite complex and possibly infeasible. Luckily, we had a very helpful discussion with our TA during the office hour that helped us refine our idea. Currently, we are still working on further refining our idea and improving our backend skills to start implementing our backend next week.
- 
-#### Week 5 (20.03.23)
-We proposed three different project ideas to Javi and decided to go with the second one, creating a dashboard for basketball coaches and data analysts. We made ourselves familiar with the dummy-fullstack repository and started implementing the backend. We created some API endpoints for accessing selected parts of our dataset (boxscore) as well as aggregations.
-
-#### Week 6 (27.03.23)
-We accomplished several tasks to advance our project: we developed a visual encoding sketch for the user interface, reached out to Fran to schedule a meeting for feedback on our idea, finalized the API design for front-end and back-end communication, and collaboratively compiled a requirements document that thoroughly details all project features.
-
-#### Week 7 & 8 (03.04.23 & 10.04.23)
-We added a help button to our visual encoding sketch and successfully built the front-end based on it. Additionally, we were able to update the back-end from a mock state to a functional state, which allowed us to make actual predictions on real data. Furthermore, we scheduled a meeting with Fran to discuss the project, ensuring that we stay on track and continue moving forward.
+```
 
 ## Versioning
 Create stable versions of your code each week by using gitlab tags.\
