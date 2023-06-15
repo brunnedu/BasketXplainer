@@ -1,4 +1,5 @@
 FROM python:3.9-slim
+RUN apt-get update && apt-get install libgomp1
 
 COPY ./ /srv/backend-app
 
