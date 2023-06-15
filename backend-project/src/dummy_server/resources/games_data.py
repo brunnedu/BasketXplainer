@@ -7,6 +7,7 @@ from flask_restful import Resource
 from sklearn.preprocessing import StandardScaler
 
 from .utils import DATA_ROOT, PRED_COLS, closest_point, get_season_games
+import io
 
 
 class GetTeamBoxscore(Resource):
@@ -70,7 +71,13 @@ class GetTeamLogo(Resource):
 
     def get(self, team_id: int):
         path = os.path.join(DATA_ROOT, "team_logos", f"{team_id}.png")
-        return send_file(path, mimetype="image/png")
+
+        with open(path, 'rb') as bites:
+            return send_file(
+                io.BytesIO(bites.read()),
+                download_name='logo.png',
+                mimetype='image/png'
+            )
     
 
 class GetTeams(Resource):
