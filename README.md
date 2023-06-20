@@ -17,10 +17,16 @@ Every team member contributed approximately equally to the project. Below we lis
 - Liule Yang: Backend, Research, Report
 - Timothé Laborie: Main contributor to frontend (Implementation and Styling)
 
-## Requirements
+## Deployment Link
+
+Try out our deployed dashboard [here](http://b5-winning-in-basketball.course-xai-iml23.isginf.ch/)
+
+## How to Run Locally
+
+### Requirements
 In this project we are using LightGBM for the ML pipeline. This package can be a bit tricky to install depending on the OS. If the usual installation steps as described below fail, more information for troubleshooting can be found [here](https://lightgbm.readthedocs.io/en/latest/Installation-Guide.html).
 
-## How to Run
+### Installation Instructions
 
 To run this project you have to:
 - clone the repository;
