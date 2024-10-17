@@ -1,6 +1,4 @@
-# Project Title
-
-[[_TOC_]]
+# BasketXplainer
 
 ## Team Members
 1. Dustin Brunner
